@@ -18,11 +18,20 @@ DATE: Monday 5/2
 
 TO DO: 
 [X] Data model
-[] Set up skeleton (static, templates, HTML, server.py, etc.)
-[] Select & install requirements
-[] Set up git ignore
-[] Create basic homepage html
+[X] Set up skeleton (static, templates, HTML, server.py, etc.)
+[X] Select & install requirements
+[X] Create database
+[] Create datatables
+    [X] users
+    [/] user_meds
+    [/] buddies
+    [] medications
+    [] med_schedule
+    [] user_inventory
+    [] wearable_by
+    [X] accessories
 [] Enable account creation
+[] Create basic homepage html
 
 JOURNAL:
 

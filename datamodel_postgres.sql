@@ -16,6 +16,7 @@ CREATE TABLE "public.accessories" (
 	"item_id" serial NOT NULL,
 	"item_name" VARCHAR(255) NOT NULL,
 	"item_cost" integer NOT NULL,
+	"item_description" TEXT,
 	"item_img" VARCHAR(255) NOT NULL,
 	CONSTRAINT "accessories_pk" PRIMARY KEY ("item_id")
 ) WITH (
@@ -28,7 +29,7 @@ CREATE TABLE "public.medications" (
 	"medication_id" serial NOT NULL,
 	"generic_name" VARCHAR(255) NOT NULL,
 	"brand_name" VARCHAR(255),
-	"med_information" VARCHAR(255) NOT NULL,
+	"med_information" VARCHAR(255),
 	CONSTRAINT "medications_pk" PRIMARY KEY ("medication_id")
 ) WITH (
   OIDS=FALSE
@@ -39,7 +40,7 @@ CREATE TABLE "public.medications" (
 CREATE TABLE "public.buddies" (
 	"buddy_id" serial NOT NULL,
 	"buddy_name" VARCHAR(255) NOT NULL,
-	"buddy_description" TEXT NOT NULL,
+	"buddy_description" TEXT,
 	"buddy_img" VARCHAR(255) NOT NULL,
 	"user_id" integer NOT NULL,
 	CONSTRAINT "buddies_pk" PRIMARY KEY ("buddy_id")
