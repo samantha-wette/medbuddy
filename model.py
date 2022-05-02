@@ -23,30 +23,27 @@ class User(db.Model):
                         nullable=False)
     lname = db.Column(db.String)
     points = db.Column(db.Integer)
-    meds = db.relationship("Medication", secondary="user_meds", backref="user")
-
-    #user_meds - a list of UserMeds objects
+    meds = db.relationship("Med", secondary="user_meds", backref="user")
 
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email}>'
 
-class Medication(db.Model):
+class Med(db.Model):
     """A medication."""
 
-    __tablename__ = 'medications'
+    __tablename__ = 'meds'
 
-    medication_id = db.Column(db.Integer,
+    med_id = db.Column(db.Integer,
                         autoincrement=True,
                         primary_key=True)
     generic_name = db.Column(db.String,
                         nullable=False)
     brand_name = db.Column(db.String)
     med_information = db.Column(db.String)
-    users = db.relationship("User", secondary="user_meds", backref="medication")
+    users = db.relationship("User", secondary="user_meds", backref="med")
     
-    #user_meds - a list of UserMeds objects
     def __repr__(self):
-        return f'<Medication medication_id={self.medication_id}\
+        return f'<Med med_id={self.med_id}\
         generic_name={self.generic_name} brand_name ={self.brand_name}>'
 
 class UserMeds(db.Model):
@@ -59,16 +56,12 @@ class UserMeds(db.Model):
     user_id = db.Column(db.Integer,
                         db.ForeignKey("users.user_id"),
                         nullable = False)
-    medication_id = db.Column(db.Integer,
-                        db.ForeignKey("medications.medication_id"),
+    med_id = db.Column(db.Integer,
+                        db.ForeignKey("med.med_id"),
                         nullable=False)
 
-    # user = db.relationship("User", backref="user_meds")
-    # medication = db.relationship("Medication", backref="user_meds")
-
-
     def __repr__(self):
-        return f'<UserMeds usermed_id={self.usermed_id} user_id={self.user_id} medication_id={self.medication_id}>'
+        return f'<UserMeds usermed_id={self.usermed_id} user_id={self.user_id} med_id={self.med_id}>'
 
 
 # class Accessory(db.Model):
