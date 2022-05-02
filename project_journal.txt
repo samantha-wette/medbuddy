@@ -1,0 +1,136 @@
+JOURNAL SENTENCE FRAMES:
+
+Something I struggled with was...
+Something I figured out was...
+Something I failed to figure out is...
+Something I decided to change is...
+Something I studied is...
+Something I learned is...
+I worked by...
+I need...
+-----------------------------------------------------------
+
+WEEK 1
+
+-----------------------------------------------------------
+
+DATE: Monday 5/2
+
+TO DO: 
+[X] Data model
+[] Set up skeleton (static, templates, HTML, server.py, etc.)
+[] Select & install requirements
+[] Set up git ignore
+[] Create basic homepage html
+[] Enable account creation
+
+JOURNAL:
+
+-----------------------------------------------------------
+DATE: Tuesday 5/3
+
+TO DO: 
+[]
+[]
+[]
+
+JOURNAL:
+
+-----------------------------------------------------------
+DATE: Wednesday 5/4
+
+TO DO: 
+[]
+[]
+[]
+
+JOURNAL:
+
+-----------------------------------------------------------
+DATE: Thursday 5/5
+
+TO DO: 
+[]
+[]
+[]
+
+JOURNAL:
+
+-----------------------------------------------------------
+DATE: Friday 5/6
+
+TO DO: 
+[]
+[]
+[]
+
+JOURNAL:
+
+-----------------------------------------------------------
+
+WEEK 1 SUMMARY: 
+
+
+
+____________________________________________________________
+
+WEEK 2
+
+-----------------------------------------------------------
+
+DATE: Monday 5/9
+
+TO DO: 
+[]
+[]
+[]
+
+JOURNAL:
+
+-----------------------------------------------------------
+DATE: Tuesday 5/10
+
+TO DO: 
+[]
+[]
+[]
+
+JOURNAL:
+
+-----------------------------------------------------------
+DATE: Wednesday 5/11
+
+TO DO: 
+[]
+[]
+[]
+
+JOURNAL:
+
+-----------------------------------------------------------
+DATE: Thursday 5/12
+
+TO DO: 
+[]
+[]
+[]
+
+JOURNAL:
+
+-----------------------------------------------------------
+DATE: Friday 5/13
+
+TO DO: 
+[]
+[]
+[]
+
+JOURNAL:
+
+-----------------------------------------------------------
+
+WEEK 1 SUMMARY: 
+
+
+
+____________________________________________________________

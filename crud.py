@@ -1,0 +1,1 @@
+# could be in model.py, class methods for sqlalchemy
