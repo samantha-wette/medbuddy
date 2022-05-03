@@ -8,3 +8,6 @@ buddy1=Buddy(buddy_name='Kitty', buddy_description='Very purry', buddy_img='cat.
 buddy2=Buddy(buddy_name='Puppy', buddy_description='Woof woof', buddy_img='pup.jpg')
 accessory1=Accessory(accessory_name='shirt', accessory_cost=50, accessory_img='shirt.png')
 accessory2=Accessory(accessory_name='bowtie', accessory_cost=25, accessory_img='bowtie.png')
+
+db.session.add()
+db.session.commit()

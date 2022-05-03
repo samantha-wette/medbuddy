@@ -1,8 +1,7 @@
-#write sqlalchemy classes into, communicate w/ db in py (translates sql to py)
-
 """Models for medication tracker app"""
 
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -27,6 +26,7 @@ class User(db.Model):
     #meds is a list of Med objects
     #accessories is a list of Accessory objects
     #buddies is a list of Buddy objects
+    #doses is a list of Dose objects
 
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email}>'
@@ -45,6 +45,8 @@ class Med(db.Model):
     med_information = db.Column(db.String)
     users = db.relationship("User", secondary="user_meds", backref="meds")
     
+    #doses is a list of Dose objects
+
     def __repr__(self):
         return f'<Med med_id={self.med_id}\
         generic_name={self.generic_name} brand_name ={self.brand_name}>'
@@ -83,6 +85,7 @@ class Accessory(db.Model):
     accessory_img = db.Column(db.String,
                         nullable=False)
     users = db.relationship("User", secondary="user_inventory", backref="accessories")
+    #compatible_buddies is a list of Buddy objects
 
     def __repr__(self):
         return f'<Accessory accessory_id={self.accessory_id} accessory_name={self.accessory_name}>'
@@ -99,18 +102,15 @@ class UserInventory(db.Model):
                         nullable = False)
     accessory_id = db.Column(db.Integer,
                         db.ForeignKey("accessories.accessory_id"))
-    #buddy_id = db.Column(db.Integer,
-                        #db.ForeignKey("buddies.buddy_id"))
 
     def __repr__(self):
         return f'<UserInventory userinventory_id={self.userinventory_id}\
              user_id={self.user_id} accessory_id={self.accessory_id}\
                   buddy_id={self.buddy_id}>'
 
-    # book-genres equivalent check notes for 
 
 class Buddy(db.Model):
-    """A buddy/pet that a user can have."""
+    """A buddy that a user can have."""
 
     __tablename__ = 'buddies'
 
@@ -125,6 +125,8 @@ class Buddy(db.Model):
     user_id = db.Column(db.Integer,
                         db.ForeignKey("users.user_id"))
     users = db.relationship("User", secondary="user_buddies", backref="buddies")
+    wearable_accessories = db.relationship("Accessory", secondary="wearable_by", backref="compatible_buddies")
+
 
 class UserBuddy(db.Model):
     """A user's buddies."""
@@ -143,37 +145,50 @@ class UserBuddy(db.Model):
         return f'<UserBuddy userbuddy_id={self.userbuddy_id} user_id={self.user_id}\
             buddy_id={self.buddy_id}>'
 
-# class WearableBy(db.Model):
-#     """Which buddies can wear which items."""
+class WearableBy(db.Model):
+    """Which buddies can wear which accessories."""
 
-#     __tablename__ = 'wearable_by'
+    __tablename__ = 'wearable_by'
 
-#     user_id = db.Column(db.Integer,
-#                         nullable = False,
-#                         #foreign key 
-#     )
-#     buddy_id = db.Column(db.Integer,
-#                         nullable=False,
-#                         #foreign key
-#     )
-#     def __repr__(self):
-#         return f'<WearableBy user_id={self.user_id} buddy_id={self.buddy_id}>'
+    wearableby_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
-# class MedSchedule(db.Model):
-#     """Medication."""
+    accessory_id = db.Column(db.Integer,
+                        db.ForeignKey("accessories.accessory_id"))
 
-#     __tablename__ = 'wearable_by'
+    buddy_id = db.Column(db.Integer,
+                        db.ForeignKey("buddies.buddy_id"))
 
-#     user_id = db.Column(db.Integer,
-#                         nullable = False,
-#                         #foreign key 
-#     )
-#     buddy_id = db.Column(db.Integer,
-#                         nullable=False,
-#                         #foreign key
-#     )
-#     def __repr__(self):
-#         return f'<WearableBy user_id={self.user_id} buddy_id={self.buddy_id}>'
+    def __repr__(self):
+        return f'<WearableBy wearableby_id={self.wearableby_id}\
+            accessory_id={self.accessory_id} buddy_id={self.buddy_id}>'
+
+class Dose(db.Model):
+    """A schedule of a user's medication doses."""
+
+    __tablename__ = 'doses'
+
+    dose_id = db.Column(db.Integer,
+                        autoincrement=True,
+                        primary_key=True)
+    
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey("users.user_id"),
+                        nullable = False)
+
+    med_id = db.Column(db.Integer,
+                        db.ForeignKey("meds.med_id"),
+                        nullable=False)
+
+    date_time = db.Column(db.DateTime)
+   
+    taken = db.Column(db.Boolean,
+                        default=False)
+    user = db.relationship('User', backref='doses')
+    med = db.relationship('Med', backref='doses')
+
+    def __repr__(self):
+        return f'<Dose dose_id={self.dose_id} user_id={self.user_id}\
+            med_id={self.med_id} date_time={self.date_time} taken={self.taken}>'
 
 
 def connect_to_db(flask_app, db_uri="postgresql:///medtracker", echo=True):
@@ -191,4 +206,3 @@ if __name__ == "__main__":
     from server import app
 
     connect_to_db(app)
-

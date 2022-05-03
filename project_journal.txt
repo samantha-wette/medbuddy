@@ -20,7 +20,8 @@ TO DO:
 [X] Data model
 [X] Set up skeleton (static, templates, HTML, server.py, etc.)
 [X] Select & install requirements
-[] Create datatables
+[X] Github repo
+[X] Create datatables
     [X] users
     [X] meds
     [X] user_meds
@@ -28,8 +29,6 @@ TO DO:
     [X] user_inventory
     [X] buddies
     [X] user_buddies
-    [] med_schedule
-    [] wearable_by
 
 JOURNAL:
 Today I created my data model and built relationships within my database.
@@ -39,9 +38,14 @@ I used db.relationship, foreign keys, and backrefs to make connections.
 DATE: Tuesday 5/3
 
 TO DO: 
-[] Enable account creation
+[X] Finish datatable relationships
+    [X] med_schedule
+    [X] wearable_by
 [] Create basic homepage html
-[]
+[] Basic inheritance files
+[] Basic routes
+[] Enable account creation
+[] Seed database
 
 JOURNAL:
 
