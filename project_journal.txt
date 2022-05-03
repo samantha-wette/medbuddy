@@ -20,27 +20,27 @@ TO DO:
 [X] Data model
 [X] Set up skeleton (static, templates, HTML, server.py, etc.)
 [X] Select & install requirements
-[X] Create database
 [] Create datatables
     [X] users
-    [/] user_meds
-    [/] buddies
-    [] medications
-    [] med_schedule
-    [] user_inventory
-    [] wearable_by
+    [X] meds
+    [X] user_meds
     [X] accessories
-[] Enable account creation
-[] Create basic homepage html
+    [X] user_inventory
+    [X] buddies
+    [X] user_buddies
+    [] med_schedule
+    [] wearable_by
 
 JOURNAL:
-
+Today I created my data model and built relationships within my database.
+Something I struggled with was making multiple connections between classes.
+I used db.relationship, foreign keys, and backrefs to make connections.
 -----------------------------------------------------------
 DATE: Tuesday 5/3
 
 TO DO: 
-[]
-[]
+[] Enable account creation
+[] Create basic homepage html
 []
 
 JOURNAL:

@@ -23,7 +23,10 @@ class User(db.Model):
                         nullable=False)
     lname = db.Column(db.String)
     points = db.Column(db.Integer)
-    meds = db.relationship("Med", secondary="user_meds", backref="user")
+
+    #meds is a list of Med objects
+    #accessories is a list of Accessory objects
+    #buddies is a list of Buddy objects
 
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email}>'
@@ -40,13 +43,13 @@ class Med(db.Model):
                         nullable=False)
     brand_name = db.Column(db.String)
     med_information = db.Column(db.String)
-    users = db.relationship("User", secondary="user_meds", backref="med")
+    users = db.relationship("User", secondary="user_meds", backref="meds")
     
     def __repr__(self):
         return f'<Med med_id={self.med_id}\
         generic_name={self.generic_name} brand_name ={self.brand_name}>'
 
-class UserMeds(db.Model):
+class UserMed(db.Model):
     """A user's medications."""
 
     __tablename__ = 'user_meds'
@@ -57,75 +60,88 @@ class UserMeds(db.Model):
                         db.ForeignKey("users.user_id"),
                         nullable = False)
     med_id = db.Column(db.Integer,
-                        db.ForeignKey("med.med_id"),
+                        db.ForeignKey("meds.med_id"),
                         nullable=False)
 
     def __repr__(self):
-        return f'<UserMeds usermed_id={self.usermed_id} user_id={self.user_id} med_id={self.med_id}>'
+        return f'<UserMed usermed_id={self.usermed_id} user_id={self.user_id} med_id={self.med_id}>'
 
 
-# class Accessory(db.Model):
-#     """An accessory available for purchase with points."""
+class Accessory(db.Model):
+    """An accessory available for purchase with points."""
 
-#     __tablename__ = 'accessories'
+    __tablename__ = 'accessories'
 
-#     item_id = db.Column(db.Integer,
-#                         autoincrement=True,
-#                         primary_key=True)
-#     item_name = db.Column(db.String,
-#                         nullable=False)
-#     item_cost = db.Column(db.Integer,
-#                         nullable=False)
-#     item_description = db.Column(db.Text)
-#     item_img = db.Column(db.String,
-#                         nullable=False)
+    accessory_id = db.Column(db.Integer,
+                        autoincrement=True,
+                        primary_key=True)
+    accessory_name = db.Column(db.String,
+                        nullable=False)
+    accessory_cost = db.Column(db.Integer,
+                        nullable=False)
+    accessory_description = db.Column(db.Text)
+    accessory_img = db.Column(db.String,
+                        nullable=False)
+    users = db.relationship("User", secondary="user_inventory", backref="accessories")
 
-#     def __repr__(self):
-#         return f'<Accessory item_id={self.item_id} item_name={self.item_name}>'
+    def __repr__(self):
+        return f'<Accessory accessory_id={self.accessory_id} accessory_name={self.accessory_name}>'
 
+class UserInventory(db.Model):
+    """A user's inventory of accessories."""
 
-# class Buddy(db.Model):
-#     """A buddy/character that a user can have."""
+    __tablename__ = 'user_inventory'
 
-#     __tablename__ = 'buddies'
+    userinventory_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
-#     buddy_id = db.Column(db.Integer,
-#                         autoincrement=True,
-#                         primary_key=True)
-#     buddy_name = db.Column(db.String,
-#                         nullable=False)
-#     buddy_description = db.Column(db.Text)
-#     buddy_img = db.Column(db.String,
-#                         nullable=False)
-#     user_id = db.Column(db.Integer,
-#                         nullable=False,
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey("users.user_id"),
+                        nullable = False)
+    accessory_id = db.Column(db.Integer,
+                        db.ForeignKey("accessories.accessory_id"))
+    #buddy_id = db.Column(db.Integer,
+                        #db.ForeignKey("buddies.buddy_id"))
 
-#                         #foreign key to users
-#     )
-#     def __repr__(self):
-#         return f'<Buddy buddy_id={self.buddy_id} buddy_name={self.buddy_name}>'
+    def __repr__(self):
+        return f'<UserInventory userinventory_id={self.userinventory_id}\
+             user_id={self.user_id} accessory_id={self.accessory_id}\
+                  buddy_id={self.buddy_id}>'
 
+    # book-genres equivalent check notes for 
 
-# class UserInventory(db.Model):
-#     """A user's inventory."""
+class Buddy(db.Model):
+    """A buddy/pet that a user can have."""
 
-#     # book-genres equivalent check notes for 
+    __tablename__ = 'buddies'
 
-#     __tablename__ = 'user_inventory'
+    buddy_id = db.Column(db.Integer,
+                        autoincrement=True,
+                        primary_key=True)
+    buddy_name = db.Column(db.String,
+                        nullable=False)
+    buddy_description = db.Column(db.Text)
+    buddy_img = db.Column(db.String,
+                        nullable=False)
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey("users.user_id"))
+    users = db.relationship("User", secondary="user_buddies", backref="buddies")
 
-#     user_id = db.Column(db.Integer,
-#                         nullable = False,
-#                         #foreign key 
-#     )
-#     item_id = db.Column(db.Integer,
-#                         nullable=False,
-#                         #foreign key
-#     )
-#     buddy_id = db.Column(db.Integer,
-#                         #foreign key
-#                         )
-#     def __repr__(self):
-#         return f'<UserInventory user_id={self.user_id} item_id={self.item_id}>'
+class UserBuddy(db.Model):
+    """A user's buddies."""
+
+    __tablename__ = 'user_buddies'
+
+    userbuddy_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey("users.user_id"),
+                        nullable = False)
+    buddy_id = db.Column(db.Integer,
+                        db.ForeignKey("buddies.buddy_id"))
+
+    def __repr__(self):
+        return f'<UserBuddy userbuddy_id={self.userbuddy_id} user_id={self.user_id}\
+            buddy_id={self.buddy_id}>'
 
 # class WearableBy(db.Model):
 #     """Which buddies can wear which items."""
