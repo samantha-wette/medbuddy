@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<form id="log-in" action="/login" method="POST">
+    <fieldset>
+        <legend>Log In:</legend>
+        <label for="email">Email Address:</label<br>
+        <input type="email" id="email" name="email">
+        <label for="password">Password:</label<br>
+        <input type="password" id="password" name="password"><br><br>
+        <input type="submit" aria-label="log-in" value="Log In"><br>
+        <a href="">Forgot Password?</a>
+    </fieldset>
+</form>
+<br>
+
+<form id="create-account" action="/users" method="POST">
+    <fieldset>
+        <legend>Create New Account:</legend>
+        <label for="fname">First Name:</label>
+        <input type="text" id="fname" name="fname"><br>
+        <label for="lname">Last Name (optional):</label>
+        <input type="text" id="lname" name="lname"><br>
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email"><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br>
+    
+        <input type="submit" aria-label="submit-and-create-account" value="Create My Account">
+    </fieldset>
+</form>
+    
+{% endblock %}

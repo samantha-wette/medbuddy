@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<html>
+    <head>
+        {% block head %}
+        <title> MedBuddy</title>
+        <meta charset="utf-8">
+        <meta name="description" content="making med tracking fun">
+        <meta name="developer" content="Samantha Wette">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        {% endblock %}
+    </head>
+    {% block header %}
+        <header>
+            <h1>Welcome to MedBuddy!</h1>
+            <nav aria-labelledby="primary-navigation">
+            <h2 id="primary-navigation">Navigation</h2>
+            <h3 id="home-page"><a href="/">Home</a></h3>
+            <h3 id="profile"><a href="/profile">My Profile</a></h3>
+            <h3 id="log-meds">Log Meds</h3>
+            <h3 id="view-data">View & Share Data</h3>
+            <h3 id="marketplace"><a href="/marketplace">Marketplace</a></h3>
+            </nav>
+        </header> 
+    {% endblock %}
+    <body>
+    {% with msgs = get_flashed_messages() %}
+        {% if msgs %}
+        <p class="flash-message">
+            {% for msg in msgs %}
+            {{ msg }}
+            {% endfor %}
+        </p>
+        {% endif %}
+    {% endwith %}
+
+    {% block body %}
+    {% endblock %}
+    
+    </body>
+{% block footer %}
+<footer>
+    <nav aria-labelledby="footer-navigation">
+        <h2 id="footer-navigation">More Information</h2>
+        <h3 id="all-meds"><a href ="/meds">All Meds</a></h3>
+        <h3 id="about"> About </h3>
+        <h3 id="contact"> Contact </h3>
+    </nav>
+</footer>
+{% endblock %}

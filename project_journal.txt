@@ -41,13 +41,15 @@ TO DO:
 [X] Finish datatable relationships
     [X] med_schedule
     [X] wearable_by
-[] Create basic homepage html
-[] Basic inheritance files
-[] Basic routes
+[X] Create basic homepage html
+[X] Basic inheritance files
+[X] Basic routes
 [] Enable account creation
-[] Seed database
+[X] Seed database
 
 JOURNAL:
+Something I still haven't figured out is seeding the database with doses.
+I'm also having a bug when trying to access a user by email.
 
 -----------------------------------------------------------
 DATE: Wednesday 5/4
