@@ -44,7 +44,6 @@ TO DO:
 [X] Create basic homepage html
 [X] Basic inheritance files
 [X] Basic routes
-[] Enable account creation
 [X] Seed database
 
 JOURNAL:
@@ -55,9 +54,11 @@ I'm also having a bug when trying to access a user by email.
 DATE: Wednesday 5/4
 
 TO DO: 
-[]
-[]
-[]
+[X] Seed db with doses
+[X] Fix SQLAlchemy bug
+[] Test registration with DB
+[] Test login with DB
+[] User profile page
 
 JOURNAL:
 

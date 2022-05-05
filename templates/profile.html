@@ -1,4 +1,28 @@
 {% extends 'base.html' %}
 {% block body %}
-Test 1-2
+User Profile<br>
+Welcome, {{ user.fname }}!<br>
+It looks like you need to adopt a buddy!<br>
+Your point total is {{ user.points }}.<br>
+Your med list is:<br>
+{% for med in user.meds %}
+<li>{{ med.generic_name }} / {{ med.brand_name}} </li>
+{% endfor %}<br>
+<form id="add-med" action="/add-med" method="POST">
+    <fieldset>
+        <legend>Add Medication to Profile:</legend>
+        <label for="med-name">Medication Name:</label>
+        <select name ="med-name" id="med-name">
+        {% for med in all_meds %}
+        <option id = "{{ med.med_id }}" value= "{{ med.med_id }}">{{ med.generic_name }} ({{ med.brand_name }})</option>
+        {% endfor %}
+        
+    </select>
+        <input type="submit" aria-label="add med to list" value="Add Med to List">
+    </fieldset>
+</form>
+
+<br>
+
+
 {% endblock %}

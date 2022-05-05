@@ -1,6 +1,6 @@
 import os
 import json
-from random import choice, randint, randrange
+from random import choice, randint, random, randrange
 from datetime import datetime
 
 import model
@@ -59,11 +59,17 @@ for n in range(10):
     user=model.User.create(email, password, fname, lname)
     model.db.session.add(user)
     model.db.session.commit()
+    
+    for _ in range(4):
+        random_med = choice(meds_in_db)
+        
 
-    # for _ in range(4):
-    #     random_med = choice(meds_in_db)
-    #     date_time = (2022, randint(1, 12), randint(1, 31))
-    #     dose=model.Dose.create(user, random_med, date_time)
 
-    #     model.db.session.add(dose)
-    #     model.db.session.commit()
+
+    for _ in range(4):
+        random_med = choice(meds_in_db)
+        date_time = f"(2022, {randint(1, 12)}, {randint(1, 25)})"
+        dose=model.Dose.create(user.user_id, random_med.med_id, date_time)
+
+        model.db.session.add(dose)
+        model.db.session.commit()

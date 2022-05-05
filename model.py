@@ -46,14 +46,7 @@ class User(db.Model):
     @classmethod
     def get_by_email(cls, email):
         """Find a user by email"""
-        print('in the get_by_email function')
-        print(cls)
-        print(email)
-        #return cls.query.filter(cls.email == cls.email).first()
-        this_user = User.query.get(2)
-        print(this_user)
-        #return cls.query.filter(cls.email == email).first()
-        #return cls.query.filter(email x== email).first()
+        return cls.query.filter(User.email == email).first()        
 
     @classmethod
     def get_meds(cls, user_id):
@@ -78,6 +71,7 @@ class User(db.Model):
         """Return a user's taken med doses"""
         user = cls.query.options(db.joinedload('doses')).filter(cls.user_id ==
         user_id, Dose.taken == True)
+        return user.doses
         
     @classmethod
     def get_buddies(cls, user_id):
@@ -351,6 +345,23 @@ class Dose(db.Model):
         return cls(user_id=user_id,
                 med_id=med_id,
                 date_time=date_time)
+
+    @classmethod
+    def get_by_user(cls, user_id):
+        """Get all doses from a user"""
+        cls.query.filter(Dose.user_id == user_id).all()
+
+    @classmethod
+    def get_taken_by_user(cls, user_id):
+        """Get all doses already taken from a user"""
+    
+    @classmethod
+    def get_missed_by_user(cls, user_id):
+        """Get all doses missed by a user"""
+
+    @classmethod
+    def get_upcoming_by_user(cls, user_id):
+        """Get all doses upcoming by a user"""
 
     @classmethod
     def mark_taken(cls, dose_id):
