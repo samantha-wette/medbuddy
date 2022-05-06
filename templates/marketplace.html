@@ -1,4 +1,29 @@
 {% extends 'base.html' %}
 {% block body %}
-Test 1-2
+Shop in the Marketplace!<br>
+Welcome to the marketplace, {{ user.fname }}! You have {{ user.points }} to
+shop with today. Will {{ buddy.buddy_name }} be getting something special today?<br>
+
+{% for accessory in accessories %}
+<li> {{ accessory.accessory_name }}<br>
+    <img src="{{ accessory.accessory_img }}"
+    alt="{{ accessory.accessory_alt }}"><br>
+    {{ accessory.accessory_description }}<br>
+    Price: {{ accessory.accessory_cost }} points </li>
+{% endfor %}
+
+<form id="add-accessory" action="/add-accessory" method="POST">
+    <fieldset>
+        <legend>What would you like to buy today?</legend>
+        <label for="accessory-name">Choose an Item:</label>
+        <select name ="accessory-name" id="accessory-name">
+            {% for accessory in accessories %}
+            <option id = "{{ accessory.accessory_id }}" value= "{{ accessory.accessory_id }}">{{ accessory.accessory_name }}</option>
+            {% endfor %}
+            
+        </select>
+            <input type="submit" aria-label="purchase accessory" value="Purchase!">
+        </fieldset>
+    </form>
+
 {% endblock %}

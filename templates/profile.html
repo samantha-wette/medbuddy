@@ -2,8 +2,16 @@
 {% block body %}
 User Profile<br>
 Welcome, {{ user.fname }}!<br>
-It looks like you need to adopt a buddy!<br>
+Would you like to <a href="/adopt" aria-label="link to adopt buddy">adopt a buddy?</a><br>
 Your point total is {{ user.points }}.<br>
+{% for buddy in user.buddies %}
+{{ buddy.buddy_name }} missed you!<br>
+{% endfor %}<br>
+Look at all your nice stuff:<br>
+{% for accessory in user.accessories %}
+<li> {{ accessory.accessory_name }}</li>
+{% endfor %} <br>
+
 Your med list is:<br>
 {% for med in user.meds %}
 <li>{{ med.generic_name }} / {{ med.brand_name}} </li>
@@ -13,11 +21,13 @@ Your med list is:<br>
         <legend>Add Medication to Profile:</legend>
         <label for="med-name">Medication Name:</label>
         <select name ="med-name" id="med-name">
-        {% for med in all_meds %}
+        <option id = "not-listed" value= "select">select</option>
+        {% for med in official_meds %}
         <option id = "{{ med.med_id }}" value= "{{ med.med_id }}">{{ med.generic_name }} ({{ med.brand_name }})</option>
         {% endfor %}
-        
-    </select>
+    </select><br>
+    <label for="other-med">Med not listed? Type it here.
+        <input type="text" id="other-med" name="other-med"><br>
         <input type="submit" aria-label="add med to list" value="Add Med to List">
     </fieldset>
 </form>

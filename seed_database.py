@@ -2,7 +2,6 @@ import os
 import json
 from random import choice, randint, random, randrange
 from datetime import datetime
-
 import model
 import server
 
@@ -16,11 +15,14 @@ model.db.create_all()
 buddies_in_db = []
 for n in range(5):
     buddy_name = f"buddy{n}"
-    buddy_description = "a cool friend called {n}"
+    buddy_description = f"a cool friend called {n}"
     buddy_img = "/Users/samanthawette/med_tracker/static/img/cat1.png"
+    buddy_alt = "description of image"
 
-    buddy=model.Buddy.create(buddy_name, buddy_description, buddy_img)
+    buddy=model.Buddy.create(buddy_name, buddy_description, buddy_img, buddy_alt)
     buddies_in_db.append(buddy)
+model.db.session.add_all(buddies_in_db)
+model.db.session.commit()
 
 #create 10 meds and store them in a list
 meds_in_db = []
@@ -29,7 +31,7 @@ for n in range(10):
     brand_name=f"fancy{n}"
     med_information="https://www.fda.gov/"
 
-    med=model.Med.create(generic_name, brand_name, med_information)
+    med=model.Med.create(generic_name, brand_name, med_information, official=True, added_by=None)
     meds_in_db.append(med)
 model.db.session.add_all(meds_in_db)
 model.db.session.commit()
@@ -42,9 +44,9 @@ for n in range(10):
     accessory_cost=randint(1, 10)
     accessory_description=f"a gorgeous {n} accessory"
     accessory_img = "/Users/samanthawette/med_tracker/static/img/bird1.png"
-
+    accessory_alt = "A visual description of this swanky accessory"
     accessory=model.Accessory.create(accessory_name, accessory_cost, 
-    accessory_description, accessory_img)
+    accessory_description, accessory_img, accessory_alt)
     accessories_in_db.append(accessory)
 
 model.db.session.add_all(accessories_in_db)
@@ -54,22 +56,23 @@ for n in range(10):
     email = f"user{n}@test.com"
     password = f"test{n}"
     fname = f"User{n}"
-    lname = "{n}user"
+    lname = f"{n}user"
+    points = 40
 
-    user=model.User.create(email, password, fname, lname)
+    user=model.User.create(email, password, fname, lname, points)
     model.db.session.add(user)
     model.db.session.commit()
     
-    for _ in range(4):
-        random_med = choice(meds_in_db)
+    # for _ in range(4):
+    #     random_med = choice(meds_in_db)
         
 
 
 
-    for _ in range(4):
-        random_med = choice(meds_in_db)
-        date_time = f"(2022, {randint(1, 12)}, {randint(1, 25)})"
-        dose=model.Dose.create(user.user_id, random_med.med_id, date_time)
+    # for _ in range(4):
+    #     random_med = choice(meds_in_db)
+    #     date_time = f"(2022, {randint(1, 12)}, {randint(1, 25)})"
+    #     dose=model.Dose.create(user.user_id, random_med.med_id, date_time)
 
-        model.db.session.add(dose)
-        model.db.session.commit()
+    #     model.db.session.add(dose)
+    #     model.db.session.commit()

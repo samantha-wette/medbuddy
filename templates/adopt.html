@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block body %}
+Adopt A Buddy!<br>
+Welcome, {{ user.fname }}! You have {{ user.points }} points.<br>
+These buddies are looking for a new home!<br>
+Can you take care of them?<br>
+Available buddies:<br>
+{% for buddy in buddies %}
+<li>{{ buddy.buddy_name }}<br>
+    <img src="{{ buddy.buddy_img }}" alt="{{ buddy.buddy_alt }}"><br>
+    {{ buddy.buddy_description }}<br>
+Adoption Fee: 15 points</li>
+{% endfor %}
+<br>
+<form id="add-buddy" action="/add-buddy" method="POST">
+    <fieldset>
+        <legend>Who would you like to adopt today?</legend>
+        <label for="buddy-name">Choose a New Buddy:</label>
+        <select name ="buddy-name" id="buddy-name">
+            {% for buddy in buddies %}
+            <option id = "{{ buddy.buddy_id }}" value= "{{ buddy.buddy_id }}">{{ buddy.buddy_name }}</option>
+            {% endfor %}
+            
+        </select>
+            <input type="submit" aria-label="adopt buddy" value="Adopt!">
+        </fieldset>
+    </form>
+
+{% endblock %}

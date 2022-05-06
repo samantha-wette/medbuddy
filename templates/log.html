@@ -1,13 +1,21 @@
 {% extends 'base.html' %}
 {% block body %}
 
+
+
 <form id="log-meds" action="/log" method="POST">
     <fieldset>
         <legend>Log Meds:</legend>
-        <label for="datetime">Dose Date/Time:</label>
+        Med(s) Taken:<br>
+        {% for med in user.meds %}
+
+        <input type="checkbox" id="{{ med.med_id }}" name=" {{ med.med_id }}">
+        <label for="{{ med.med_id }}">{{ med.generic_name }} / {{ med.brand_name }}</label>
+        <br>
+        {% endfor %}
+        <br>
+        <label for="datetime">Dose Date/Time:</label><br>
         <input type="datetime-local" name="datetime" id="datetime"><br>
-        <input type="checkbox" name="meds-taken" value="med_name" id="med_id">
-        <label for="med_id">Med_Name</label>
         <br>        
         <input type="submit" aria-label="Submit" value="Get Points!">
         <input type="reset" aria-label="reset" value="Reset"><br>

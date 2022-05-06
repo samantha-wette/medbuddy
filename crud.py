@@ -1,15 +1,16 @@
-from model import db, User, Med, UserMed, Dose, connect_to_db
+from model import db, User, Med, UserMed, Dose, UserBuddy, Buddy, UserAccessory,\
+    connect_to_db
 from server import app
 
 def add_med_to_user(user_id, med_id):
     user_id = int(user_id)
     med_id = int(med_id)
     usermed = UserMed(user_id = user_id, med_id = med_id)
+    db.session.add(usermed)
+    db.session.commit()
 
 # add to UserMed table the userID and medID and medNAME
 # add an entry to the dose table
-    db.session.add(usermed)
-    db.session.commit()
     # usermed_table = UserMed.__tablename__
     
     # result = db.session.query(UserMed).join(Med).filter(UserMed.user_id == Med.users).one()
@@ -20,8 +21,24 @@ def add_med_to_user(user_id, med_id):
     #     .filter(UserMed.user_id == User.user_id) &\
     #         (UserMed.med_id == Med.med_id).all()
         
-# session.query(User.user_id, User.last_name, Role.name, Med.__tablename__).filter(
-#         meds.users.c.user_id == User.id).filter(roles_users.c.role_id == Role.id).all()
+def add_buddy_to_user(user_id, buddy_id):
+    user_id = int(user_id)
+    buddy_id = int(buddy_id)
+    userbuddy = UserBuddy(user_id = user_id, buddy_id = buddy_id)
+    db.session.add(userbuddy)
+    db.session.commit()
+
+    #added-by
+
+    
+def add_accessory_to_user(user_id, accessory_id):
+    user_id = int(user_id)
+    accessory_id = int(accessory_id)
+    useraccessory = UserAccessory(user_id = user_id, accessory_id = accessory_id)
+    db.session.add(useraccessory)
+    db.session.commit()
+
+
 
 if __name__ == "__main__":
     # DebugToolbarExtension(app)

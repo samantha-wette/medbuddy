@@ -56,22 +56,44 @@ DATE: Wednesday 5/4
 TO DO: 
 [X] Seed db with doses
 [X] Fix SQLAlchemy bug
-[] Test registration with DB
-[] Test login with DB
-[] User profile page
+[X] Test registration with DB
+[X] Test login with DB
+[X] Allow user to logout
 
 JOURNAL:
-
+Today I was able to fix the bug from yesterday. 
 -----------------------------------------------------------
 DATE: Thursday 5/5
 
 TO DO: 
-[]
-[]
-[]
+[X] Fix user profile page so it shows the right user
+[X] Show user medications on profile
+[X] Route to adoption page
+[X] Allow user to adopt a buddy 
+    [X] Add buddy to profile
+    [X] Take away money
+    [X] Only get buddy if you have enough points
+[X] Allow user to shop in marketplace
+    [X] Set up template
+    [X] Set up routes
+    [X] Add accessory to profile
+    [x] Take away money
+    [x] Only get accessory if you have enough points
+[] Allow user to schedule doses
+[] Allow user to log doses and get points
+    [] Set up routes
+    [x] Set up template
+    [] Get points
+    [] Log doses to db
+[] Allow user to view data
+[] Edit profile
+    [] Remove meds
+    [] Change fname, lname, email, pw 
 
 JOURNAL:
-
+Today I realized that the reason my page wasn't showing the right user was 
+because I hard coded the user in when I was testing/debugging. I definitely learned
+a lesson there to always undo things like that! I got a lot done today learned a lot.
 -----------------------------------------------------------
 DATE: Friday 5/6
 

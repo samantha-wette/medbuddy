@@ -3,6 +3,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
+from sqlalchemy import CheckConstraint
+
 db = SQLAlchemy()
 
 class User(db.Model):
@@ -21,7 +23,8 @@ class User(db.Model):
     fname = db.Column(db.String,
                         nullable=False)
     lname = db.Column(db.String)
-    points = db.Column(db.Integer)
+    points = db.Column(db.Integer, nullable=False)
+    __table_args__ = (CheckConstraint (points >= 0, name ='check_points_zero_or_above'), {})
 
     #meds is a list of Med objects
     #accessories is a list of Accessory objects
@@ -31,17 +34,32 @@ class User(db.Model):
         return f'<User user_id={self.user_id} email={self.email} password={self.password}>'
  
     @classmethod
-    def create(cls, email, password, fname, lname):
+    def create(cls, email, password, fname, lname, points=15):
         """create and return a new user"""
         return cls(email=email,
                 password=password,
                 fname=fname,
-                lname=lname)
+                lname=lname,
+                points=points)
+    
+    @classmethod
+    def get_points(cls, user_id, num):
+        """Add to a user's point total"""
+        user = cls.query.get(user_id)
+        new_points = User.points + num
+        user.points = new_points
 
+    @classmethod
+    def spend_points(cls, user_id, num):
+        """Add to a user's point total"""
+        print("in the function")
+        user = cls.query.get(user_id)
+        new_points = user.points - num
+        user.points = new_points
     @classmethod
     def get_by_id(cls, user_id):
         '""Find a user by their ID"""'
-        return User.query.get(2)
+        return User.query.get(user_id)
 
     @classmethod
     def get_by_email(cls, email):
@@ -101,6 +119,9 @@ class Med(db.Model):
                         nullable=False)
     brand_name = db.Column(db.String)
     med_information = db.Column(db.String)
+    official = db.Column(db.Boolean, nullable=False)
+    added_by = db.Column(db.Integer)
+
     users = db.relationship("User", secondary="user_meds", backref="meds")
     
     #doses is a list of Dose objects
@@ -110,11 +131,13 @@ class Med(db.Model):
         generic_name={self.generic_name} brand_name ={self.brand_name}>'
 
     @classmethod
-    def create(cls, generic_name, brand_name, med_information):
+    def create(cls, generic_name, brand_name, med_information, official, added_by):
         """Create and return a Med object"""
         return cls(generic_name=generic_name,
                 brand_name=brand_name,
-                med_information=med_information)
+                med_information=med_information,
+                official=official,
+                added_by = added_by)
 
     @classmethod
     def get_by_id(cls, med_id):
@@ -124,7 +147,7 @@ class Med(db.Model):
     @classmethod
     def get_by_generic_name(cls, generic_name):
         """Find a med by its generic name"""
-        return cls.query.filter(cls.generic_name == generic_name).first()
+        return cls.query.filter(Med.generic_name == generic_name).first()
 
     @classmethod
     def get_by_brand_name(cls, brand_name):
@@ -138,9 +161,13 @@ class Med(db.Model):
         return med.doses
 
     @classmethod
+    def get_official(cls):
+        """Find a user's buddies"""
+        return cls.query.filter(Med.official == True).all()
+
+    @classmethod
     def all_meds(cls):
         return cls.query.all()
-   
 
 class UserMed(db.Model):
     """A user's medications. (secondary table)"""
@@ -175,19 +202,21 @@ class Accessory(db.Model):
     accessory_description = db.Column(db.Text)
     accessory_img = db.Column(db.String,
                         nullable=False)
-    users = db.relationship("User", secondary="user_inventory", backref="accessories")
+    accessory_alt = db.Column(db.String)
+    users = db.relationship("User", secondary="user_accessory", backref="accessories")
     #compatible_buddies is a list of Buddy objects
 
     def __repr__(self):
         return f'<Accessory accessory_id={self.accessory_id} accessory_name={self.accessory_name}>'
     
     @classmethod
-    def create(cls, accessory_name, accessory_cost, accessory_description, accessory_img):
+    def create(cls, accessory_name, accessory_cost, accessory_description, accessory_img, accessory_alt):
         """Create and return an Accessory object"""
         return cls(accessory_name=accessory_name,
                 accessory_cost=accessory_cost,
                 accessory_description=accessory_description,
-                accessory_img=accessory_img)
+                accessory_img=accessory_img,
+                accessory_alt=accessory_alt)
 
     @classmethod
     def get_by_id(cls, accessory_id):
@@ -210,12 +239,12 @@ class Accessory(db.Model):
         return cls.query.all()
 
 
-class UserInventory(db.Model):
+class UserAccessory(db.Model):
     """A user's inventory of accessories. (secondary table)"""
 
-    __tablename__ = 'user_inventory'
+    __tablename__ = 'user_accessory'
 
-    userinventory_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    useraccessory_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
     user_id = db.Column(db.Integer,
                         db.ForeignKey("users.user_id"),
@@ -224,9 +253,8 @@ class UserInventory(db.Model):
                         db.ForeignKey("accessories.accessory_id"))
 
     def __repr__(self):
-        return f'<UserInventory userinventory_id={self.userinventory_id}\
-             user_id={self.user_id} accessory_id={self.accessory_id}\
-                  buddy_id={self.buddy_id}>'
+        return f'<UserAccessory useraccessory_id={self.useraccessory_id}\
+             user_id={self.user_id} accessory_id={self.accessory_id}'
 
 
 class Buddy(db.Model):
@@ -242,17 +270,19 @@ class Buddy(db.Model):
     buddy_description = db.Column(db.Text)
     buddy_img = db.Column(db.String,
                         nullable=False)
+    buddy_alt = db.Column(db.String)
     user_id = db.Column(db.Integer,
                         db.ForeignKey("users.user_id"))
     users = db.relationship("User", secondary="user_buddies", backref="buddies")
     wearable_accessories = db.relationship("Accessory", secondary="wearable_by", backref="compatible_buddies")
 
     @classmethod
-    def create(cls, buddy_name, buddy_description, buddy_img):
+    def create(cls, buddy_name, buddy_description, buddy_img, buddy_alt):
         """Create and return a Buddy object"""
         return cls(buddy_name=buddy_name,
                 buddy_description=buddy_description,
-                buddy_img=buddy_img)
+                buddy_img=buddy_img,
+                buddy_alt=buddy_alt)
 
     @classmethod
     def get_by_id(cls, buddy_id):
@@ -286,7 +316,8 @@ class UserBuddy(db.Model):
                         db.ForeignKey("users.user_id"),
                         nullable = False)
     buddy_id = db.Column(db.Integer,
-                        db.ForeignKey("buddies.buddy_id"))
+                        db.ForeignKey("buddies.buddy_id"),
+                        nullable = False)
 
     def __repr__(self):
         return f'<UserBuddy userbuddy_id={self.userbuddy_id} user_id={self.user_id}\
