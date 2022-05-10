@@ -1,1 +1,5 @@
 env
+secrets.sh
+client_secrets.json
+client_secret.json
+credentials.json

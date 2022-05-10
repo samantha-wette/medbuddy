@@ -9,3 +9,6 @@ Jinja2==3.0.1
 MarkupSafe==2.0.1
 greenlet==1.1.0
 itsdangerous==2.0.1
+Authlib
+Flask-Login==0.4.1
+oauth_lib==3.0.1

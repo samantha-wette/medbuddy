@@ -9,6 +9,20 @@ def add_med_to_user(user_id, med_id):
     db.session.add(usermed)
     db.session.commit()
 
+def delete_med_from_user(user_id, med_id):
+
+    user_id = int(user_id)
+    print(f"USER_ID IS {user_id} OOOOOOOOO")
+
+    med_id = int(med_id)
+    print(f"MED_ID IS {med_id} OOOOOOOOO")
+
+    usermed = UserMed(user_id = user_id, med_id = med_id)
+    print(f"USERMED IS {usermed} OOOOOOOOO")
+    db.session.delete(usermed)
+    db.session.commit()
+
+
 # add to UserMed table the userID and medID and medNAME
 # add an entry to the dose table
     # usermed_table = UserMed.__tablename__

@@ -33,6 +33,17 @@ Your med list is:<br>
 </form>
 
 <br>
-
+<form id="remove-med" action="/remove-med" method="POST">
+    <fieldset>
+        <legend>Remove Medication from Profile:</legend>
+        <label for="med-name">Medication to Remove:</label>
+        <select name ="med-to-remove" id="med-to-remove">
+        {% for med in user.meds %}
+        <option id = "{{ med.med_id }}" value= "{{ med.med_id }}">{{ med.generic_name }} ({{ med.brand_name }})</option>
+        {% endfor %}
+    </select><br>
+        <input type="submit" aria-label="remove med from list" value="Remove Med from List">
+    </fieldset>
+</form>
 
 {% endblock %}

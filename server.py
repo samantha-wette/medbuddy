@@ -1,15 +1,26 @@
 """Server for medtracker app. """
 
 from select import select
-from flask import Flask, render_template, request, flash, session, redirect
+from flask import Flask, jsonify, render_template, request, flash, session, redirect, url_for, make_response
 from model import connect_to_db, db, User, Med, UserMed, Accessory, \
     UserAccessory, Buddy, UserBuddy, WearableBy, Dose
 from jinja2 import StrictUndefined
 from random import choice
+# from authlib.integrations.flask_client import OAuth
+import requests
+import os
+import google.oauth2.credentials
+import google_auth_oauthlib.flow
+import googleapiclient.discovery
+import hashlib
+
+
+CLIENT_SECRETS_FILE = "client_secret.json"
+SCOPES = ['https://www.googleapis.com/auth/userinfo.email', 'openid', 'https://www.googleapis.com/auth/userinfo.profile']
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 app = Flask(__name__)
-app.secret_key = "dev"
-app.jinja_env.undefined = StrictUndefined
+app.secret_key = "ruvndexfdm"
 
 @app.route('/')
 def home():
@@ -20,6 +31,74 @@ def home():
     except: 
         user = None
     return render_template('home.html', user = user)
+
+
+@app.route('/test')
+def test_api_request():
+    if 'credentials' not in session:
+        return redirect('authorize')
+    
+    credentials = google.oauth2.credentials.Credentials(
+        **session['credentials'])
+    user = googleapiclient.discovery.build('auth', 'v2', credentials=credentials)
+    
+    # calendar = googleapiclient.discovery.build(API_SERVICE_NAME,
+    # API_VERSION, credentials=credentials)
+    # doses = calendar.doses().list().execute()
+    session['credentials'] = {
+    'token': credentials.token,
+    'refresh_token': credentials.refresh_token,
+    'token_uri': credentials.token_uri,
+    'client_id': credentials.client_id,
+    'client_secret': credentials.client_secret,
+    'scopes': credentials.scopes}
+    print('******************** IT WORKED?')
+    return
+    # return jsonify(**doses)
+
+@app.route('/authorize')
+#make sure to do a redirect
+def authorize():
+    # state = hashlib.sha256(os.urandom(1024)).hexdigest()
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+    'client_secret.json',
+    scopes=['https://www.googleapis.com/auth/userinfo.email', 'openid', 'https://www.googleapis.com/auth/userinfo.profile'])
+    flow.redirect_uri = url_for('oauth2callback', _external=True)
+    authorization_url, state = flow.authorization_url(
+        access_type = 'offline',
+        # state= state,
+        included_grant_scopes = 'true'
+    )
+    print(f"the state from google is {state} ***********************")
+    session['state'] = state
+
+    # google = oauth.create_client('google')
+    # redirect_uri = url_for('authorize', _external=True)
+    return redirect(authorization_url)
+
+# @app.route('/authorization_url')
+# def protect_data():
+#     return redirect("/profile")
+
+@app.route('/oauth2callback')
+def oauth2callback():
+    state = session['state']
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(CLIENT_SECRETS_FILE, scopes = SCOPES, state = state)
+    flow.redirect_uri = url_for('oauth2callback', _external=True)
+
+    authorization_response = request.url
+    flow.fetch_token(authorization_response=authorization_response)
+
+    credentials = flow.credentials
+    session['credentials'] = {
+    'token': credentials.token,
+    'refresh_token': credentials.refresh_token,
+    'token_uri': credentials.token_uri,
+    'client_id': credentials.client_id,
+    'client_secret': credentials.client_secret,
+    'scopes': credentials.scopes}
+    print(session['credentials'])
+    return redirect('/')
 
 @app.route("/users", methods=["POST"])
 def create_new_user():
@@ -63,14 +142,10 @@ def handle_login():
 @app.route("/logout", methods=["POST", "GET"])
 def handle_logout():
     """Log out user"""
-    session.pop('user', None)
+    for key in list(session.keys()):
+        session.pop(key)
     flash("See you next time!")
     return redirect("/")
-
-# @app.route('/user/<User.user_id>')
-# def show_user(user_id):
-#     """Show a user's pets and inventory"""
-#     return render_template('use')
 
 @app.route('/profile')
 def show_user():
@@ -82,6 +157,7 @@ def show_user():
     -med data"""
 
     if "user" in session:
+        client_id = session['credentials']['client_id']
         user_id = int(session["user"])
         print(f"the user_id is {user_id}")
         user = User.get_by_id(user_id)
@@ -91,7 +167,8 @@ def show_user():
     
         return render_template("profile.html",
                                     user = user,
-                                    official_meds = official_meds)
+                                    official_meds = official_meds,
+                                    client_id = client_id)
     else:
         flash(f"Looks like you need to log in!")
         return redirect("/")
@@ -194,18 +271,19 @@ def add_med():
     session.modified = True
     flash(f"{new_med.generic_name} was added to your profile.")
     return redirect("/profile")
-# @app.route('/remove-med', methods=["POST"])
-# def add_med():
-#     """Add a med to a user's profile"""
-#     user_id = session["user"]
-#     print(f"the user is {user_id}")
-#     med_id = request.form.get("med-name")
 
-#     print(f"the med they chose is {med_id}")
-#     new_med = crud.add_med_to_user(user_id = user_id, med_id = med_id)
-#     flash(f"med {med_id} has been added to profile")
-#     session.modified = True
-#     return redirect("/profile")
+@app.route('/remove-med', methods=["POST"])
+def remove_med():
+    """Remove a med from a user's profile"""
+    user_id = session["user"]
+    med_id = request.form.get("med-to-remove")
+    print(f"THE MED_ID IS HEREEEEEE {med_id}")
+    med_id = int(med_id)
+    old_med = crud.delete_med_from_user(user_id = user_id, med_id = med_id)
+    db.session.commit()
+    session.modified = True
+    flash(f"med {med_id} has been removed.")
+    return redirect("/profile")
 
 @app.route('/log')
 def log_med():
@@ -223,6 +301,24 @@ def log_med():
     else:
         flash(f"Looks like you need to log in!")
         return redirect("/")
+
+@app.route('/schedule')
+def schedule_doses():
+    """Schedule doses using meds on med list."""
+
+    if "user" in session:
+        user_id = int(session["user"])
+        print(f"the user_id is {user_id}")
+        user = User.get_by_id(user_id)
+        print(user.fname)
+        print(user.meds)
+    
+        return render_template("schedule.html",
+                                    user = user)
+    else: 
+        flash(f"Looks like you need to log in!")
+        return redirect("/")
+
 
 @app.route('/marketplace')
 def view_marketplace():
@@ -284,4 +380,21 @@ import crud
 if __name__ == "__main__":
     # DebugToolbarExtension(app)
     connect_to_db(app)
-    app.run(host="0.0.0.0", debug=True)
+    app.run("localhost", "5000", debug=True)
+
+
+    
+
+
+
+    # project_name=os.environ.get('PROJECT_NAME'),
+    # token_uri='https://oauth2.googleapis.com/token',
+    # access_token_params = None,
+    # auth_uri = "https://accounts.google.com/o/oauth2/auth",
+    # authorize_params = None,
+    # api_base_url='https://accounts.google.com/o/oauth2/v2/auth',
+    # userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',
+    # client_kwargs={'scope': 'openid profile email'},
+    # auth_provider_cert_url="https://www.googleapis.com/oauth2/v1/certs",
+    # redirect_uris = ["http://localhost:5000/login","http://localhost:5000/authorize","http://127.0.0.1:5000/authorize"]
+    # javascript_origins = "http://localhost:5000")

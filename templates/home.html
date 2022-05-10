@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% block body %}
-
 {% if user %}
 Welcome back, {{ user.fname }}!
 
@@ -17,6 +16,27 @@ Welcome back, {{ user.fname }}!
         <a href="">Forgot Password?</a>
     </fieldset>
 </form>
+<body>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <div id="g_id_onload"
+         data-client_id=" {{client_id}} "
+         data-context="signin"
+         data-ux_mode="popup"
+         data-login_uri="http://localhost:5000/authorize"
+         data-nonce=""
+         data-auto_prompt="false">
+    </div>
+    
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="pill"
+         data-theme="outline"
+         data-text="signin_with"
+         data-size="large"
+         data-logo_alignment="left"
+         data-width="40">
+    </div></body>
+    
 <br>
 
 <form id="create-account" action="/users" method="POST">
@@ -34,5 +54,23 @@ Welcome back, {{ user.fname }}!
         <input type="submit" aria-label="submit-and-create-account" value="Create My Account">
     </fieldset>
 </form>
+<div id="g_id_onload"
+     data-client_id="{{ client_id }}"
+     data-context="signup"
+     data-ux_mode="popup"
+     data-login_uri="http://localhost:5000/authorize"
+     data-auto_prompt="false">
+</div>
+
+<div class="g_id_signin"
+     data-type="standard"
+     data-shape="pill"
+     data-theme="outline"
+     data-text="signup_with"
+     data-size="large"
+     data-logo_alignment="left"
+     data-width="40">
+</div>
+
 {% endif %}
 {% endblock %}
