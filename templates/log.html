@@ -3,13 +3,13 @@
 
 
 
-<form id="log-meds" action="/log" method="POST">
+<form id="log-meds" action="/med-taken" method="POST">
     <fieldset>
-        <legend>Log Scheduled Doses:</legend>
+        <legend>Log Doses:</legend>
         Med(s) Taken:<br>
-        {% for dose in user.doses %}
+        {% for dose in user_doses %}
 
-        <input type="checkbox" id="{{ dose }}" name="scheduled-dose">
+        <input type="checkbox" id="{{ dose }}" name="dose-id" value="{{ dose.dose_id }}">
         <label for="{{ dose }}">{{ dose }}</label>
         <br>
         {% endfor %}
@@ -23,7 +23,7 @@
 </form>
 
 
-<form id="log-meds" action="/log" method="POST">
+<!-- <form id="log-meds" action="/log" method="POST">
     <fieldset>
         <legend>Log Other Doses:</legend>
         Med(s) Taken:<br>
@@ -40,5 +40,5 @@
         <input type="submit" aria-label="Submit" value="Get Points!">
         <input type="reset" aria-label="reset" value="Reset"><br>
     </fieldset>
-</form>
+</form> -->
 {% endblock %}

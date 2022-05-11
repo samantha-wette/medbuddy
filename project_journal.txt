@@ -88,12 +88,6 @@ because I hard coded the user in when I was testing/debugging. I definitely lear
 a lesson there to always undo things like that! I got a lot done today learned a lot.
 -----------------------------------------------------------
 
-WEEK 1 SUMMARY: 
-
-
-
-____________________________________________________________
-
 WEEK 2
 
 -----------------------------------------------------------
@@ -101,36 +95,34 @@ WEEK 2
 DATE: Monday 5/9
 
 TO DO: 
-[] Allow user to schedule doses
-[] Allow user to log doses and get points
-    [] Set up routes
-    [] Get points
-    [] Log doses to db
-[] Allow user to view data
-[] Edit profile
-    [] Remove meds
-    [] Change fname, lname, email, pw --> Flask Login 
-[] API --> meds 
+[] Google OAuth 2.0 
 
 JOURNAL:
-
+Today I spent all day trying to figure out OAuth so I can enable
+the google calendar API and hopefully user login. I did a LOT of research
+and self-study and am getting close but am not there yet.
 -----------------------------------------------------------
 DATE: Tuesday 5/10
 
 TO DO: 
-[]
-[]
-[]
+[X] Get OAuth working
+[X] Allow user to schedule doses
+[X] Allow user to log doses and get points
+    [X] Set up routes
+    [X] Get points
+    [X] Log doses to db
+[X] Allow user to view data
 
 JOURNAL:
-
+Today I made progress towards OAuth and Google Calendar. I also enabled
+users to schedule doses, log doses, and view their past doses.
 -----------------------------------------------------------
 DATE: Wednesday 5/11
 
 TO DO: 
-[]
-[]
-[]
+[] Meds API
+[] Schedule doses to Google Calendar
+[] Flask Login
 
 JOURNAL:
 

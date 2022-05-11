@@ -44,7 +44,7 @@ class User(db.Model):
                 points=points)
     
     @classmethod
-    def get_points(cls, user_id, num):
+    def earn_points(cls, user_id, num):
         """Add to a user's point total"""
         user = cls.query.get(user_id)
         new_points = User.points + num
@@ -360,7 +360,7 @@ class Dose(db.Model):
                         nullable=False)
 
     date_time = db.Column(db.DateTime)
-   
+
     taken = db.Column(db.Boolean,
                         default=False)
     user = db.relationship('User', backref='doses')
@@ -380,23 +380,25 @@ class Dose(db.Model):
 
     # @classmethod
     # def add_to_calendar(cls, user_id, med_id, date_time)
-    
+
     @classmethod
     def get_by_user(cls, user_id):
         """Get all doses from a user"""
-        cls.query.filter(Dose.user_id == user_id).all()
+        return cls.query.filter(Dose.user_id == user_id).all()
 
     @classmethod
     def get_taken_by_user(cls, user_id):
         """Get all doses already taken from a user"""
-    
+        return cls.query.filter(Dose.user_id == user_id, Dose.taken == True).all()
     @classmethod
     def get_missed_by_user(cls, user_id):
         """Get all doses missed by a user"""
+        return cls.query.filter(Dose.user_id == user_id, Dose.taken == False).all()
 
     @classmethod
     def get_upcoming_by_user(cls, user_id):
         """Get all doses upcoming by a user"""
+        return cls.query.filter(Dose.user_id == user_id, Dose.taken == False).all()
 
     @classmethod
     def mark_taken(cls, dose_id):
@@ -407,6 +409,21 @@ class Dose(db.Model):
     @classmethod
     def all_doses(cls):
         return cls.query.all()
+
+# class UserDose(db.Model):
+#     """Which doses a user has (secondary table)"""
+
+#     __tablename__ = 'user_doses'
+#     userdose_id = db.column(db.Integer, autoincrement=True, primary_key=True)
+
+#     user_id = db.column(db.Integer, db.ForeignKey("user.user_id"))
+
+#     dose_id = db.column(db.Integer, db.ForeignKey("dose.dose_id"))
+
+#     def __repr__(self):
+#         return f'<UserDose userdose_id={self.userdose_id}\
+#             user_id ={self.user_id} dose_id = {self.dose_id}>'
+
 
 def connect_to_db(flask_app, db_uri="postgresql:///medtracker", echo=True):
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri

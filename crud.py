@@ -22,6 +22,11 @@ def delete_med_from_user(user_id, med_id):
     db.session.delete(usermed)
     db.session.commit()
 
+# def add_dose_to_user(user_id, dose_id):
+#     user_id = int(user_id)
+#     dose_id = int(dose_id)
+
+            #added_dose = crud.add_dose_to_user(user_id = user_id, dose_id = dose_id)    
 
 # add to UserMed table the userID and medID and medNAME
 # add an entry to the dose table

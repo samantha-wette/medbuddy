@@ -209,7 +209,7 @@ def show_user():
     -med data"""
 
     if "user" in session:
-        client_id = session['credentials']['client_id']
+        # client_id = session['credentials']['client_id']
         user_id = int(session["user"])
         print(f"the user_id is {user_id}")
         user = User.get_by_id(user_id)
@@ -219,8 +219,9 @@ def show_user():
     
         return render_template("profile.html",
                                     user = user,
-                                    official_meds = official_meds,
-                                    client_id = client_id)
+                                    official_meds = official_meds)
+                                    # ,
+                                    # client_id = client_id)
     else:
         flash(f"Looks like you need to log in!")
         return redirect("/")
@@ -236,7 +237,25 @@ def show_user():
     #     # # all_doses = Dose.get_by_user(user_id)
         # # print(all_doses)
         # # taken_doses = User.get_doses_taken(user_id)
-        
+
+@app.route('/dose-history')
+def view_dose_history():
+    """View dose history"""
+    if "user" in session:
+        user_id = session["user"]
+        user = User.get_by_id(user_id)
+        user_doses = Dose.get_by_user(user_id)
+        doses_taken = Dose.get_taken_by_user(user_id)
+        doses_missed = Dose.get_missed_by_user(user_id)
+        return render_template('dose_history.html',
+                                user = user,
+                                doses_taken = doses_taken,
+                                doses_missed = doses_missed)
+    else:
+        flash(f"Looks like you need to log in!")
+        return redirect("/")
+
+
 @app.route('/adopt')
 def view_adoption_page():
     """View adoption center"""
@@ -338,21 +357,47 @@ def remove_med():
     return redirect("/profile")
 
 @app.route('/log')
-def log_med():
-    """Log a medication to get points"""
+def log_med(): 
+    """Go to page to log medications"""
     #select from scheduled doses
     #or put in a one-time med
     #get points
     if "user" in session:
         user_id = session["user"]
         user = User.get_by_id(user_id)
-
-
+        user_doses = Dose.get_upcoming_by_user(user_id)
         return render_template('log.html',
-                                user = user)
+                                user = user,
+                                user_doses = user_doses)
     else:
         flash(f"Looks like you need to log in!")
         return redirect("/")
+
+@app.route('/med-taken', methods=["POST"])
+def med_taken():
+    """Log a medication to get points"""
+    print("********* DOSES BEING LOGGED*********")
+    user_id = session["user"]
+    print(f"THE USER IS {user_id}")
+    datetime = request.form.get('datetime')
+    print(f"THE DATETIME IS {datetime} ************")
+    dose_ids = request.form.getlist('dose-id')
+    print(f"THE DOSEIDS ARE {dose_ids} *******")
+    for dose_id in dose_ids:
+        print(f"itERATINg, THIS DOSE_ID IS {dose_id}")
+        taken_dose = Dose.mark_taken(dose_id=dose_id)
+        # db.session.add(taken_dose)
+        print(f"THE DOSE HAS BEEN MARKED AS TAKEN")
+        earned_points = User.earn_points(user_id=user_id, num=1)
+        print(f"THE USER HAS MORE POINTS NOW!")
+        # db.session.add(earned_points)
+        # print("THE EARNED POINTS HAVE BEEN ADDED TO THE SESSION")
+    db.session.commit()
+    session.modified = True
+    user_points = User.get_points(user_id=user_id)
+    flash(f"Nice! You now have {user_points} points!")
+    return redirect('/log')
+
 
 @app.route('/schedule')
 def schedule_doses():
@@ -360,24 +405,17 @@ def schedule_doses():
 
     if "user" in session:
         user_id = int(session["user"])
-        print(f"the user_id is {user_id}")
         user = User.get_by_id(user_id)
-        print(user.fname)
-        print(user.meds)
-    
         return render_template("schedule.html",
                                     user = user)
     else: 
         flash(f"Looks like you need to log in!")
         return redirect("/")
 
-
 @app.route('/add-dose', methods=["POST"])
 def add_dose():
     """Add a dose to a user's profile"""
     user_id = session["user"]
-    print(f"the user is {user_id}")
-
     datetime = request.form.get('datetime')
     values = request.form.getlist('medfordose')
     for value in values:
@@ -386,12 +424,9 @@ def add_dose():
         date_time = datetime)
         db.session.add(new_dose)
     db.session.commit()
-    db.session.commit()
     session.modified = True
     flash(f"Meds scheduled!")
     return redirect('/schedule')
-
-
 
 @app.route('/marketplace')
 def view_marketplace():
