@@ -5,7 +5,27 @@
 
 <form id="log-meds" action="/log" method="POST">
     <fieldset>
-        <legend>Log Meds:</legend>
+        <legend>Log Scheduled Doses:</legend>
+        Med(s) Taken:<br>
+        {% for dose in user.doses %}
+
+        <input type="checkbox" id="{{ dose }}" name="scheduled-dose">
+        <label for="{{ dose }}">{{ dose }}</label>
+        <br>
+        {% endfor %}
+        <br>
+        <label for="datetime">Dose Date/Time:</label><br>
+        <input type="datetime-local" name="datetime" id="datetime"><br>
+        <br>        
+        <input type="submit" aria-label="Submit" value="Get Points!">
+        <input type="reset" aria-label="reset" value="Reset"><br>
+    </fieldset>
+</form>
+
+
+<form id="log-meds" action="/log" method="POST">
+    <fieldset>
+        <legend>Log Other Doses:</legend>
         Med(s) Taken:<br>
         {% for med in user.meds %}
 

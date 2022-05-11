@@ -378,6 +378,9 @@ class Dose(db.Model):
                 med_id=med_id,
                 date_time=date_time)
 
+    # @classmethod
+    # def add_to_calendar(cls, user_id, med_id, date_time)
+    
     @classmethod
     def get_by_user(cls, user_id):
         """Get all doses from a user"""

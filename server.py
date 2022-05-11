@@ -1,8 +1,10 @@
 """Server for medtracker app. """
 
+from datetime import datetime
 from select import select
 from flask import Flask, jsonify, render_template, request, flash, session, redirect, url_for, make_response
-from model import connect_to_db, db, User, Med, UserMed, Accessory, \
+from pyparsing import commonHTMLEntity
+from model import  connect_to_db, db, User, Med, UserMed, Accessory, \
     UserAccessory, Buddy, UserBuddy, WearableBy, Dose
 from jinja2 import StrictUndefined
 from random import choice
@@ -13,12 +15,13 @@ import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import hashlib
+from googleapiclient.errors import HttpError
 
 
 CLIENT_SECRETS_FILE = "client_secret.json"
-SCOPES = ['https://www.googleapis.com/auth/userinfo.email', 'openid', 'https://www.googleapis.com/auth/userinfo.profile']
+SCOPES = ['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/userinfo.email', 'openid', 'https://www.googleapis.com/auth/userinfo.profile']
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-
+os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 app = Flask(__name__)
 app.secret_key = "ruvndexfdm"
 
@@ -26,25 +29,77 @@ app.secret_key = "ruvndexfdm"
 def home():
     """View homepage."""
     try:
-        user_id = session["user"]
-        user = User.get_by_id(user_id)
-    except: 
-        user = None
+            user_id = session["user"]
+            user = User.get_by_id(user_id)
+    except:
+            user = None
+    
     return render_template('home.html', user = user)
 
 
 @app.route('/test')
 def test_api_request():
+    print(session['credentials'])
     if 'credentials' not in session:
         return redirect('authorize')
     
     credentials = google.oauth2.credentials.Credentials(
         **session['credentials'])
-    user = googleapiclient.discovery.build('auth', 'v2', credentials=credentials)
+    print(credentials)
+    service = googleapiclient.discovery.build('calendar', 'V3', credentials=credentials)
+    print(service)
+
+    # now = datetime.utcnow().isoformat
+    # print(f"NOW IT IS {now}")
+    page_token = None
+    events = service.events().list(calendarId='primary',
+                                    pageToken=page_token,
+                                    maxResults=3,
+                                    singleEvents=True,
+                                    orderBy='startTime').execute()
+
+    print("EXECUTION OF EVENTS COMPLETE")
+
+#what does the credentials item contain and how do we access it?
+
+    print(events)
+    print("THOSE ARE THE EVENTS *****************")
+    events = events.get('items', [])
+    print(events)
+    print("THOSE ARE THE EVENTS WITH ITEMS APPLIED")
+
+    if not events:
+        print('No upcoming events found.')
+        return
+
+    # Prints the start and name of the next 10 events
+    for event in events:
+        summary = event['summary']
+        start = event['start'].get('dateTime', event['start'].get('date'))
+        print(summary, start)
+
+    # except HttpError as error:
+    #     print('An error occurred: %s' % error)
     
     # calendar = googleapiclient.discovery.build(API_SERVICE_NAME,
     # API_VERSION, credentials=credentials)
     # doses = calendar.doses().list().execute()
+
+     # class Credentials(token,
+    # refresh_token=None,
+    # id_token=None,
+    # token_uri=None,
+    # client_id=None,
+    # client_secret=None,
+    # scopes=None,
+    # default_scopes=None,
+    # quota_project_id=None,
+    # expiry=None,
+    # rapt_token=None)
+
+    print("***********")
+    print(credentials)
+
     session['credentials'] = {
     'token': credentials.token,
     'refresh_token': credentials.refresh_token,
@@ -52,17 +107,14 @@ def test_api_request():
     'client_id': credentials.client_id,
     'client_secret': credentials.client_secret,
     'scopes': credentials.scopes}
-    print('******************** IT WORKED?')
-    return
-    # return jsonify(**doses)
+    return jsonify(events)
 
 @app.route('/authorize')
 #make sure to do a redirect
 def authorize():
     # state = hashlib.sha256(os.urandom(1024)).hexdigest()
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-    'client_secret.json',
-    scopes=['https://www.googleapis.com/auth/userinfo.email', 'openid', 'https://www.googleapis.com/auth/userinfo.profile'])
+    'client_secret.json', scopes=SCOPES)
     flow.redirect_uri = url_for('oauth2callback', _external=True)
     authorization_url, state = flow.authorization_url(
         access_type = 'offline',
@@ -318,6 +370,27 @@ def schedule_doses():
     else: 
         flash(f"Looks like you need to log in!")
         return redirect("/")
+
+
+@app.route('/add-dose', methods=["POST"])
+def add_dose():
+    """Add a dose to a user's profile"""
+    user_id = session["user"]
+    print(f"the user is {user_id}")
+
+    datetime = request.form.get('datetime')
+    values = request.form.getlist('medfordose')
+    for value in values:
+        new_dose = Dose.create(user_id=user_id,
+        med_id=value,
+        date_time = datetime)
+        db.session.add(new_dose)
+    db.session.commit()
+    db.session.commit()
+    session.modified = True
+    flash(f"Meds scheduled!")
+    return redirect('/schedule')
+
 
 
 @app.route('/marketplace')

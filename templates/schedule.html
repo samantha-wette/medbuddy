@@ -1,26 +1,25 @@
 {% extends 'base.html' %}
 {% block body %}
-form to schedule a dose
-
 <form id ="add-dose" action="/add-dose" method="POST">
     <fieldset>
-      <legend>Schedule a Dose</legend>
-      <input type=""
+      <legend>Schedule Your Meds</legend>
+      Select Meds:
+      {% for med in user.meds %}
+      <p>
+      <input type="checkbox" name="medfordose" value="{{ med.med_id }}" id="{{ med.med_id}}">
+      <label for="{{ med.med_id }}">
+      {{ med.generic_name }} ({{ med.brand_name }})</label>
+      {% endfor %}
+      </p>
+
+      <p>
+        <label for="datetime">When should these be taken?</label>
         <input type="datetime-local" name="datetime" id="datetime">
-        <label for="datetime">When should this be taken?</label>
+
       </p>
-      <p>
-        <input type="radio" name="size" id="size_2" value="medium">
-        <label for="size_2">Medium</label>
-      </p>
-      <p>
-        <input type="radio" name="size" id="size_3" value="large">
-        <label for="size_3">Large</label>
-      </p>
+      <input type="submit" value="Add to Schedule" aria-label="Add to Schedule"></input>
+
     </fieldset>
   </form>
   
-form to add a med to db
-
-
-{% endblock %}
+  {% endblock %}

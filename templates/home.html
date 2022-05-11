@@ -16,13 +16,29 @@ Welcome back, {{ user.fname }}!
         <a href="">Forgot Password?</a>
     </fieldset>
 </form>
-<body>
+<br>
+<form id="create-account" action="/users" method="POST">
+    <fieldset>
+        <legend>Create New Account:</legend>
+        <label for="fname">First Name:</label>
+        <input type="text" id="fname" name="fname"><br>
+        <label for="lname">Last Name (optional):</label>
+        <input type="text" id="lname" name="lname"><br>
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email"><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br>
+    
+        <input type="submit" aria-label="submit-and-create-account" value="Create My Account">
+    </fieldset>
+</form>
+<!-- <body>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <div id="g_id_onload"
          data-client_id=" {{client_id}} "
          data-context="signin"
          data-ux_mode="popup"
-         data-login_uri="http://localhost:5000/authorize"
+         data-login_uri="http://localhost:5000/oauth2callback"
          data-nonce=""
          data-auto_prompt="false">
     </div>
@@ -39,26 +55,11 @@ Welcome back, {{ user.fname }}!
     
 <br>
 
-<form id="create-account" action="/users" method="POST">
-    <fieldset>
-        <legend>Create New Account:</legend>
-        <label for="fname">First Name:</label>
-        <input type="text" id="fname" name="fname"><br>
-        <label for="lname">Last Name (optional):</label>
-        <input type="text" id="lname" name="lname"><br>
-        <label for="email">Email Address:</label>
-        <input type="email" id="email" name="email"><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br>
-    
-        <input type="submit" aria-label="submit-and-create-account" value="Create My Account">
-    </fieldset>
-</form>
 <div id="g_id_onload"
      data-client_id="{{ client_id }}"
      data-context="signup"
      data-ux_mode="popup"
-     data-login_uri="http://localhost:5000/authorize"
+     data-login_uri="http://localhost:5000/oauth2callback"
      data-auto_prompt="false">
 </div>
 
@@ -70,7 +71,7 @@ Welcome back, {{ user.fname }}!
      data-size="large"
      data-logo_alignment="left"
      data-width="40">
-</div>
+</div> -->
 
 {% endif %}
 {% endblock %}
