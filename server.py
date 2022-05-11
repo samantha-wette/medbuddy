@@ -1,6 +1,7 @@
 """Server for medtracker app. """
 
 from datetime import datetime
+from re import M
 from select import select
 from flask import Flask, jsonify, render_template, request, flash, session, redirect, url_for, make_response
 from pyparsing import commonHTMLEntity
@@ -38,45 +39,73 @@ def home():
 
 
 @app.route('/test')
-def test_api_request():
+def add_to_calendar():
+    print("*********HELLO*******")
+
     print(session['credentials'])
     if 'credentials' not in session:
         return redirect('authorize')
     
-    credentials = google.oauth2.credentials.Credentials(
-        **session['credentials'])
+    credentials = google.oauth2.credentials.Credentials(**session['credentials'])
     print(credentials)
-    service = googleapiclient.discovery.build('calendar', 'V3', credentials=credentials)
-    print(service)
+
+
+    service = googleapiclient.discovery.build('calendar', 'V3', credentials = credentials)
+    print(f"the service is {service} *********")
+    
+    session['credentials'] = {
+    'token': credentials.token,
+    'refresh_token': credentials.refresh_token,
+    'token_uri': credentials.token_uri,
+    'client_id': credentials.client_id,
+    'client_secret': credentials.client_secret,
+    'scopes': credentials.scopes}
+    datetime = "2022-05-14T11:54"
+    print(f"THE DATETIME IS ***** {datetime}")
+    event = {
+        'summary': 'MB',
+        'description': 'list_of_doses',
+        'start': {
+            'dateTime': f'{datetime}:00',
+            'timeZone': 'America/Los_Angeles',
+        },
+        'end': {'dateTime': f'{datetime}:59',
+                'timeZone': 'America/Los_Angeles',
+        },
+        # 'recurrence': ['RRULE:FREQ=DAILY;COUNT=2'],
+    }
+    event = service.events().insert(calendarId='primary', body=event).execute()
+    return jsonify(event)
 
     # now = datetime.utcnow().isoformat
     # print(f"NOW IT IS {now}")
-    page_token = None
-    events = service.events().list(calendarId='primary',
-                                    pageToken=page_token,
-                                    maxResults=3,
-                                    singleEvents=True,
-                                    orderBy='startTime').execute()
+    #page_token = None
 
-    print("EXECUTION OF EVENTS COMPLETE")
+    # events = service.events().list(calendarId='primary',
+    #                                 pageToken=page_token,
+    #                                 maxResults=3,
+    #                                 singleEvents=True,
+    #                                 orderBy='startTime').execute()
+
+    print("EVENT ADDED TO THE USER'S CALEDNAR")
 
 #what does the credentials item contain and how do we access it?
 
-    print(events)
-    print("THOSE ARE THE EVENTS *****************")
-    events = events.get('items', [])
-    print(events)
-    print("THOSE ARE THE EVENTS WITH ITEMS APPLIED")
+    print(event)
+    print("THAT IS THE EVENT *****************")
+    # events = events.get('items', [])
+    # print(events)
+    # print("THOSE ARE THE EVENTS WITH ITEMS APPLIED")
 
-    if not events:
-        print('No upcoming events found.')
-        return
+    # if not events:
+    #     print('No upcoming events found.')
+    #     return
 
-    # Prints the start and name of the next 10 events
-    for event in events:
-        summary = event['summary']
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        print(summary, start)
+    # # Prints the start and name of the next 10 events
+    # for event in events:
+    #     summary = event['summary']
+    #     start = event['start'].get('dateTime', event['start'].get('date'))
+    #     print(summary, start)
 
     # except HttpError as error:
     #     print('An error occurred: %s' % error)
@@ -100,14 +129,6 @@ def test_api_request():
     print("***********")
     print(credentials)
 
-    session['credentials'] = {
-    'token': credentials.token,
-    'refresh_token': credentials.refresh_token,
-    'token_uri': credentials.token_uri,
-    'client_id': credentials.client_id,
-    'client_secret': credentials.client_secret,
-    'scopes': credentials.scopes}
-    return jsonify(events)
 
 @app.route('/authorize')
 #make sure to do a redirect
@@ -384,7 +405,7 @@ def med_taken():
     dose_ids = request.form.getlist('dose-id')
     print(f"THE DOSEIDS ARE {dose_ids} *******")
     for dose_id in dose_ids:
-        print(f"itERATINg, THIS DOSE_ID IS {dose_id}")
+        print(f"ITERATING, THIS DOSE_ID IS {dose_id}")
         taken_dose = Dose.mark_taken(dose_id=dose_id)
         # db.session.add(taken_dose)
         print(f"THE DOSE HAS BEEN MARKED AS TAKEN")
@@ -412,20 +433,56 @@ def schedule_doses():
         flash(f"Looks like you need to log in!")
         return redirect("/")
 
+
 @app.route('/add-dose', methods=["POST"])
 def add_dose():
     """Add a dose to a user's profile"""
+    
+    calendar = request.form.get("calendar")
+    if calendar:
+        if 'credentials' not in session:
+            flash("Please authorize MedBuddy with Google Calendar and try again.")
+            return redirect('authorize')
+
     user_id = session["user"]
     datetime = request.form.get('datetime')
+    print(f"THE DATETIME IS {datetime} *****************************")
     values = request.form.getlist('medfordose')
+    meds = []
     for value in values:
+        meds.append(value)
         new_dose = Dose.create(user_id=user_id,
         med_id=value,
         date_time = datetime)
         db.session.add(new_dose)
     db.session.commit()
     session.modified = True
+    if calendar:
+        print(session['credentials'])        
+        credentials = google.oauth2.credentials.Credentials(
+            **session['credentials'])
+        print(credentials)
+        service = googleapiclient.discovery.build('calendar', 'V3', credentials=credentials)
+        print(service)
+
+    event = {
+        'summary': 'MB',
+        'description': f'{meds}',
+        'start': {
+            'dateTime': f'{datetime}:00',
+            'timeZone': 'America/Los_Angeles',
+        },
+        'end': {'dateTime': f'{datetime}:59',
+                'timeZone': 'America/Los_Angeles',
+        },
+        # 'recurrence': ['RRULE:FREQ=DAILY;COUNT=2'],
+    }
+    event = service.events().insert(calendarId='primary', body=event).execute()
+
+
     flash(f"Meds scheduled!")
+
+    
     return redirect('/schedule')
 
 @app.route('/marketplace')
