@@ -1,5 +1,34 @@
 {% extends 'base.html' %}
+
 {% block body %}
+<body>
+    <script>
+        $( function() {
+          $("#searchBox").autocomplete({
+              source: function(request, response) {
+                $.ajax({
+                  type: "POST",
+                  url: "/search",
+                  dataType: "json",
+                  cache: false,
+                  data: {
+                      q: request.term
+                },
+                  success : function(data) {
+                    //alert(data);
+                    //console.log(data);
+                    response(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus + " " + errorThrown);
+                }
+              });
+            }, 
+            minLength: 2
+        });
+        });
+        
+        </script>
 User Profile<br>
 Welcome, {{ user.fname }}!<br>
 Would you like to <a href="/adopt" aria-label="link to adopt buddy">adopt a buddy?</a><br>
@@ -14,21 +43,26 @@ Look at all your nice stuff:<br>
 
 Your med list is:<br>
 {% for med in user.meds %}
-<li>{{ med.generic_name }} / {{ med.brand_name}} </li>
+<li>{{ med.generic_name }}</li>
 {% endfor %}<br>
 <form id="add-med" action="/add-med" method="POST">
     <fieldset>
         <legend>Add Medication to Profile:</legend>
-        <label for="med-name">Medication Name:</label>
+        <div style="width: 600px; margin: auto;">
+            <p style="width: 560px; margin: auto;">
+                <label for="searchBox">Medication Name:</label>&nbsp;&nbsp;
+                <input type="text" name="search" id="searchBox"/>
+            </p>
+                <input type="submit" aria-label="add med to list" value="Add Med to List">        
+        </div>
+    
+        <!-- <label for="med-name">Medication Name:</label>
         <select name ="med-name" id="med-name">
         <option id = "not-listed" value= "select">select</option>
         {% for med in official_meds %}
-        <option id = "{{ med.med_id }}" value= "{{ med.med_id }}">{{ med.generic_name }} ({{ med.brand_name }})</option>
-        {% endfor %}
+        <option id = "{{ med.med_id }}" value= "{{ med.med_id }}">{{ med.generic_name }}</option>
+        {% endfor %} -->
     </select><br>
-    <label for="other-med">Med not listed? Type it here.
-        <input type="text" id="other-med" name="other-med"><br>
-        <input type="submit" aria-label="add med to list" value="Add Med to List">
     </fieldset>
 </form>
 
@@ -39,11 +73,12 @@ Your med list is:<br>
         <label for="med-name">Medication to Remove:</label>
         <select name ="med-to-remove" id="med-to-remove">
         {% for med in user.meds %}
-        <option id = "{{ med.med_id }}" value= "{{ med.med_id }}">{{ med.generic_name }} ({{ med.brand_name }})</option>
+        <option id = "{{ med.med_id }}" value= "{{ med.med_id }}">{{ med.generic_name }}</option>
         {% endfor %}
     </select><br>
         <input type="submit" aria-label="remove med from list" value="Remove Med from List">
     </fieldset>
 </form>
+</body>
 
 {% endblock %}

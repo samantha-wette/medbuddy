@@ -1,7 +1,7 @@
 """Models for medication tracker app"""
 
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, timedelta
 # from flask_login import UserMixin
 
 from sqlalchemy import CheckConstraint
@@ -132,7 +132,7 @@ class Med(db.Model):
         generic_name={self.generic_name} brand_name ={self.brand_name}>'
 
     @classmethod
-    def create(cls, generic_name, brand_name, med_information, official, added_by):
+    def create(cls, generic_name, brand_name, med_information, official, added_by=None):
         """Create and return a Med object"""
         return cls(generic_name=generic_name,
                 brand_name=brand_name,
@@ -366,6 +366,8 @@ class Dose(db.Model):
     user = db.relationship('User', backref='doses')
     med = db.relationship('Med', backref='doses')
 
+    time_taken = db.Column(db.DateTime)
+
     def __repr__(self):
         return f'<Dose dose_id={self.dose_id} user_id={self.user_id}\
             med_id={self.med_id} date_time={self.date_time} taken={self.taken}>'
@@ -376,10 +378,9 @@ class Dose(db.Model):
         """Create and return a Dose object"""
         return cls(user_id=user_id,
                 med_id=med_id,
-                date_time=date_time)
-
-    # @classmethod
-    # def add_to_calendar(cls, user_id, med_id, date_time)
+                date_time=date_time,
+                time_taken = None,
+                taken = False)
 
     @classmethod
     def get_by_user(cls, user_id):
@@ -390,21 +391,39 @@ class Dose(db.Model):
     def get_taken_by_user(cls, user_id):
         """Get all doses already taken from a user"""
         return cls.query.filter(Dose.user_id == user_id, Dose.taken == True).all()
+    
     @classmethod
     def get_missed_by_user(cls, user_id):
         """Get all doses missed by a user"""
-        return cls.query.filter(Dose.user_id == user_id, Dose.taken == False).all()
+        now = datetime.now()
+        hours = int(-2)
+        hours_subtracted = timedelta(hours=hours)
+        two_hours_ago = now + hours_subtracted
+        return cls.query.filter(Dose.user_id == user_id, Dose.taken == False, Dose.date_time < two_hours_ago).all()
 
     @classmethod
     def get_upcoming_by_user(cls, user_id):
-        """Get all doses upcoming by a user"""
-        return cls.query.filter(Dose.user_id == user_id, Dose.taken == False).all()
+        """Get all doses upcoming by a user.
+        
+        Dosees shown will be the ones starting 2 hours ago through 12 hours from now"""
+        
+        now = datetime.now()
+        hours_added = timedelta(hours = 12)
+
+        hours_subtracted = timedelta(hours= -2)
+        two_hours_ago = now + hours_subtracted
+
+        twelve_hours_from_now = now + hours_added
+
+        return cls.query.filter(Dose.user_id == user_id, Dose.taken == False,
+        Dose.date_time < twelve_hours_from_now, Dose.date_time > two_hours_ago).all()
 
     @classmethod
-    def mark_taken(cls, dose_id):
+    def mark_taken(cls, dose_id, time_taken):
         """Mark a dose as taken"""
         dose = cls.query.get(dose_id)
         dose.taken = True
+        dose.time_taken = time_taken
 
     @classmethod
     def all_doses(cls):

@@ -10,7 +10,7 @@
         {% for dose in user_doses %}
 
         <input type="checkbox" id="{{ dose }}" name="dose-id" value="{{ dose.dose_id }}">
-        <label for="{{ dose }}">{{ dose }}</label>
+        <label for="{{ dose }}">{{dose.med.generic_name}} (scheduled for {{dose.date_time}})</label>
         <br>
         {% endfor %}
         <br>

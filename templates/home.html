@@ -2,9 +2,7 @@
 {% block body %}
 {% if user %}
 Welcome back, {{ user.fname }}!
-
 {% else %}
-
 <form id="log-in" action="/login" method="POST">
     <fieldset>
         <legend>Log In:</legend>

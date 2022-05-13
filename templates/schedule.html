@@ -5,13 +5,11 @@
       <legend>Schedule Your Meds</legend>
       Select Meds:
       {% for med in user.meds %}
-      <p>
-      <input type="checkbox" name="medfordose" value="{{ med.med_id }}" id="{{ med.med_id}}">
+      <div><input type="checkbox" name="medfordose" value="{{ med.med_id }}" id="{{ med.med_id}}">
       <label for="{{ med.med_id }}">
-      {{ med.generic_name }} ({{ med.brand_name }})</label>
+      {{ med.generic_name }}</label>
       {% endfor %}
-      </p>
-
+      </div>
       <p>
         <label for="datetime">When should these be taken?</label><br>
         <input type="datetime-local" name="datetime" id="datetime">

@@ -120,9 +120,7 @@ users to schedule doses, log doses, and view their past doses.
 DATE: Wednesday 5/11
 
 TO DO: 
-[] Meds API
-[] Schedule doses to Google Calendar
-[] Flask Login
+[X] Schedule doses to Google Calendar
 
 JOURNAL:
 
@@ -130,19 +128,19 @@ JOURNAL:
 DATE: Thursday 5/12
 
 TO DO: 
-[]
-[]
-[]
+[X]Autocomplete
+[X]Meds data
+[X] Delete med from profile
 
 JOURNAL:
+Blocker: getting kicked off of drugs.com
 
 -----------------------------------------------------------
 DATE: Friday 5/13
 
 TO DO: 
-[]
-[]
-[]
+[] create recurring doses
+[] create recurring events (GCal)
 
 JOURNAL:
 

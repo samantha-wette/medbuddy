@@ -1,6 +1,7 @@
 """Server for medtracker app. """
 
-from datetime import datetime
+import json
+from datetime import datetime, timedelta
 from re import M
 from select import select
 from flask import Flask, jsonify, render_template, request, flash, session, redirect, url_for, make_response
@@ -17,7 +18,6 @@ import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import hashlib
 from googleapiclient.errors import HttpError
-
 
 CLIENT_SECRETS_FILE = "client_secret.json"
 SCOPES = ['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/userinfo.email', 'openid', 'https://www.googleapis.com/auth/userinfo.profile']
@@ -37,6 +37,22 @@ def home():
     
     return render_template('home.html', user = user)
 
+@app.route('/search', methods=['POST'])
+def search():
+    """Searches for meds in autocomplete"""
+    term = request.form['q']
+    print ('term: ', term)
+    
+    file = open('static/data/meds.json', 'r')
+    json_data = json.load(file)
+    dict_of_dicts = json.loads(json_data)
+    all_meds = []
+    for dict in dict_of_dicts:
+        all_meds.append(dict_of_dicts[dict]["name"])
+    filtered_dict = [v for v in all_meds if term in v]	
+    resp = jsonify(filtered_dict)
+    resp.status_code = 200
+    return resp
 
 @app.route('/test')
 def add_to_calendar():
@@ -44,7 +60,7 @@ def add_to_calendar():
 
     print(session['credentials'])
     if 'credentials' not in session:
-        return redirect('authorize')
+        return redirect('/authorize')
     
     credentials = google.oauth2.credentials.Credentials(**session['credentials'])
     print(credentials)
@@ -171,7 +187,7 @@ def oauth2callback():
     'client_secret': credentials.client_secret,
     'scopes': credentials.scopes}
     print(session['credentials'])
-    return redirect('/')
+    return redirect('/schedule')
 
 @app.route("/users", methods=["POST"])
 def create_new_user():
@@ -222,15 +238,9 @@ def handle_logout():
 
 @app.route('/profile')
 def show_user():
-    """Show a user's private profile information
-    -points
-    -pets
-    -inventory
-    -med schedule
-    -med data"""
+    """Show a user's personal profile"""
 
     if "user" in session:
-        # client_id = session['credentials']['client_id']
         user_id = int(session["user"])
         print(f"the user_id is {user_id}")
         user = User.get_by_id(user_id)
@@ -241,23 +251,51 @@ def show_user():
         return render_template("profile.html",
                                     user = user,
                                     official_meds = official_meds)
-                                    # ,
-                                    # client_id = client_id)
     else:
         flash(f"Looks like you need to log in!")
         return redirect("/")
-    # elif session["user"]:
-    #     user_id = session["user"]
-    #     print(f"the user_id is {user_id}")
-    #     
-    #     print(f"the user is {user}")
-    #     for med in user.meds:
-    #         print(med.med_id)
-    #     all_meds = Med.all_meds()
-    #     print(all_meds)
-    #     # # all_doses = Dose.get_by_user(user_id)
-        # # print(all_doses)
-        # # taken_doses = User.get_doses_taken(user_id)
+
+@app.route('/add-med', methods=["POST"])
+def add_med():
+    """Add a med to a user's profile"""
+    user_id = session["user"]
+    print(f"the user is {user_id}")
+    med_name = request.form.get("search")
+    new_med = Med.get_by_generic_name(med_name)
+    if new_med:
+        med_id = new_med.med_id
+        added_med = crud.add_med_to_user(user_id = user_id, med_id = med_id)
+
+    else:
+        new_med = Med.create(generic_name=med_name,
+                                brand_name=None,
+                                med_information = None,
+                                official=False,
+                                added_by = int(user_id))
+        db.session.add(new_med)
+        db.session.commit()
+        new_med = Med.get_by_generic_name(med_name)
+        med_id = new_med.med_id
+        added_med = crud.add_med_to_user(user_id = user_id, med_id = med_id)
+    print("after the loop")
+    db.session.commit()
+    print("new med committed to user db")
+    session.modified = True
+    flash(f"{new_med.generic_name} was added to your profile.")
+    return redirect("/profile")
+
+@app.route('/remove-med', methods=["POST"])
+def remove_med():
+    """Remove a med from a user's profile"""
+    user_id = session["user"]
+    med_id = request.form.get("med-to-remove")
+    print(f"THE MED_ID IS HEREEEEEE {med_id}")
+    med_id = int(med_id)
+    old_med = crud.delete_med_from_user(user_id = user_id, med_id = med_id)
+    db.session.commit()
+    session.modified = True
+    flash(f"med {med_id} has been removed.")
+    return redirect("/profile")
 
 @app.route('/dose-history')
 def view_dose_history():
@@ -267,7 +305,7 @@ def view_dose_history():
         user = User.get_by_id(user_id)
         user_doses = Dose.get_by_user(user_id)
         doses_taken = Dose.get_taken_by_user(user_id)
-        doses_missed = Dose.get_missed_by_user(user_id)
+        doses_missed = Dose.get_missed_by_user(user_id=user_id)
         return render_template('dose_history.html',
                                 user = user,
                                 doses_taken = doses_taken,
@@ -316,66 +354,16 @@ def add_buddy():
 @app.route('/meds')
 def view_all_meds():
     """View all meds in the database"""
+
+    # query = f"https://api.fda.gov/drug/drugsfda.json?api_key={FDA_API_KEY}&search=products.brand_name:'NAME'"
+
+
     official_meds = Med.get_official()
+
 
     return render_template('meds.html',
                             official_meds = official_meds )
 
-
-# @app.route('/meds/<med_id>')
-# def view_med_details():
-#     """View information about a particular medication"""
-#     pass
-
-@app.route('/add-med', methods=["POST"])
-def add_med():
-    """Add a med to a user's profile"""
-    user_id = session["user"]
-    print(f"the user is {user_id}")
-    med_id = request.form.get("med-name")
-    print(f"the med_id is {med_id}")
-    if med_id == "select":
-        new_med = request.form.get("other-med")
-        print(f"new_med is {new_med}")
-        new_med = Med.create(generic_name=new_med,
-                                brand_name=new_med,
-                                med_information = None,
-                                official=False,
-                                added_by = int(user_id))
-        print(f"now new_med is {new_med}")
-        db.session.add(new_med)
-        print("new_med added to session")
-        db.session.commit()
-        print("and committed")
-        new_med = Med.get_by_generic_name(new_med.generic_name)
-        print(f"we got the generic name and now our newmed is {new_med}")
-        med_id = new_med.med_id
-        print(f"med_id is {med_id}")
-        added_med = crud.add_med_to_user(user_id = user_id, med_id = med_id)
-        print("med added to user via function")
-    else:
-        new_med = Med.get_by_id(med_id)
-        print(f"the new_med for else is {new_med}")
-        added_med = crud.add_med_to_user(user_id = user_id, med_id = med_id)
-    print("after the loop")
-    db.session.commit()
-    print("new med committed to user db")
-    session.modified = True
-    flash(f"{new_med.generic_name} was added to your profile.")
-    return redirect("/profile")
-
-@app.route('/remove-med', methods=["POST"])
-def remove_med():
-    """Remove a med from a user's profile"""
-    user_id = session["user"]
-    med_id = request.form.get("med-to-remove")
-    print(f"THE MED_ID IS HEREEEEEE {med_id}")
-    med_id = int(med_id)
-    old_med = crud.delete_med_from_user(user_id = user_id, med_id = med_id)
-    db.session.commit()
-    session.modified = True
-    flash(f"med {med_id} has been removed.")
-    return redirect("/profile")
 
 @app.route('/log')
 def log_med(): 
@@ -386,7 +374,8 @@ def log_med():
     if "user" in session:
         user_id = session["user"]
         user = User.get_by_id(user_id)
-        user_doses = Dose.get_upcoming_by_user(user_id)
+        user_doses = Dose.get_upcoming_by_user(user_id=user_id)
+
         return render_template('log.html',
                                 user = user,
                                 user_doses = user_doses)
@@ -406,7 +395,7 @@ def med_taken():
     print(f"THE DOSEIDS ARE {dose_ids} *******")
     for dose_id in dose_ids:
         print(f"ITERATING, THIS DOSE_ID IS {dose_id}")
-        taken_dose = Dose.mark_taken(dose_id=dose_id)
+        taken_dose = Dose.mark_taken(dose_id=dose_id, time_taken=datetime)
         # db.session.add(taken_dose)
         print(f"THE DOSE HAS BEEN MARKED AS TAKEN")
         earned_points = User.earn_points(user_id=user_id, num=1)
@@ -437,12 +426,20 @@ def schedule_doses():
 @app.route('/add-dose', methods=["POST"])
 def add_dose():
     """Add a dose to a user's profile"""
-    
+
     calendar = request.form.get("calendar")
     if calendar:
-        if 'credentials' not in session:
+        # try:
+        #     credentials = session[credentials]
+        # except:
+        if not session.get('credentials'):
             flash("Please authorize MedBuddy with Google Calendar and try again.")
-            return redirect('authorize')
+            return redirect('/authorize')
+
+        #     credentials = session[credentials]
+        #     print(credentials)
+        #     print("**********")
+        # else:
 
     user_id = session["user"]
     datetime = request.form.get('datetime')
@@ -459,25 +456,24 @@ def add_dose():
     session.modified = True
     if calendar:
         print(session['credentials'])        
-        credentials = google.oauth2.credentials.Credentials(
-            **session['credentials'])
+        credentials = google.oauth2.credentials.Credentials(**session['credentials'])
         print(credentials)
         service = googleapiclient.discovery.build('calendar', 'V3', credentials=credentials)
         print(service)
 
-    event = {
-        'summary': 'MB',
-        'description': f'{meds}',
-        'start': {
-            'dateTime': f'{datetime}:00',
-            'timeZone': 'America/Los_Angeles',
-        },
-        'end': {'dateTime': f'{datetime}:59',
+        event = {
+            'summary': 'MB',
+            'description': f'{meds}',
+            'start': {
+                'dateTime': f'{datetime}:00',
                 'timeZone': 'America/Los_Angeles',
-        },
-        # 'recurrence': ['RRULE:FREQ=DAILY;COUNT=2'],
-    }
-    event = service.events().insert(calendarId='primary', body=event).execute()
+            },
+            'end': {'dateTime': f'{datetime}:59',
+                    'timeZone': 'America/Los_Angeles',
+            },
+            # 'recurrence': ['RRULE:FREQ=DAILY;COUNT=2'],
+        }
+        event = service.events().insert(calendarId='primary', body=event).execute()
 
 
     flash(f"Meds scheduled!")
@@ -529,37 +525,9 @@ def add_accessory():
         session.modified = True
     return redirect("/marketplace")
 
-
-# @app.route('/marketplace/<accessory_id>')
-# def view_accessory():
-#     """View information about a particular accessory in the marketplace"""
-#     pass
-
-# @app.route('/my_meds')
-# def view_my_meds():
-#     """Logged in users can view their private medication profile"""
-#     pass
-
 import crud
 
 if __name__ == "__main__":
     # DebugToolbarExtension(app)
     connect_to_db(app)
     app.run("localhost", "5000", debug=True)
-
-
-    
-
-
-
-    # project_name=os.environ.get('PROJECT_NAME'),
-    # token_uri='https://oauth2.googleapis.com/token',
-    # access_token_params = None,
-    # auth_uri = "https://accounts.google.com/o/oauth2/auth",
-    # authorize_params = None,
-    # api_base_url='https://accounts.google.com/o/oauth2/v2/auth',
-    # userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',
-    # client_kwargs={'scope': 'openid profile email'},
-    # auth_provider_cert_url="https://www.googleapis.com/oauth2/v1/certs",
-    # redirect_uris = ["http://localhost:5000/login","http://localhost:5000/authorize","http://127.0.0.1:5000/authorize"]
-    # javascript_origins = "http://localhost:5000")

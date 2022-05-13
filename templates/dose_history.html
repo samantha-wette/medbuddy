@@ -3,10 +3,10 @@
 Dose History for {{ user.fname }}<br>
 Doses Taken:<br>
 {% for dose in doses_taken %}
-<li>{{ dose }} </li>
+<li>{{ dose.med.generic_name }} (taken {{ dose.time_taken}})</li>
 {% endfor %}<br><br>
 Doses Missed:<br>
 {% for dose in doses_missed %}
-<li>{{ dose }} </li>
+<li>{{ dose.med.generic_name }} (scheduled for {{dose.date_time}}) </li>
 {% endfor %}<br><br>
 {% endblock %}
