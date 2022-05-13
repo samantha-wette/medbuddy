@@ -187,7 +187,7 @@ def oauth2callback():
     'client_secret': credentials.client_secret,
     'scopes': credentials.scopes}
     print(session['credentials'])
-    return redirect('/schedule')
+    return redirect('/med_profile')
 
 @app.route("/users", methods=["POST"])
 def create_new_user():
@@ -236,25 +236,6 @@ def handle_logout():
     flash("See you next time!")
     return redirect("/")
 
-@app.route('/profile')
-def show_user():
-    """Show a user's personal profile"""
-
-    if "user" in session:
-        user_id = int(session["user"])
-        print(f"the user_id is {user_id}")
-        user = User.get_by_id(user_id)
-        print(user.fname)
-        print(user.meds)
-        official_meds = Med.get_official()
-    
-        return render_template("profile.html",
-                                    user = user,
-                                    official_meds = official_meds)
-    else:
-        flash(f"Looks like you need to log in!")
-        return redirect("/")
-
 @app.route('/add-med', methods=["POST"])
 def add_med():
     """Add a med to a user's profile"""
@@ -282,7 +263,7 @@ def add_med():
     print("new med committed to user db")
     session.modified = True
     flash(f"{new_med.generic_name} was added to your profile.")
-    return redirect("/profile")
+    return redirect("/med_profile")
 
 @app.route('/remove-med', methods=["POST"])
 def remove_med():
@@ -291,11 +272,17 @@ def remove_med():
     med_id = request.form.get("med-to-remove")
     print(f"THE MED_ID IS HEREEEEEE {med_id}")
     med_id = int(med_id)
+
+    #delete med from profile
     old_med = crud.delete_med_from_user(user_id = user_id, med_id = med_id)
     db.session.commit()
     session.modified = True
     flash(f"med {med_id} has been removed.")
-    return redirect("/profile")
+
+    #delete all upcoming doses of that med from profile
+    doses_of_old_med = crud.delete_doses_of_med_from_user(user_id = user_id, med_id = med_id)
+    return redirect("/med_profile")
+
 
 @app.route('/dose-history')
 def view_dose_history():
@@ -313,7 +300,6 @@ def view_dose_history():
     else:
         flash(f"Looks like you need to log in!")
         return redirect("/")
-
 
 @app.route('/adopt')
 def view_adoption_page():
@@ -409,14 +395,14 @@ def med_taken():
     return redirect('/log')
 
 
-@app.route('/schedule')
+@app.route('/med_profile')
 def schedule_doses():
     """Schedule doses using meds on med list."""
 
     if "user" in session:
         user_id = int(session["user"])
         user = User.get_by_id(user_id)
-        return render_template("schedule.html",
+        return render_template("med_profile.html",
                                     user = user)
     else: 
         flash(f"Looks like you need to log in!")
@@ -479,7 +465,7 @@ def add_dose():
     flash(f"Meds scheduled!")
 
     
-    return redirect('/schedule')
+    return redirect('/med_profile')
 
 @app.route('/marketplace')
 def view_marketplace():

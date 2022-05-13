@@ -1,7 +1,7 @@
 """Models for medication tracker app"""
 
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 # from flask_login import UserMixin
 
 from sqlalchemy import CheckConstraint
@@ -363,15 +363,17 @@ class Dose(db.Model):
 
     taken = db.Column(db.Boolean,
                         default=False)
+
+    time_taken = db.Column(db.DateTime)
+
     user = db.relationship('User', backref='doses')
     med = db.relationship('Med', backref='doses')
 
-    time_taken = db.Column(db.DateTime)
+
 
     def __repr__(self):
         return f'<Dose dose_id={self.dose_id} user_id={self.user_id}\
             med_id={self.med_id} date_time={self.date_time} taken={self.taken}>'
-
 
     @classmethod
     def create(cls, user_id, med_id, date_time):
@@ -381,6 +383,12 @@ class Dose(db.Model):
                 date_time=date_time,
                 time_taken = None,
                 taken = False)
+
+    @classmethod
+    def get_upcoming_by_user_and_med(cls, user_id, med_id):
+        now = datetime.now()
+        return cls.query.filter(Dose.user_id == user_id, Dose.med_id == med_id, Dose.date_time > now,
+        Dose.taken == False).all()
 
     @classmethod
     def get_by_user(cls, user_id):
@@ -428,21 +436,6 @@ class Dose(db.Model):
     @classmethod
     def all_doses(cls):
         return cls.query.all()
-
-# class UserDose(db.Model):
-#     """Which doses a user has (secondary table)"""
-
-#     __tablename__ = 'user_doses'
-#     userdose_id = db.column(db.Integer, autoincrement=True, primary_key=True)
-
-#     user_id = db.column(db.Integer, db.ForeignKey("user.user_id"))
-
-#     dose_id = db.column(db.Integer, db.ForeignKey("dose.dose_id"))
-
-#     def __repr__(self):
-#         return f'<UserDose userdose_id={self.userdose_id}\
-#             user_id ={self.user_id} dose_id = {self.dose_id}>'
-
 
 def connect_to_db(flask_app, db_uri="postgresql:///medtracker", echo=True):
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri

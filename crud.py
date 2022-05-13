@@ -9,14 +9,20 @@ def add_med_to_user(user_id, med_id):
     db.session.add(usermed)
     db.session.commit()
 
+def delete_doses_of_med_from_user(user_id, med_id):
+    user_id = int(user_id)
+    med_id = int(med_id)
+    doses = Dose.get_upcoming_by_user_and_med(user_id=user_id, med_id=med_id)
+    for dose in doses:
+        db.session.delete(dose)
+    db.session.commit()
+
 def delete_med_from_user(user_id, med_id):
     user_id = int(user_id)
     med_id = int(med_id)
     usermed = UserMed.query.filter(UserMed.user_id==user_id, UserMed.med_id == med_id).first()        
     db.session.delete(usermed)
     db.session.commit()
-
-
 
     # user_id = int(user_id)
     # print(f"USER_ID IS {user_id} OOOOOOOOO")

@@ -1,7 +1,25 @@
 {% extends 'base.html' %}
 {% block body %}
 {% if user %}
-Welcome back, {{ user.fname }}!
+User Profile<br>
+Welcome, {{ user.fname }}!<br>
+Would you like to <a href="/adopt" aria-label="link to adopt buddy">adopt a buddy?</a><br>
+Your point total is {{ user.points }}.<br>
+{% for buddy in user.buddies %}
+{{ buddy.buddy_name }} missed you!<br>
+{% endfor %}<br>
+Look at all your nice stuff:<br>
+{% for accessory in user.accessories %}
+<li> {{ accessory.accessory_name }}</li>
+{% endfor %} <br>
+
+Your med list is:<br>
+{% for med in user.meds %}
+<li>{{ med.generic_name }}</li>
+{% endfor %}<br>
+
+
+
 {% else %}
 <form id="log-in" action="/login" method="POST">
     <fieldset>
