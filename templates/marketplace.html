@@ -1,29 +1,44 @@
 {% extends 'base.html' %}
 {% block body %}
-Shop in the Marketplace!<br>
-Welcome to the marketplace, {{ user.fname }}! You have {{ user.points }} to
-shop with today. Will {{ buddy.buddy_name }} be getting something special today?<br>
+<div class="container-fluid">
+<h1> Marketplace </h1>
+Welcome to the marketplace, {{ user.fname }}! 
+{% if buddy %}
+Will {{ buddy.buddy_name }} be getting something special today? You have {{ user.points }}
+to shop with.
+{% endif %}
+{% if not buddy %}
+You'll need to adopt a buddy before you can shop in the marketplace.
+{% endif %}
+</div>
 
-{% for accessory in accessories %}
-<li> {{ accessory.accessory_name }}<br>
-    <img src="{{ accessory.accessory_img }}"
-    alt="{{ accessory.accessory_alt }}"><br>
-    {{ accessory.accessory_description }}<br>
-    Price: {{ accessory.accessory_cost }} points </li>
+<div class="row row-cols-1 row-cols-md-4 g-4">
+    {% for accessory in accessories %}
+    <form id="add-accessory" action="/add-accessory" method="POST">
+    <div class="col">
+    <div class="card text-center">
+        <img class="card-img-top" src="{{accessory.accessory_img}}"
+        alt = "{{accessory.accessory_alt}}">
+        <div class="card-body">
+            <h5 class="card-title">{{accessory.accessory_name}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ accessory.accessory_cost}} points </h6>
+            <p>{{ accessory.accessory_description }}</p>
+            <input id="{{accessory.accessory_id}}" name="accessory-id"
+            value ="{{accessory.accessory_id}}" type="hidden">
+            {% if buddy %}
+            <input type="submit" value="Buy Now" aria-label="purchase accessory" class="btn btn-primary">
+            {% endif %}
+            {% if not buddy %}
+            <input type="submit" value="Buy Now" aria-label="you must get a buddy before you can purchase accessories" class="btn btn-primary" disabled>
+            {% endif %}
+        </div>
+        <small class="card-footer text-muted">
+        Wearable by...
+        </small>
+    </div>
+    </div>
+</form>
 {% endfor %}
 
-<form id="add-accessory" action="/add-accessory" method="POST">
-    <fieldset>
-        <legend>What would you like to buy today?</legend>
-        <label for="accessory-name">Choose an Item:</label>
-        <select name ="accessory-name" id="accessory-name">
-            {% for accessory in accessories %}
-            <option id = "{{ accessory.accessory_id }}" value= "{{ accessory.accessory_id }}">{{ accessory.accessory_name }}</option>
-            {% endfor %}
-            
-        </select>
-            <input type="submit" aria-label="purchase accessory" value="Purchase!">
-        </fieldset>
-    </form>
-
+</div>
 {% endblock %}

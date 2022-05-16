@@ -12,3 +12,5 @@ itsdangerous==2.0.1
 Authlib
 Flask-Login==0.4.1
 oauth_lib==3.0.1
+Beautifulsoup
+requests

@@ -128,8 +128,8 @@ JOURNAL:
 DATE: Thursday 5/12
 
 TO DO: 
-[X]Autocomplete
-[X]Meds data
+[X] Autocomplete
+[X] Meds data
 [X] Delete med from profile
 
 JOURNAL:

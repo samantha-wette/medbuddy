@@ -18,7 +18,7 @@ def create_buddies():
     for n in range(5):
         buddy_name = f"buddy{n}"
         buddy_description = f"a cool friend called {n}"
-        buddy_img = "/Users/samanthawette/med_tracker/static/img/cat1.png"
+        buddy_img = "static/img/cat1.png"
         buddy_alt = "description of image"
 
         buddy=model.Buddy.create(buddy_name, buddy_description, buddy_img, buddy_alt)
@@ -39,16 +39,6 @@ def create_meds():
     model.db.session.add_all(meds_in_db)
     model.db.session.commit()
 
-    # meds_list = create_meds_list
-    # meds_in_db = []
-    # for med in meds_list:
-    #     generic_name=med
-    #     brand_name=None
-    #     med_information=None
-    #     med=model.Med.create(generic_name, brand_name, med_information, official=True, added_by=None)
-    # model.db.session.add_all(meds_in_db)
-    # model.db.session.commit()
-
 def create_accessories():
     #create 10 accessories and store them in a list
     accessories_in_db = []
@@ -56,7 +46,7 @@ def create_accessories():
         accessory_name=f"accessory{n}"
         accessory_cost=randint(1, 10)
         accessory_description=f"a gorgeous {n} accessory"
-        accessory_img = "/Users/samanthawette/med_tracker/static/img/bird1.png"
+        accessory_img = "static/img/bird1.png"
         accessory_alt = "A visual description of this swanky accessory"
         accessory=model.Accessory.create(accessory_name, accessory_cost, 
         accessory_description, accessory_img, accessory_alt)
@@ -78,19 +68,6 @@ def create_users():
         model.db.session.add(user)
         model.db.session.commit()
     
-    # for _ in range(4):
-    #     random_med = choice(meds_in_db)
-        
-
-
-
-    # for _ in range(4):
-    #     random_med = choice(meds_in_db)
-    #     date_time = f"(2022, {randint(1, 12)}, {randint(1, 25)})"
-    #     dose=model.Dose.create(user.user_id, random_med.med_id, date_time)
-
-    #     model.db.session.add(dose)
-    #     model.db.session.commit()
 
 create_buddies()
 create_accessories()

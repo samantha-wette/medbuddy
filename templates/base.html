@@ -26,36 +26,39 @@
         {% endwith %}
     </head>
     {% block header %}
+    <div>
         <header>
-            <div class="container-fluid">
-            <nav aria-labelledby="primary-navigation">
-            <div class="row">
-            <h1>Welcome to MedBuddy!</h1>
+        <nav class="navbar navbar-expand" style="background-color: lightblue">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+            <img src="static/img/dog1.png" alt="dog" height="24"
+             class="d-inline-block align-text-top"> MedBuddy</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- <div class="collapse navbar-collapse" id="navbarDrop"> -->
+                <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                    <div class="collapse navbar-collapse" id="navbarScroll">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/log">View and Log Meds</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/med_profile">Change Med Profile</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/dose-history">View Med History</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/adopt">Adoption Center</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/marketplace">Marketplace</a></li>
+                        
+                       </div>
+                </ul>
             </div>
-            <div class="row">
-                <div class="col" id="home-page">
-            <h4 id="home-page"><a href="/">Home</a></h4>
-                </div>
-                <div class="col">
-            <h4 id="schedule-doses"><a href="/med_profile">Med Profile</a></h4>
-                </div>
-                <div class="col">
-            <h4 id="log-meds"><a href="/log">Log Meds</a></h4>
-                 </div>
-                <div class="col">
-            <h4 id="med-history"><a href="/dose-history">Dose History</a></h4>
-                </div>
-                <div class="col">
-            <h4 id="adoptions"><a href="/adopt">Adoption Center</a></h4>
-                </div>
-                <div class="col">
-            <h4 id="marketplace"><a href="/marketplace">Marketplace</a></h4>
-                </div>
-            </div>
-        </nav>
         </div>
-        </header> 
-    {% endblock %}
+    </nav>
+</header>
+</div>
+
+{% endblock %}
     <body>
         <div class="container-fluid">
     {% block body %}
@@ -63,24 +66,17 @@
         </div>
     </body>
 {% block footer %}
+<div>
 <footer>
-    <nav aria-labelledby="footer-navigation">
+    <nav class="navbar fixed-bottom bg-light">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col">
-        <h4 id="about"> About </h4>
-                </div>
-                <div class="col">
-        <h4 id="contact"> Contact </h4>
-                </div>
-                <div class="col">
-        <h4 id="authorize"><a href="/authorize">Authorize Google Calendar</a></h4>
-                </div>
-                <div class="col">
-        <h4 id="log-out"><a href="/logout">Logout</a></h4>
-                </div>
-            </div>
+          <a class="navbar-brand" href="#">About</a>
+          <a class="navbar-brand" href="/authorize">Authorize Google Calendar</a>
+          <a class="navbar-brand" href="/logout">Log Out</a>
         </div>
-    </nav>
-</footer>
+      </nav>
+    </footer>
+</div>
+      
+
 {% endblock %}

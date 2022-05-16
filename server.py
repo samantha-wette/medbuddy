@@ -47,103 +47,54 @@ def search():
     json_data = json.load(file)
     dict_of_dicts = json.loads(json_data)
     all_meds = []
+    filtered_dict = []
     for dict in dict_of_dicts:
         all_meds.append(dict_of_dicts[dict]["name"])
-    filtered_dict = [v for v in all_meds if term in v]	
+    for med in all_meds:
+        if term.lower() in med.lower():
+            filtered_dict.append(med)
     resp = jsonify(filtered_dict)
     resp.status_code = 200
     return resp
 
-@app.route('/test')
-def add_to_calendar():
-    print("*********HELLO*******")
+# @app.route('/test')
+# def add_to_calendar():
+#     print("*********HELLO*******")
 
-    print(session['credentials'])
-    if 'credentials' not in session:
-        return redirect('/authorize')
+#     print(session['credentials'])
+#     if 'credentials' not in session:
+#         return redirect('/authorize')
     
-    credentials = google.oauth2.credentials.Credentials(**session['credentials'])
-    print(credentials)
+#     credentials = google.oauth2.credentials.Credentials(**session['credentials'])
+#     print(credentials)
 
 
-    service = googleapiclient.discovery.build('calendar', 'V3', credentials = credentials)
-    print(f"the service is {service} *********")
+#     service = googleapiclient.discovery.build('calendar', 'V3', credentials = credentials)
+#     print(f"the service is {service} *********")
     
-    session['credentials'] = {
-    'token': credentials.token,
-    'refresh_token': credentials.refresh_token,
-    'token_uri': credentials.token_uri,
-    'client_id': credentials.client_id,
-    'client_secret': credentials.client_secret,
-    'scopes': credentials.scopes}
-    datetime = "2022-05-14T11:54"
-    print(f"THE DATETIME IS ***** {datetime}")
-    event = {
-        'summary': 'MB',
-        'description': 'list_of_doses',
-        'start': {
-            'dateTime': f'{datetime}:00',
-            'timeZone': 'America/Los_Angeles',
-        },
-        'end': {'dateTime': f'{datetime}:59',
-                'timeZone': 'America/Los_Angeles',
-        },
-        # 'recurrence': ['RRULE:FREQ=DAILY;COUNT=2'],
-    }
-    event = service.events().insert(calendarId='primary', body=event).execute()
-    return jsonify(event)
-
-    # now = datetime.utcnow().isoformat
-    # print(f"NOW IT IS {now}")
-    #page_token = None
-
-    # events = service.events().list(calendarId='primary',
-    #                                 pageToken=page_token,
-    #                                 maxResults=3,
-    #                                 singleEvents=True,
-    #                                 orderBy='startTime').execute()
-
-    print("EVENT ADDED TO THE USER'S CALEDNAR")
-
-#what does the credentials item contain and how do we access it?
-
-    print(event)
-    print("THAT IS THE EVENT *****************")
-    # events = events.get('items', [])
-    # print(events)
-    # print("THOSE ARE THE EVENTS WITH ITEMS APPLIED")
-
-    # if not events:
-    #     print('No upcoming events found.')
-    #     return
-
-    # # Prints the start and name of the next 10 events
-    # for event in events:
-    #     summary = event['summary']
-    #     start = event['start'].get('dateTime', event['start'].get('date'))
-    #     print(summary, start)
-
-    # except HttpError as error:
-    #     print('An error occurred: %s' % error)
-    
-    # calendar = googleapiclient.discovery.build(API_SERVICE_NAME,
-    # API_VERSION, credentials=credentials)
-    # doses = calendar.doses().list().execute()
-
-     # class Credentials(token,
-    # refresh_token=None,
-    # id_token=None,
-    # token_uri=None,
-    # client_id=None,
-    # client_secret=None,
-    # scopes=None,
-    # default_scopes=None,
-    # quota_project_id=None,
-    # expiry=None,
-    # rapt_token=None)
-
-    print("***********")
-    print(credentials)
+#     session['credentials'] = {
+#     'token': credentials.token,
+#     'refresh_token': credentials.refresh_token,
+#     'token_uri': credentials.token_uri,
+#     'client_id': credentials.client_id,
+#     'client_secret': credentials.client_secret,
+#     'scopes': credentials.scopes}
+#     datetime = "2022-05-14T11:54"
+#     print(f"THE DATETIME IS ***** {datetime}")
+#     event = {
+#         'summary': 'MB',
+#         'description': 'list_of_doses',
+#         'start': {
+#             'dateTime': f'{datetime}:00',
+#             'timeZone': 'America/Los_Angeles',
+#         },
+#         'end': {'dateTime': f'{datetime}:59',
+#                 'timeZone': 'America/Los_Angeles',
+#         },
+#         # 'recurrence': ['RRULE:FREQ=DAILY;COUNT=2'],
+#     }
+#     event = service.events().insert(calendarId='primary', body=event).execute()
+#     return jsonify(event)
 
 
 @app.route('/authorize')
@@ -164,10 +115,6 @@ def authorize():
     # google = oauth.create_client('google')
     # redirect_uri = url_for('authorize', _external=True)
     return redirect(authorization_url)
-
-# @app.route('/authorization_url')
-# def protect_data():
-#     return redirect("/profile")
 
 @app.route('/oauth2callback')
 def oauth2callback():
@@ -226,7 +173,7 @@ def handle_login():
         print(session["user"])
         flash(f"Welcome back, {user.fname}!")
 
-    return redirect("/profile")
+    return redirect("/")
 
 @app.route("/logout", methods=["POST", "GET"])
 def handle_logout():
@@ -335,7 +282,7 @@ def add_buddy():
         flash(f"Welcome home, {buddy.buddy_name}. You'll love it here.")
         flash(f"{user.fname}, your new point total is {user.points}.")
         session.modified = True
-    return redirect("/profile")
+    return redirect("/")
 
 @app.route('/meds')
 def view_all_meds():
@@ -476,15 +423,17 @@ def view_marketplace():
         user = User.get_by_id(user_id)
         if user.buddies:
             buddy = choice(user.buddies)
-            
+            return render_template('marketplace.html',
+                buddy = buddy,
+                user = user,
+                accessories = accessories)
+
+        else:
+            buddy = None
             return render_template('marketplace.html',
                                 buddy = buddy,
                                 user = user,
                                 accessories = accessories)
-        else: 
-            flash("Looks like you need to adopt a buddy!")
-            return redirect("/adopt")
-
     else:
         flash(f"Looks like you need to log in!")
         return redirect("/")
@@ -495,7 +444,7 @@ def add_accessory():
     #get information from a post request in profile.html
     #use the user's id and the med's id to add the med to the user
     
-    accessory_id = request.form.get("accessory-name")
+    accessory_id = request.form.get("accessory-id")
     accessory = Accessory.get_by_id(accessory_id)
     user_id = session["user"]
     user = User.get_by_id(user_id)
