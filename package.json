@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@amcharts/amcharts5": "^5.2.5",
+    "@babel/runtime": "^7.18.0",
+    "moment": "^2.29.3",
+    "react": "^16.14.0",
+    "react-dates": "^21.8.0",
+    "react-dom": "^16.14.0",
+    "react-with-direction": "^1.4.0"
+  }
+}

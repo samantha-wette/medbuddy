@@ -25,11 +25,15 @@ You'll need to adopt a buddy before you can shop in the marketplace.
             <p>{{ accessory.accessory_description }}</p>
             <input id="{{accessory.accessory_id}}" name="accessory-id"
             value ="{{accessory.accessory_id}}" type="hidden">
-            {% if buddy %}
-            <input type="submit" value="Buy Now" aria-label="purchase accessory" class="btn btn-primary">
-            {% endif %}
             {% if not buddy %}
             <input type="submit" value="Buy Now" aria-label="you must get a buddy before you can purchase accessories" class="btn btn-primary" disabled>
+            {% endif %}
+            {% if buddy %}
+            {% if accessory in user.accessories %}
+            <input type="submit" value="Buy Now" aria-label="you already have this accessory" class="btn btn-primary" disabled>
+            {% else %}
+            <input type="submit" value="Buy Now" aria-label="purchase accessory" class="btn btn-primary">
+            {% endif %}
             {% endif %}
         </div>
         <small class="card-footer text-muted">

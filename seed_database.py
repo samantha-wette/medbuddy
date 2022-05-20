@@ -3,8 +3,12 @@ import json
 from random import choice, randint, random, randrange
 from datetime import datetime
 from venv import create
+
+from pyparsing import dict_of
 import model
 import server
+import buddies
+import accessories
 
 os.system("dropdb medtracker")
 os.system("createdb medtracker")
@@ -13,15 +17,28 @@ model.connect_to_db(server.app)
 model.db.create_all()
 
 def create_buddies():
-#create 5 buddies and store them in a list
+#create buddies and store them in a list
     buddies_in_db = []
-    for n in range(5):
-        buddy_name = f"buddy{n}"
-        buddy_description = f"a cool friend called {n}"
-        buddy_img = "static/img/cat1.png"
-        buddy_alt = "description of image"
+    buddy_dicts = buddies.buddy_dict
+    for buddy_dict in buddy_dicts:
+        buddy_name = (buddy_dicts[buddy_dict]["buddy_name"])
+        buddy_description = (buddy_dicts[buddy_dict]["buddy_description"])
+        buddy_img = (buddy_dicts[buddy_dict]["buddy_img1"])
+        buddy_alt = (buddy_dicts[buddy_dict]["buddy_alt1"])
+        buddy_img2 = (buddy_dicts[buddy_dict]["buddy_img2"])
+        buddy_alt2 = (buddy_dicts[buddy_dict]["buddy_alt2"])
+        buddy_img3 = (buddy_dicts[buddy_dict]["buddy_img3"])
+        buddy_alt3 = (buddy_dicts[buddy_dict]["buddy_alt3"])
+        buddy_img2_3 = (buddy_dicts[buddy_dict]["buddy_img2_3"])
 
-        buddy=model.Buddy.create(buddy_name, buddy_description, buddy_img, buddy_alt)
+        buddy_alt2_3 = (buddy_dicts[buddy_dict]["buddy_alt2_3"])
+
+        buddy=model.Buddy.create(buddy_name = buddy_name,
+         buddy_description=buddy_description, 
+         buddy_img=buddy_img, buddy_alt=buddy_alt,
+         buddy_img2=buddy_img2, buddy_alt2=buddy_alt2,
+         buddy_img3=buddy_img3, buddy_alt3=buddy_alt3,
+         buddy_img2_3=buddy_img2_3, buddy_alt2_3=buddy_alt2_3)
         buddies_in_db.append(buddy)
     model.db.session.add_all(buddies_in_db)
     model.db.session.commit()
@@ -40,16 +57,17 @@ def create_meds():
     model.db.session.commit()
 
 def create_accessories():
-    #create 10 accessories and store them in a list
+    #create accessories and store them in a list
     accessories_in_db = []
-    for n in range(10):
-        accessory_name=f"accessory{n}"
-        accessory_cost=randint(1, 10)
-        accessory_description=f"a gorgeous {n} accessory"
-        accessory_img = "static/img/bird1.png"
-        accessory_alt = "A visual description of this swanky accessory"
-        accessory=model.Accessory.create(accessory_name, accessory_cost, 
-        accessory_description, accessory_img, accessory_alt)
+    accessory_dict = accessories.accessory_dict
+    for accessory in accessory_dict:
+        accessory_name=(accessory_dict[accessory]["accessory_name"])
+        accessory_cost=(accessory_dict[accessory]["accessory_cost"])
+        accessory_description=(accessory_dict[accessory]["accessory_description"])
+        accessory_img=(accessory_dict[accessory]["accessory_img"])
+        accessory_alt=(accessory_dict[accessory]["accessory_alt"])
+        accessory=model.Accessory.create(accessory_name=accessory_name, accessory_cost=accessory_cost, 
+        accessory_description=accessory_description, accessory_img=accessory_img, accessory_alt=accessory_alt)
         accessories_in_db.append(accessory)
 
     model.db.session.add_all(accessories_in_db)

@@ -3,19 +3,28 @@
 {% if user %}
 User Profile<br>
 Welcome, {{ user.fname }}!<br>
-Would you like to <a href="/adopt" aria-label="link to adopt buddy">adopt a buddy?</a><br>
 Your point total is {{ user.points }}.<br>
 {% for buddy in user.buddies %}
-{{ buddy.buddy_name }} missed you!<br>
+<figure class="figure">
+    <img src="{{ buddy.buddy_img }}" class="figure-img img-fluid rounded" alt="{{ buddy.buddy_alt }}"><br>
+    <figcaption class="figure-caption">{{ buddy.buddy_name }} missed you!
+    </figcaption>
+  </figure>
+  
 {% endfor %}<br>
+
+Your Buddies:<br>
+{% for buddy in user.buddies %}
+<li>{{ buddy.buddy_name }}
+    {% endfor %} <br>
 Look at all your nice stuff:<br>
 {% for accessory in user.accessories %}
 <li> {{ accessory.accessory_name }}</li>
 {% endfor %} <br>
 
 Your med list is:<br>
-{% for med in user.meds %}
-<li>{{ med.generic_name }}</li>
+{% for med in user.usermeds %}
+<li>{{ med.med.generic_name }}</li>
 {% endfor %}<br>
 
 

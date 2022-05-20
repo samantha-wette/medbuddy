@@ -1,29 +1,34 @@
 {% extends 'base.html' %}
 {% block body %}
-Adopt A Buddy!<br>
-Welcome, {{ user.fname }}! You have {{ user.points }} points.<br>
-These buddies are looking for a new home!<br>
-Can you take care of them?<br>
-Available buddies:<br>
-{% for buddy in buddies %}
-<li>{{ buddy.buddy_name }}<br>
-    <img src="{{ buddy.buddy_img }}" alt="{{ buddy.buddy_alt }}"><br>
-    {{ buddy.buddy_description }}<br>
-Adoption Fee: 15 points</li>
-{% endfor %}
-<br>
-<form id="add-buddy" action="/add-buddy" method="POST">
-    <fieldset>
-        <legend>Who would you like to adopt today?</legend>
-        <label for="buddy-name">Choose a New Buddy:</label>
-        <select name ="buddy-name" id="buddy-name">
-            {% for buddy in buddies %}
-            <option id = "{{ buddy.buddy_id }}" value= "{{ buddy.buddy_id }}">{{ buddy.buddy_name }}</option>
-            {% endfor %}
-            
-        </select>
-            <input type="submit" aria-label="adopt buddy" value="Adopt!">
-        </fieldset>
-    </form>
+<div class="container-fluid">
+<h1> Adoption Center </h1>
+Welcome to the adoption center, {{ user.fname }}! 
+</div>
 
+<div class="row row-cols-1 row-cols-md-4 g-4">
+    {% for buddy in buddies %}
+    <form id="add-buddy" action="/add-buddy" method="POST">
+    <div class="col">
+    <div class="card text-center">
+        <img class="card-img-top" src="{{buddy.buddy_img}}" alt ="{{buddy.buddy_alt}}">
+        <div class="card-body">
+            <h5 class="card-title">{{buddy.buddy_name}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted"> 15 points </h6>
+            <p>{{ buddy.buddy_description }}</p>
+            <input id="{{buddy.buddy_id}}" name="buddy-id"
+            value ="{{buddy.buddy_id}}" type="hidden">
+            {% if buddy in user.buddies %}
+            <input type="submit" value="Adopt Now" aria-label="you already have this buddy" class="btn btn-primary" disabled>
+            {% else %}
+            <input type="submit" value="Adopt Now" aria-label="adopt buddy" class="btn btn-primary">
+            {% endif %}
+        </div>
+        <small class="card-footer text-muted">
+        Take me home please!
+        </small>
+    </div>
+    </div>
+</form>
+{% endfor %}
+</div>
 {% endblock %}

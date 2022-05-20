@@ -1,6 +1,92 @@
 {% extends 'base.html' %}
+
 {% block body %}
+  <!-- <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  </head> -->
+
+
+  <!-- HTML -->
+  <!-- 
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["calendar"]});
+      google.charts.setOnLoadCallback(drawChart);
+
+   function drawChart() {
+       var dataTable = new google.visualization.DataTable();
+       dataTable.addColumn({ type: 'date', id: 'Date' });
+       dataTable.addColumn({ type: 'number', id: 'Won/Loss' });
+       dataTable.addColumn({ type: 'string', id: 'info', role: 'tooltip'})
+       dataTable.addRows([
+        [ new Date(2022, 5, 17), 1, "med1, med2"],
+          [ new Date(2022, 5, 18), 0, "med5, med6"]
+        ]);
+        // // for dose in user.doses:
+        // for (i=0), //conditional logic --> 
+<!-- 
+        // [ new Date(dose.year, dose.month, dose.day), percent,
+        // `Meds taken: ${meds}`, `Meds missed: ${meds_missed}`],
+
+
+       var chart = new google.visualization.Calendar(document.getElementById('calendar_basic'));
+
+       var options = {
+         title: "Medication History",
+         height: 350,
+         coloraxis:  {minValue: 0,  maxValue: 1,}
+       };
+
+       chart.draw(dataTable, options);
+   }
+    </script>
+  </head>
+  <body>
+    <div id="calendar_basic" style="width: 1000px; height: 350px;"></div>
+  </body>
+</html> -->
+
+
+    <!-- function drawCalendarChart() {
+       var dataTable = new google.visualization.DataTable();
+       dataTable.addColumn({ type: 'date', id: 'Date' });
+       dataTable.addColumn({ type: 'number', id: 'Percent Meds Taken' });
+    //    dataTable.addColumn({ type: 'string', id: 'Meds Taken'})
+    //    dataTable.addColumn({ type: 'string', id: 'Meds Missed'})
+       dataTable.addColumn({ type: 'string', id: 'Meds taken and missed', role: 'tooltip'});
+       dataTable.addRows([    
+        var options = {
+         title: "Medication History",
+         height: 350,
+        //   colors: ['#FF0000', '#00FF00']}
+       };
+
+       var chart = new google.visualization.Calendar(document.getElementById('calendar_chart_div'));
+
+       chart.draw(dataTable, options);
+   }
+    </script>
+  </head>
+  <body>
+     <div id="calendar_chart_div" style="width: 1000px; height: 350px;"></div></td>
+          <td><div id="Anthony_chart_div" style="border: 1px solid #ccc"></div></td> -->
+    <!-- </body> --> 
+
+
+
 Dose History for {{ user.fname }}<br>
+Current Meds:<br>
+{% for med in user.usermeds %}
+{% if med.currently_taking == True %}
+<li>{{med.med.generic_name}}</li> 
+Past Meds:<br>
+{% else %}
+<li>{{med.med.generic_name}}</li>
+{% endif %}
+{% endfor %}
+
 Doses Taken:<br>
 {% for dose in doses_taken %}
 <li>{{ dose.med.generic_name }} (taken {{ dose.time_taken}})</li>
@@ -9,4 +95,9 @@ Doses Missed:<br>
 {% for dose in doses_missed %}
 <li>{{ dose.med.generic_name }} (scheduled for {{dose.date_time}}) </li>
 {% endfor %}<br><br>
+  
+<div id="tablediv"></div>
+{% endblock %}
+{% block js %}
+<script src="static/js/medHistory.jsx" type="text/jsx"></script>
 {% endblock %}

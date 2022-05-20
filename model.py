@@ -27,6 +27,7 @@ class User(db.Model):
     points = db.Column(db.Integer, nullable=False)
     __table_args__ = (CheckConstraint (points >= 0, name ='check_points_zero_or_above'), {})
 
+    #usermeds is a list of UserMed objects
     #meds is a list of Med objects
     #accessories is a list of Accessory objects
     #buddies is a list of Buddy objects
@@ -123,9 +124,11 @@ class Med(db.Model):
     official = db.Column(db.Boolean, nullable=False)
     added_by = db.Column(db.Integer)
 
-    users = db.relationship("User", secondary="user_meds", backref="meds")
+    # users = db.relationship("User", backref="meds")
     
     #doses is a list of Dose objects
+
+    #usermeds is a list of UserMed objects
 
     def __repr__(self):
         return f'<Med med_id={self.med_id}\
@@ -171,7 +174,7 @@ class Med(db.Model):
         return cls.query.all()
 
 class UserMed(db.Model):
-    """A user's medications. (secondary table)"""
+    """A user's medications."""
 
     __tablename__ = 'user_meds'
 
@@ -183,10 +186,66 @@ class UserMed(db.Model):
     med_id = db.Column(db.Integer,
                         db.ForeignKey("meds.med_id"),
                         nullable=False)
+    taken_regularly = db.Column(db.Boolean,
+                        default=False)
+    taken_as_needed = db.Column(db.Boolean,
+                        default=False)
+    taken_short_term = db.Column(db.Boolean,
+                        default=False)
+    currently_taking = db.Column(db.Boolean, default=True)
+
+    typical_dose = db.Column(db.String, default=None)
+
+    med = db.relationship("Med", backref="usermeds")
+    user = db.relationship("User", backref="usermeds")
+
+    #doses is a list of Dose objects
 
     def __repr__(self):
         return f'<UserMed usermed_id={self.usermed_id} user_id={self.user_id} med_id={self.med_id}>'
+    
+    @classmethod
+    def create(cls, user_id, med_id, taken_regularly, taken_as_needed, taken_short_term, currently_taking, typical_dose=None):
+        """Create and return a UserMed object"""
+        return cls(user_id=user_id,
+                med_id=med_id,
+                taken_regularly=taken_regularly,
+                taken_as_needed=taken_as_needed,
+                taken_short_term=taken_short_term,
+                currently_taking=currently_taking,
+                typical_dose=typical_dose)
 
+    @classmethod
+    def switch_taken_regularly(cls, usermed_id):
+        usermed = cls.query.get(usermed_id)
+        if usermed.taken_regularly == False:
+            usermed.taken_regularly = True
+        if usermed.taken_regularly ==True:
+            usermed.taken_reguarly=False
+
+    @classmethod
+    def switch_taken_as_needed(cls, usermed_id):
+        usermed = cls.query.get(usermed_id)
+        if usermed.taken_as_needed == False:
+            usermed.taken_as_needed = True
+        if usermed.taken_as_needed ==True:
+            usermed.taken_as_needed=False
+
+    @classmethod
+    def switch_taken_short_term(cls, usermed_id):
+        usermed = cls.query.get(usermed_id)
+        if usermed.taken_short_term == False:
+            usermed.taken_short_term = True
+        if usermed.taken_short_term ==True:
+            usermed.taken_short_term=False
+
+    @classmethod
+    def as_needed_by_user(cls, user_id):
+        return cls.query.filter(cls.taken_as_needed == True, cls.user_id == user_id).all()
+
+    @classmethod
+    def get_by_user_and_med(cls, user_id, med_id):
+        return cls.query.filter(cls.user_id == user_id, cls.med_id == med_id,).first()
 
 class Accessory(db.Model):
     """An accessory available for purchase with points."""
@@ -272,18 +331,31 @@ class Buddy(db.Model):
     buddy_img = db.Column(db.String,
                         nullable=False)
     buddy_alt = db.Column(db.String)
+    buddy_img2 = db.Column(db.String)
+    buddy_alt2 = db.Column(db.String)
+    buddy_img3 = db.Column(db.String)
+    buddy_alt3 = db.Column(db.String)
+    buddy_img2_3 = db.Column(db.String)
+    buddy_alt2_3 = db.Column(db.String)
     user_id = db.Column(db.Integer,
                         db.ForeignKey("users.user_id"))
     users = db.relationship("User", secondary="user_buddies", backref="buddies")
     wearable_accessories = db.relationship("Accessory", secondary="wearable_by", backref="compatible_buddies")
 
     @classmethod
-    def create(cls, buddy_name, buddy_description, buddy_img, buddy_alt):
+    def create(cls, buddy_name, buddy_description, buddy_img, buddy_alt,
+    buddy_img2, buddy_alt2, buddy_img3, buddy_alt3, buddy_img2_3, buddy_alt2_3):
         """Create and return a Buddy object"""
         return cls(buddy_name=buddy_name,
                 buddy_description=buddy_description,
                 buddy_img=buddy_img,
-                buddy_alt=buddy_alt)
+                buddy_alt=buddy_alt,
+                buddy_img2 = buddy_img2,
+                buddy_alt2 = buddy_alt2,
+                buddy_img3 = buddy_img3,
+                buddy_alt3 = buddy_alt3,
+                buddy_img2_3 = buddy_img2_3,
+                buddy_alt2_3 = buddy_alt2_3)
 
     @classmethod
     def get_by_id(cls, buddy_id):
@@ -359,30 +431,40 @@ class Dose(db.Model):
                         db.ForeignKey("meds.med_id"),
                         nullable=False)
 
-    date_time = db.Column(db.DateTime)
+    usermed_id = db.Column(db.Integer,
+                        db.ForeignKey("user_meds.usermed_id"),
+                        nullable=False)
+
+    date_time = db.Column(db.DateTime, default=None)
 
     taken = db.Column(db.Boolean,
                         default=False)
 
     time_taken = db.Column(db.DateTime)
 
+    notes = db.Column(db.Text, default=None)
+
+    amount=db.Column(db.String, default=None)
+
     user = db.relationship('User', backref='doses')
     med = db.relationship('Med', backref='doses')
-
-
+    usermed = db.relationship('UserMed', backref='doses')
 
     def __repr__(self):
         return f'<Dose dose_id={self.dose_id} user_id={self.user_id}\
             med_id={self.med_id} date_time={self.date_time} taken={self.taken}>'
 
     @classmethod
-    def create(cls, user_id, med_id, date_time):
+    def create(cls, user_id, med_id, usermed_id, date_time, time_taken=None, taken=False, notes=None, amount=amount):
         """Create and return a Dose object"""
         return cls(user_id=user_id,
                 med_id=med_id,
+                usermed_id=usermed_id,
                 date_time=date_time,
-                time_taken = None,
-                taken = False)
+                time_taken=time_taken,
+                taken = taken,
+                notes=notes,
+                amount=amount)
 
     @classmethod
     def get_upcoming_by_user_and_med(cls, user_id, med_id):
@@ -427,11 +509,13 @@ class Dose(db.Model):
         Dose.date_time < twelve_hours_from_now, Dose.date_time > two_hours_ago).all()
 
     @classmethod
-    def mark_taken(cls, dose_id, time_taken):
+    def mark_taken(cls, dose_id, time_taken, notes=None, amount=None):
         """Mark a dose as taken"""
         dose = cls.query.get(dose_id)
         dose.taken = True
         dose.time_taken = time_taken
+        dose.notes = notes
+        dose.amount = amount
 
     @classmethod
     def all_doses(cls):

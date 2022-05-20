@@ -1,4 +1,14 @@
 {% extends 'base.html' %}
 {% block body %}
-Test 1-2
+
+<div id="container"></div>
+<div id="all-meds" class="row row-cols-1 row-cols-md-3 g-4"></div>
+
+<ul id="pagination" class="pagination"></div>
+
+{% endblock %}
+
+{% block js %}
+These are all the official meds in our database. Click the link to learn more.
+<script src="static/js/allMeds.jsx" type="text/jsx"></script>
 {% endblock %}
