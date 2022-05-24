@@ -3,6 +3,8 @@ import json
 from datetime import datetime, timedelta, date
 from re import M
 from select import select
+from time import strftime
+from tracemalloc import start
 from flask import Flask, jsonify, render_template, request, flash, session, redirect, url_for, make_response
 from pyparsing import commonHTMLEntity
 from model import  connect_to_db, db, User, Med, UserMed, Accessory, \
@@ -526,39 +528,56 @@ def add_dose():
             return redirect('/authorize')
 
     user_id = session["user"]
-    date = request.form.get('date')
+    starting_date = request.form.get('date')
+    print(f"**************out of the form, the starting_date is {starting_date} which is a {type(starting_date)} object")
     time = request.form.get('time')
-    count = request.form.get('repeat')
+    initial_count = request.form.get('repeat')
+    try:
+        initial_count = int(initial_count)
+    except:
+        initial_count = 1
 
-    if count <= 0:
-        count = 1
-    elif count >= 1:
-        count = count
+    if initial_count <= 0:
+        initial_count = 1
+    elif initial_count >= 1:
+        initial_count = initial_count
     else:
-        count = 1
-
+        initial_count = 1
 
     values = request.form.getlist('medfordose')
+    starting_date = datetime.strptime(starting_date, '%Y-%m-%d')
+    
     meds = []
     for value in values:
         usermed = UserMed.get_by_user_and_med(user_id=user_id, med_id=value)
-        usermed_id=usermed.usermed_id
-        meds.append(value)
-        new_dose = Dose.create(user_id=user_id,
-        med_id=value,
-        usermed_id=usermed_id,
-        date=date,
-        time=time,
-        notes=None,
-        amount=None,
-        cancelled=False
-        )
+        med_name = usermed.med.generic_name
+        meds.append(med_name)
 
+
+    count = initial_count
+    while count > 0:
+        for value in values:
+            date = starting_date + timedelta(days=(count-1))
+            date = date.strftime('%Y-%m-%d')
+            usermed = UserMed.get_by_user_and_med(user_id=user_id, med_id=value)
+            usermed_id=usermed.usermed_id
+            new_dose = Dose.create(user_id=user_id,
+            med_id=value,
+            usermed_id=usermed_id,
+            date=date,
+            time=time,
+            notes=None,
+            amount=None,
+            cancelled=False
+            )
+        count = count - 1
 
         db.session.add(new_dose)
+    
     db.session.commit()
     session.modified = True
     if calendar:
+        starting_date = starting_date.strftime('%Y-%m-%d')
         credentials = google.oauth2.credentials.Credentials(**session['credentials'])
         service = googleapiclient.discovery.build('calendar', 'V3', credentials=credentials)
 
@@ -566,13 +585,13 @@ def add_dose():
             'summary': 'MB',
             'description': f'{meds}',
             'start': {
-                'dateTime': f'{date}T{time}:00',
+                'dateTime': f'{starting_date}T{time}:00',
                 'timeZone': 'America/Los_Angeles',
             },
-            'end': {'dateTime': f'{date}T{time}:59',
+            'end': {'dateTime': f'{starting_date}T{time}:59',
                     'timeZone': 'America/Los_Angeles',
             },
-            'recurrence': [f'RRULE:FREQ=DAILY;COUNT={count}'],
+            'recurrence': [f'RRULE:FREQ=DAILY;COUNT={initial_count}'],
         }
         event = service.events().insert(calendarId='primary', body=event).execute()
 
