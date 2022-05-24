@@ -196,6 +196,11 @@ class UserMed(db.Model):
 
     typical_dose = db.Column(db.String, default=None)
 
+    typical_time = db.Column(db.Time, default=None)
+
+    last_updated_date = db.Column(db.Date, default=None)
+    last_updated_time = db.Column(db.Time, default=None)
+
     med = db.relationship("Med", backref="usermeds")
     user = db.relationship("User", backref="usermeds")
 
@@ -205,7 +210,7 @@ class UserMed(db.Model):
         return f'<UserMed usermed_id={self.usermed_id} user_id={self.user_id} med_id={self.med_id}>'
     
     @classmethod
-    def create(cls, user_id, med_id, taken_regularly, taken_as_needed, taken_short_term, currently_taking, typical_dose=None):
+    def create(cls, user_id, med_id, taken_regularly, taken_as_needed, taken_short_term, currently_taking, typical_dose=None, typical_time=None, last_updated_date=None, last_updated_time=None):
         """Create and return a UserMed object"""
         return cls(user_id=user_id,
                 med_id=med_id,
@@ -213,23 +218,64 @@ class UserMed(db.Model):
                 taken_as_needed=taken_as_needed,
                 taken_short_term=taken_short_term,
                 currently_taking=currently_taking,
-                typical_dose=typical_dose)
+                typical_dose=typical_dose,
+                typical_time=typical_time,
+                last_updated_date=last_updated_date,
+                last_updated_time=last_updated_time)
 
     @classmethod
-    def switch_taken_regularly(cls, usermed_id):
+    def update_last_updated(cls, usermed_id):
+        usermed = cls.query.get(usermed_id)
+        usermed.last_updated_date = date.today()
+        usermed.last_updated_time = datetime.now().time()
+
+
+    @classmethod
+    def make_taken_regularly(cls, usermed_id):
         usermed = cls.query.get(usermed_id)
         if usermed.taken_regularly == False:
             usermed.taken_regularly = True
+
+    @classmethod
+    def make_not_taken_regularly(cls, usermed_id):
+        usermed = cls.query.get(usermed_id)
         if usermed.taken_regularly ==True:
             usermed.taken_reguarly=False
 
     @classmethod
-    def switch_taken_as_needed(cls, usermed_id):
+    def set_typical_time(cls, usermed_id, typical_time):
+        usermed = cls.query.get(usermed_id)
+        usermed.typical_time = typical_time
+
+    @classmethod
+    def set_taken_as_needed(cls, usermed_id):
         usermed = cls.query.get(usermed_id)
         if usermed.taken_as_needed == False:
             usermed.taken_as_needed = True
+
+    @classmethod
+    def set_not_taken_as_needed(cls, usermed_id):
+        usermed = cls.query.get(usermed_id)
         if usermed.taken_as_needed ==True:
             usermed.taken_as_needed=False
+
+    @classmethod
+    def set_currently_taking(cls, usermed_id):
+        usermed = cls.query.get(usermed_id)
+        if usermed.currently_taking == False:
+            usermed.currently_taking = True
+
+    @classmethod
+    def set_not_currently_taking(cls, usermed_id):
+        usermed = cls.query.get(usermed_id)
+        if usermed.currently_taking ==True:
+            usermed.currently_taking=False
+
+    @classmethod
+    def set_typical_dose(cls, usermed_id, typical_dose):
+        usermed = cls.query.get(usermed_id)
+        usermed.typical_dose = typical_dose
+
 
     @classmethod
     def switch_taken_short_term(cls, usermed_id):
@@ -435,7 +481,9 @@ class Dose(db.Model):
                         db.ForeignKey("user_meds.usermed_id"),
                         nullable=False)
 
-    date_time = db.Column(db.DateTime, default=None)
+    date = db.Column(db.Date, default=None)
+
+    time = db.Column(db.Time, default=None)
 
     taken = db.Column(db.Boolean,
                         default=False)
@@ -446,31 +494,41 @@ class Dose(db.Model):
 
     amount=db.Column(db.String, default=None)
 
+    cancelled = db.Column(db.Boolean, default=False)
+
     user = db.relationship('User', backref='doses')
     med = db.relationship('Med', backref='doses')
     usermed = db.relationship('UserMed', backref='doses')
 
     def __repr__(self):
         return f'<Dose dose_id={self.dose_id} user_id={self.user_id}\
-            med_id={self.med_id} date_time={self.date_time} taken={self.taken}>'
+            med_id={self.med_id}>'
 
     @classmethod
-    def create(cls, user_id, med_id, usermed_id, date_time, time_taken=None, taken=False, notes=None, amount=amount):
+    def create(cls, user_id, med_id, usermed_id, date=date, time=time, time_taken=None, taken=False, notes=None, amount=amount, cancelled=False):
         """Create and return a Dose object"""
         return cls(user_id=user_id,
                 med_id=med_id,
                 usermed_id=usermed_id,
-                date_time=date_time,
+                date=date,
+                time=time,
                 time_taken=time_taken,
                 taken = taken,
                 notes=notes,
-                amount=amount)
+                amount=amount,
+                cancelled=cancelled)
 
     @classmethod
     def get_upcoming_by_user_and_med(cls, user_id, med_id):
-        now = datetime.now()
-        return cls.query.filter(Dose.user_id == user_id, Dose.med_id == med_id, Dose.date_time > now,
+        today = date.today()
+        return cls.query.filter(Dose.user_id == user_id, Dose.med_id == med_id, Dose.date >= today,
         Dose.taken == False).all()
+
+    @classmethod
+    def cancel_upcoming_doses_by_usermed(cls, usermed_id):
+        doses = cls.query.filter(Dose.usermed_id == usermed_id, Dose.taken == False).all()
+        for dose in doses:
+            del(dose)
 
     @classmethod
     def get_by_user(cls, user_id):
@@ -485,28 +543,28 @@ class Dose(db.Model):
     @classmethod
     def get_missed_by_user(cls, user_id):
         """Get all doses missed by a user"""
-        now = datetime.now()
-        hours = int(-2)
-        hours_subtracted = timedelta(hours=hours)
-        two_hours_ago = now + hours_subtracted
-        return cls.query.filter(Dose.user_id == user_id, Dose.taken == False, Dose.date_time < two_hours_ago).all()
+        today = date.today()
+        # hours = int(-2)
+        # hours_subtracted = timedelta(hours=hours)
+        # two_hours_ago = today + hours_subtracted
+        return cls.query.filter(Dose.user_id == user_id, Dose.taken == False, Dose.date < today).all()
 
     @classmethod
     def get_upcoming_by_user(cls, user_id):
-        """Get all doses upcoming by a user.
-        
-        Dosees shown will be the ones starting 2 hours ago through 12 hours from now"""
-        
-        now = datetime.now()
-        hours_added = timedelta(hours = 12)
+        """Get all today's upcoming doses by a user."""
+                
+        # now = datetime.now()
+        # hours_added = timedelta(hours = 12)
 
-        hours_subtracted = timedelta(hours= -2)
-        two_hours_ago = now + hours_subtracted
+        # hours_subtracted = timedelta(hours= -2)
+        # two_hours_ago = now + hours_subtracted
 
-        twelve_hours_from_now = now + hours_added
+        # twelve_hours_from_now = now + hours_added
+        today = date.today()
 
         return cls.query.filter(Dose.user_id == user_id, Dose.taken == False,
-        Dose.date_time < twelve_hours_from_now, Dose.date_time > two_hours_ago).all()
+        Dose.date == today).all()
+        # Dose.date_time < twelve_hours_from_now, Dose.date_time > two_hours_ago).all()
 
     @classmethod
     def mark_taken(cls, dose_id, time_taken, notes=None, amount=None):

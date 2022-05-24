@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block body %}
+<body>
+  <script>
+      $( function() {
+        $("#searchBox").autocomplete({
+            source: function(request, response) {
+              $.ajax({
+                type: "POST",
+                url: "/search",
+                dataType: "json",
+                cache: false,
+                data: {
+                    q: request.term
+              },
+                success : function(data) {
+                  //alert(data);
+                  //console.log(data);
+                  response(data);
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+                  console.log(textStatus + " " + errorThrown);
+              }
+            });
+          }, 
+          minLength: 2
+      });
+      });
+      
+      </script>
+{% endblock %}
+{% block banner %}
+<h5>
+Schedule Your Meds</h5>
+{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row">
+      <div class="col">
+
+ <form id ="add-dose" action="/add-dose" method="POST">
+  <fieldset class="row mb-3">
+    <legend class="col-form-label col-sm-2 pt-0">Select Meds:</legend>
+    <div class="col-sm-10">
+    {% for med in user.usermeds %}
+    {% if med.taken_regularly == True %}
+    <div class="row g-3">
+      <div class="col-sm">
+          <div class="form-check">
+            <div><input class="form-check-input" type="checkbox" name="medfordose" value="{{ med.med_id }}" id="{{ med.med_id}}">
+              <label for="{{ med.med_id }}">
+              {{ med.med.generic_name }}</label>
+            </div>
+          </div>
+              {% endif %}
+              {% endfor %}
+            </div>
+</div>
+      </div>
+    <div class="row mb-3">
+  <div class="col-sm-2 col-form-label">
+      <label for="time">Time of Dose:</label>
+  </div>
+  <div class="col-sm-10">
+      <input type="time" name="time" id="time" class="form-control">
+  </div>
+</div>
+  
+<div class="row mb-3">
+  <div class="col-sm-2 col-form-label">
+      <label for="date">Date of First Dose:</label>
+  </div>
+  <div class="col-sm-10">
+      <input type="date" name="date" id="date" class="form-control">
+  </div>
+</div>
+
+<div class="row mb-3">
+  <div class="col-sm-2 col-form-label">
+    <label for="repeat">Repeat:</label>
+  </div>
+    <div class="col-sm-10">
+        <input type="number" name="repeat" class="form-control" placeholder="Number of Days" aria-label="Username">
+      </div>
+      <div>
+      <p>
+
+
+      <input type="checkbox" id="calendar" name="calendar" value="calendar">
+      <label for="calendar"> Add to Google Calendar</label></p>
+<p>
+      <input type="submit" value="Add to MedBuddy Schedule" aria-label="Add to Schedule"></input>
+      <input type="reset" aria-label="reset" value="Reset"><br>
+
+</p>
+
+    </fieldset>
+  </form>
+</div>
+</div>
+</div>
+  {% endblock %}
+
+
+
+  

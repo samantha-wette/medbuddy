@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block body %}
+{% endblock %}
+{% block content %}
 <div class="container-fluid">
 <h1> Marketplace </h1>
 Welcome to the marketplace, {{ user.fname }}! 
@@ -36,9 +38,9 @@ You'll need to adopt a buddy before you can shop in the marketplace.
             {% endif %}
             {% endif %}
         </div>
-        <small class="card-footer text-muted">
+        <!-- <small class="card-footer text-muted">
         Wearable by...
-        </small>
+        </small> -->
     </div>
     </div>
 </form>

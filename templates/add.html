@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block body %}
+<body>
+  <script>
+      $( function() {
+        $("#searchBox").autocomplete({
+            source: function(request, response) {
+              $.ajax({
+                type: "POST",
+                url: "/search",
+                dataType: "json",
+                cache: false,
+                data: {
+                    q: request.term
+              },
+                success : function(data) {
+                  //alert(data);
+                  //console.log(data);
+                  response(data);
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+                  console.log(textStatus + " " + errorThrown);
+              }
+            });
+          }, 
+          minLength: 2
+      });
+      });
+      </script>
+      {% endblock %}
+      {% block banner %}
+<h1>New Medication</h1>
+{% endblock %}
+{% block content %}
+
+<form id="add-med" action="/add-med" method="POST">
+
+  <div class="row mb-3">
+    <div class="col">
+      <input type="text" class="form-control" placeholder="Medication Name" aria-label="Medication" id="searchBox" name="search"/>
+    </div>
+  </div>
+      <div class="input-group mb-3">
+        <input type="checkbox" class="btn-check" name="regular" id="regular" autocomplete="off">
+        <label class="btn btn-outline-primary" for="regular">I take this med daily.</label>
+
+
+        <input type="checkbox" class="btn-check" name="as-needed" id="as-needed" autocomplete="off">
+        <label class="btn btn-outline-primary" for="as-needed">I take this med as needed.</label>
+        <!-- <input type="checkbox" class="btn-check" name="series" id="series" autocomplete="off">
+        <label class="btn btn-outline-primary" for="series">I take this med short-term, as a limited series.</label> -->
+        <input type="checkbox" class="btn-check" name="current" id="current" autocomplete="off">
+        <label class="btn btn-outline-primary" for="current">I am currently taking this med.</label>
+      </div>
+      <div>
+        <label for="daily-time">If daily, what time do you take it?</label>
+        <input type="time" name="timepicker" class="timepicker" id="daily-time"/>
+      </div>
+      <div>
+        <label for="dose-amount">What is your typical dose?</label>
+        <input type="text" name="dose-amount" id="dose-amount"/>
+      <div>
+        <input type="submit" aria-label="add med to list" value="Add Med to List"/>
+</div>     
+</form> 
+</div>
+  {% endblock %}
+
+  {% block js %}
+  {% endblock %}
+  

@@ -1,0 +1,28 @@
+.top-margin-hi {    margin-top: 75px;
+}
+
+.top-banner { margin-top: 75px;
+}
+
+.flexibly-sticky { align-items: flex-start;
+
+
+}
+.content-section {
+    background: lavender;
+    height: 1000px;
+    padding: 1em;
+  }
+
+.sidebar-section {
+    height: 100%;
+    position: sticky;
+    top: 0;
+  }
+
+.sidebar-content {
+    background: cornflowerblue;
+    position: sticky;
+    top: 0;
+    padding: 1em;
+}

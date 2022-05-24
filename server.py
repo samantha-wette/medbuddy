@@ -1,6 +1,6 @@
 """Server for medtracker app. """
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from re import M
 from select import select
 from flask import Flask, jsonify, render_template, request, flash, session, redirect, url_for, make_response
@@ -70,7 +70,8 @@ def search():
 
 #     service = googleapiclient.discovery.build('calendar', 'V3', credentials = credentials)
 #     print(f"the service is {service} *********")
-    
+#     date = "2022-05-23"
+#     time = "09:00:00"
 #     session['credentials'] = {
 #     'token': credentials.token,
 #     'refresh_token': credentials.refresh_token,
@@ -78,16 +79,17 @@ def search():
 #     'client_id': credentials.client_id,
 #     'client_secret': credentials.client_secret,
 #     'scopes': credentials.scopes}
-#     datetime = "2022-05-14T11:54"
-#     print(f"THE DATETIME IS ***** {datetime}")
+#     date = date
+#     time = time
+#     print(f"THE DATETIME IS ***** {date}T{time}")
 #     event = {
 #         'summary': 'MB',
 #         'description': 'list_of_doses',
 #         'start': {
-#             'dateTime': f'{datetime}:00',
+#             'dateTime': f'{date}T{time}:00',
 #             'timeZone': 'America/Los_Angeles',
 #         },
-#         'end': {'dateTime': f'{datetime}:59',
+#         'end': {'dateTime': f'{date}T{time}:59',
 #                 'timeZone': 'America/Los_Angeles',
 #         },
 #         # 'recurrence': ['RRULE:FREQ=DAILY;COUNT=2'],
@@ -128,7 +130,7 @@ def oauth2callback():
     'client_secret': credentials.client_secret,
     'scopes': credentials.scopes}
     print(session['credentials'])
-    return redirect('/med_profile')
+    return redirect('/schedule')
 
 @app.route("/users", methods=["POST"])
 def create_new_user():
@@ -213,7 +215,15 @@ def add_med():
         typical_dose=str(typical_dose)
     else:
         typical_dose=None
+    
+    typical_time=request.form.get("timepicker")
+    if typical_time:
+        typical_time = typical_time
+    else:
+        typical_time=None
+
     med = Med.get_by_generic_name(med_name)
+
     if med:
         med_id = med.med_id
         added_med = UserMed.create(user_id=user_id,
@@ -222,7 +232,10 @@ def add_med():
                                     taken_as_needed=taken_as_needed,
                                     taken_short_term=taken_short_term,
                                     currently_taking=currently_taking,
-                                    typical_dose=typical_dose)
+                                    typical_dose=typical_dose,
+                                    typical_time=typical_time,
+                                    last_updated_date=date.today(),
+                                    last_updated_time=datetime.now().time())
         
     else:
         med = Med.create(generic_name=med_name,
@@ -240,12 +253,93 @@ def add_med():
                                     taken_as_needed=taken_as_needed,
                                     taken_short_term=taken_short_term,
                                     currently_taking=currently_taking,
-                                    typical_dose=typical_dose)
+                                    typical_dose=typical_dose,
+                                    typical_time=typical_time,
+                                    last_updated_date=date.today(),
+                                    last_updated_time=datetime.now().time())
+
     db.session.add(added_med)
     db.session.commit()
     session.modified = True
     flash(f"{med.generic_name} was added to your profile.")
-    return redirect("/med_profile")
+    return redirect("/add")
+
+@app.route('/change')
+def change_meds():
+    """Change Med Profile."""
+
+    if "user" in session:
+        user_id = int(session["user"])
+        user = User.get_by_id(user_id)
+        return render_template("change.html",
+                                    user = user)
+    else: 
+        flash(f"Looks like you need to log in!")
+        return redirect("/")
+
+@app.route('/change-med', methods=["POST"])
+def update_med():
+    """Change a medication on a user's profile"""
+
+    user_id = session["user"]
+    usermed_id = request.form.get("med-to-update")
+    usermed_id = int(usermed_id)
+
+    taken_regularly=request.form.get("regular")
+    if taken_regularly:
+        taken_regularly=True
+        UserMed.make_taken_regularly(usermed_id)
+        typical_time=request.form.get("timepicker")
+        if typical_time:
+            print("TYPICAL TIMEEEE")
+            print(typical_time)
+            typical_time = typical_time
+            UserMed.set_typical_time(usermed_id=usermed_id, typical_time=typical_time)
+
+    else:
+        taken_regularly=False
+        UserMed.make_not_taken_regularly(usermed_id)
+        Dose.cancel_upcoming_doses_by_usermed(usermed_id)
+
+
+    taken_as_needed=request.form.get("as-needed")
+    if taken_as_needed:
+        taken_as_needed=True
+        UserMed.set_taken_as_needed(usermed_id)
+
+    else:
+        taken_as_needed=False
+        UserMed.set_not_taken_as_needed(usermed_id)
+
+    currently_taking=request.form.get("current")
+    if currently_taking:
+        currently_taking=True
+        UserMed.set_currently_taking(usermed_id)
+    else:
+        currently_taking=False
+        UserMed.set_not_currently_taking(usermed_id)
+
+    typical_dose=request.form.get("dose-amount")
+    if typical_dose:
+        typical_dose=str(typical_dose)
+        UserMed.set_typical_dose(typical_dose=typical_dose, usermed_id=usermed_id)
+    else:
+        typical_dose=None
+        UserMed.set_typical_dose(typical_dose=None, usermed_id=usermed_id)
+    
+    UserMed.update_last_updated(usermed_id)
+    #delete future doses
+    #reschedule future doses
+
+    # #delete med from profile
+    # old_med = crud.delete_med_from_user(user_id = user_id, med_id = med_id)
+    db.session.commit()
+    # session.modified = True
+    # flash(f"med {med_id} has been removed.")
+
+    # #delete all upcoming doses of that med from profile
+    # doses_of_old_med = crud.delete_doses_of_med_from_user(user_id = user_id, med_id = med_id)
+    return redirect("/change")
 
 
 @app.route('/remove-med', methods=["POST"])
@@ -263,12 +357,12 @@ def remove_med():
 
     #delete all upcoming doses of that med from profile
     doses_of_old_med = crud.delete_doses_of_med_from_user(user_id = user_id, med_id = med_id)
-    return redirect("/med_profile")
+    return redirect("/schedule")
 
 
-@app.route('/dose-history')
+@app.route('/my-meds')
 def view_dose_history():
-    """View dose history"""
+    """View med list and dose history"""
     if "user" in session:
         user_id = session["user"]
         user = User.get_by_id(user_id)
@@ -328,7 +422,7 @@ def view_all_meds():
 
 @app.route('/log')
 def log_med(): 
-    """Go to page to log medications"""
+    """Display page for user to log meds"""
 
     if "user" in session:
         user_id = session["user"]
@@ -343,6 +437,7 @@ def log_med():
     else:
         flash(f"Looks like you need to log in!")
         return redirect("/")
+
 
 @app.route('/med-taken', methods=["POST"])
 def med_taken():
@@ -362,7 +457,8 @@ def med_taken():
             new_dose = Dose.create(user_id=user_id,
                                     med_id=med_id,
                                     usermed_id=usermed_id,
-                                    date_time=date_time,
+                                    date=date.today(),
+                                    time=datetime.now().time(),
                                     time_taken=date_time,
                                     taken=True,
                                     notes=notes,
@@ -387,18 +483,37 @@ def med_taken():
     return redirect('/log')
 
 
-@app.route('/med_profile')
-def schedule_doses():
-    """Schedule doses using meds on med list."""
+@app.route('/add')
+def display_add_med():
+    """Display page for user to add medication to med list."""
 
     if "user" in session:
         user_id = int(session["user"])
         user = User.get_by_id(user_id)
-        return render_template("med_profile.html",
+        return render_template("add.html",
                                     user = user)
     else: 
         flash(f"Looks like you need to log in!")
         return redirect("/")
+
+@app.route('/schedule')
+def schedule_med_page(): 
+    """Display page for user to schedule meds"""
+
+    if "user" in session:
+        user_id = session["user"]
+        user = User.get_by_id(user_id)
+        user_doses = Dose.get_upcoming_by_user(user_id=user_id)
+        as_needed = UserMed.as_needed_by_user(user_id=user_id)
+
+        return render_template('schedule.html',
+                                user = user,
+                                user_doses = user_doses,
+                                as_needed=as_needed)
+    else:
+        flash(f"Looks like you need to log in!")
+        return redirect("/")
+
 
 @app.route('/add-dose', methods=["POST"])
 def add_dose():
@@ -411,7 +526,18 @@ def add_dose():
             return redirect('/authorize')
 
     user_id = session["user"]
-    datetime = request.form.get('datetime')
+    date = request.form.get('date')
+    time = request.form.get('time')
+    count = request.form.get('repeat')
+
+    if count <= 0:
+        count = 1
+    elif count >= 1:
+        count = count
+    else:
+        count = 1
+
+
     values = request.form.getlist('medfordose')
     meds = []
     for value in values:
@@ -421,10 +547,14 @@ def add_dose():
         new_dose = Dose.create(user_id=user_id,
         med_id=value,
         usermed_id=usermed_id,
-        date_time = datetime,
+        date=date,
+        time=time,
         notes=None,
-        amount=None
+        amount=None,
+        cancelled=False
         )
+
+
         db.session.add(new_dose)
     db.session.commit()
     session.modified = True
@@ -436,13 +566,13 @@ def add_dose():
             'summary': 'MB',
             'description': f'{meds}',
             'start': {
-                'dateTime': f'{datetime}:00',
+                'dateTime': f'{date}T{time}:00',
                 'timeZone': 'America/Los_Angeles',
             },
-            'end': {'dateTime': f'{datetime}:59',
+            'end': {'dateTime': f'{date}T{time}:59',
                     'timeZone': 'America/Los_Angeles',
             },
-            # 'recurrence': ['RRULE:FREQ=DAILY;COUNT=2'],
+            'recurrence': [f'RRULE:FREQ=DAILY;COUNT={count}'],
         }
         event = service.events().insert(calendarId='primary', body=event).execute()
 
@@ -450,7 +580,7 @@ def add_dose():
     flash(f"Meds scheduled!")
 
     
-    return redirect('/med_profile')
+    return redirect('/schedule')
 
 @app.route('/marketplace')
 def view_marketplace():
@@ -505,17 +635,6 @@ def manage():
     else:
         flash(f"Looks like you need to log in!")
         return redirect("/")
-
-@app.route('/learn')
-def learn():
-    """Render page for user to learn about their meds"""
-    if 'user' in session:
-        return render_template('learn.html')
-
-    else:
-        flash(f"Looks like you need to log in!")
-        return redirect("/")
-        
 
 @app.route('/data')
 def data():

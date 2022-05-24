@@ -2,6 +2,8 @@ function MedCard(props) {
     return(<div className="card">
     <div className="card-body">
         <h5 className="card-title">{props.name}</h5>
+        <li className="list-group-item">Typical Dose: {props.dose}</li>
+        <li className="list-group-item">Typical Dose: {props.dose}</li>
         <a href={props.info} className="btn btn-primary">Learn More</a>
     </div>
     </div>)
@@ -30,7 +32,6 @@ function MedCardContainer() {
             name={currentMed.name}
             info={currentMed.information}
             official={currentMed.official}
-            
             />
             );
         }
