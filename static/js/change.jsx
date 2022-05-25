@@ -37,7 +37,7 @@ function MedCardContainer() {
         }
     }
     return<div>
-    {userMeds}
+    TEST 123 {userMeds}
     </div>;
 }
   

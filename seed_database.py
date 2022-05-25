@@ -49,9 +49,9 @@ def create_meds():
     json_data = json.load(file)
     dict_of_dicts = json.loads(json_data)
     for dict in dict_of_dicts:
-        generic_name = (dict_of_dicts[dict]["name"])
+        med_name = (dict_of_dicts[dict]["name"])
         med_information = (dict_of_dicts[dict]["info"])
-        med=model.Med.create(generic_name=generic_name, brand_name=None, med_information=med_information, official=True, added_by=None)
+        med=model.Med.create(med_name=med_name, med_information=med_information, official=True, added_by=None)
         meds_in_db.append(med)
     model.db.session.add_all(meds_in_db)
     model.db.session.commit()

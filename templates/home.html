@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
-{% block body %}
+{% block banner %}
+Welcome to MedBuddy!
+{% endblock %}
+{% block content %}
+TEST 123
+{% endblock %}
+<!-- 
 {% if user %}
-User Profile<br>
 Welcome, {{ user.fname }}!<br>
 Your point total is {{ user.points }}.<br>
 {% for buddy in user.buddies %}
@@ -24,12 +29,18 @@ Look at all your nice stuff:<br>
 
 Your med list is:<br>
 {% for med in user.usermeds %}
-<li>{{ med.med.generic_name }}</li>
+<li>{{ med.med.med_name }}</li>
 {% endfor %}<br>
 
-
+{% endif %} -->
+{% block sidebar %}
+{% if user %}
+hi :) 
 
 {% else %}
+
+User Profile<br>
+
 <form id="log-in" action="/login" method="POST">
     <fieldset>
         <legend>Log In:</legend>
@@ -57,6 +68,9 @@ Your med list is:<br>
         <input type="submit" aria-label="submit-and-create-account" value="Create My Account">
     </fieldset>
 </form>
+{% endif %}
+{% endblock %}
+
 <!-- <body>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <div id="g_id_onload"
@@ -98,5 +112,3 @@ Your med list is:<br>
      data-width="40">
 </div> -->
 
-{% endif %}
-{% endblock %}

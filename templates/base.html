@@ -20,6 +20,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js" crossorigin></script>
 <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+{% block js %}
+{% endblock %}
 <link href="/static/css/site.css" rel="stylesheet">
 <link href="/static/bootstrap-5.2.0-beta1-dist/css/css-overrides.css" rel="stylesheet">
 
@@ -77,7 +80,7 @@
                       <li>
                         <hr class="dropdown-divider">
                       </li>
-                      <li><a class="dropdown-item" href="/med-profile">My Buddies</a></li>
+                      <li><a class="dropdown-item" href="/customize">Customize (HTML)</a></li>
                     </ul>
                     <li>
                       <hr class="dropdown-divider">
@@ -158,11 +161,26 @@ Hey there, {{ user.fname }}!
   <div class="sidebar-content">
 You have {{ user.points }} points! </div>
 
-  <div class="sidebar-item">
-    <div class="sidebar-content">
-  Your main buddy is {{ user.buddies }}
-    </div>
+<div id="allBuddies" class="carousel slide carousel-dark carousel-fade" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    {% for buddy in user.buddies %}
+    <div class="carousel-item active">
+      <img src="{{buddy.buddy_img}}" class="d-block w-100" alt="{{buddy.buddy_alt}}">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>{{buddy.buddy_name}}</h5>
+      </div>
+  </div>
+  {% endfor %}
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
 </div>
+
 
 <div class="sidebar-item">
   <div class="sidebar-content">
@@ -175,8 +193,6 @@ Upcoming Doses:
   </div>
 </div>
 
-    {% block js %}
-    {% endblock %}
 {% block footer %}
 <div>
 <footer>

@@ -43,20 +43,31 @@ Schedule Your Meds</h5>
     <legend class="col-form-label col-sm-2 pt-0">Select Meds:</legend>
     <div class="col-sm-10">
     {% for med in user.usermeds %}
-    {% if med.taken_regularly == True %}
+      {% if med.taken_regularly == True and med.currently_taking == True %}
     <div class="row g-3">
       <div class="col-sm">
           <div class="form-check">
             <div><input class="form-check-input" type="checkbox" name="medfordose" value="{{ med.med_id }}" id="{{ med.med_id}}">
               <label for="{{ med.med_id }}">
-              {{ med.med.generic_name }}</label>
+              {{ med.med.med_name }}</label>
             </div>
           </div>
               {% endif %}
+                {% if med.taken_regularly == False and med.currently_taking == True %}
+                <div class="row g-3">
+                  <div class="col-sm">
+                      <div class="form-check">
+                        <div><input class="form-check-input" type="checkbox" name="medfordose" value="{{ med.med_id }}" id="{{ med.med_id}}">
+                          <label for="{{ med.med_id }}">
+                          {{ med.med.med_name }}</label>
+                        </div>
+                      </div>
+                  {% endif %}
+          
               {% endfor %}
             </div>
-</div>
       </div>
+    </div>
     <div class="row mb-3">
   <div class="col-sm-2 col-form-label">
       <label for="time">Time of Dose:</label>
@@ -71,7 +82,7 @@ Schedule Your Meds</h5>
       <label for="date">Date of First Dose:</label>
   </div>
   <div class="col-sm-10">
-      <input type="date" name="date" id="date" class="form-control">
+      <input type="date" name="time" id="date" class="form-control">
   </div>
 </div>
 
@@ -82,23 +93,24 @@ Schedule Your Meds</h5>
     <div class="col-sm-10">
         <input type="number" name="repeat" class="form-control" placeholder="Number of Days" aria-label="Username">
       </div>
-      <div>
-      <p>
+    </div>
 
+      <p>
 
       <input type="checkbox" id="calendar" name="calendar" value="calendar">
       <label for="calendar"> Add to Google Calendar</label></p>
+      </p>
 <p>
       <input type="submit" value="Add to MedBuddy Schedule" aria-label="Add to Schedule"></input>
       <input type="reset" aria-label="reset" value="Reset"><br>
 
 </p>
-
     </fieldset>
   </form>
 </div>
 </div>
 </div>
+
   {% endblock %}
 
 

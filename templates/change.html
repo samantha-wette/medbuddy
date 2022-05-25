@@ -18,7 +18,7 @@
     {% endif %}
 
       <div class="card-body text-center">
-      <h5 class="card-title" id="med to update">{{ med.med.generic_name }}</h5>
+      <h5 class="card-title" id="med to update">{{ med.med.med_name }}</h5>
       <input type="hidden" id="med-to-update" name="med-to-update" value="{{ med.usermed_id }}">
 
       <p class="card-text">
@@ -34,18 +34,18 @@
             <input class="form-check-input" type="checkbox" role="switch" id="daily" name="regular" checked>
             <label class="form-check-label" for="daily">I take this daily.</label>
         </div>
-            <div>
+            <!-- <div>
               <label for="daily-time">If daily, what time do you take it?</label>
-              <input type="time" name="timepicker" class="timepicker" id="daily-time" value="{{med.typical_time}}"/>
+              <input type="time" name="timepicker" class="timepicker" id="daily-time" value="{{med.typical_time}}"/> -->
             {% else %}
             <input class="form-check-input" type="checkbox" role="switch" id="daily" name="regular">
             <label class="form-check-label" for="daily">I take this daily.</label>
           </div>
-          <div>
+          <!-- <div>
             <label for="daily-time">If daily, what time do you take it?</label>
-            <input type="time" name="timepicker" class="timepicker" id="daily-time"/>
+            <input type="time" name="timepicker" class="timepicker" id="daily-time"/> -->
           {% endif %}
-          </div>
+          <!-- </div> -->
 
           <div class="form-check form-switch">
             {% if med.taken_as_needed == True %}

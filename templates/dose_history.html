@@ -87,7 +87,7 @@
             <tr>
               <th scope="col">Medication</th>
               <th scope="col">Daily</th>
-              <th scope="col">Short-Term</th>
+              <!-- <th scope="col">Short-Term</th> -->
               <th scope="col">As Needed</th>
               <th scope="col">Currently Taking?</th>
               <th scope="col">Typical Dose</th>
@@ -96,12 +96,13 @@
           <tbody>
             {% for med in user.usermeds %} 
             <tr>
-              <th scope="row">{{ med.med.generic_name }}</th>
+              <th scope="row">{{ med.med.med_name }}</th>
               <td>{{ med.taken_regularly }}</td>
-              <td>{{ med.taken_short_term }}</td>
+              <!-- <td>{{ med.taken_short_term }}</td> -->
               <td>{{ med.taken_as_needed }}</td>
               <td>{{ med.currently_taking }}</td>
               <td>{{ med.typical_dose }}</td>
+
             </tr>
             {% endfor %}
           </tbody>
@@ -119,7 +120,7 @@
       <div class="accordion-body">
         Doses Taken:<br>
         {% for dose in doses_taken %}
-        <li>{{ dose.med.generic_name }} (taken {{ dose.time_taken}})</li>
+        <li>{{ dose.med.med_name }} (taken {{ dose.time_taken}})</li>
         {% endfor %}<br><br>
         
 
@@ -137,7 +138,7 @@
     <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body">
         {% for dose in doses_missed %}
-<li>{{ dose.med.generic_name }} (scheduled for {{dose.date}} at {{dose.time}}) </li>
+<li>{{ dose.med.med_name }} (scheduled for {{dose.date}} at {{dose.time}}) </li>
 {% endfor %}<br><br>
 
       </div>

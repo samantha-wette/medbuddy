@@ -2,6 +2,8 @@
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date, datetime, timedelta
+# from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+
 # from flask_login import UserMixin
 
 from sqlalchemy import CheckConstraint
@@ -32,6 +34,7 @@ class User(db.Model):
     #accessories is a list of Accessory objects
     #buddies is a list of Buddy objects
     #doses is a list of Dose objects
+
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email} password={self.password}>'
  
@@ -58,6 +61,7 @@ class User(db.Model):
         user = cls.query.get(user_id)
         new_points = user.points - num
         user.points = new_points
+
     @classmethod
     def get_by_id(cls, user_id):
         '""Find a user by their ID"""'
@@ -117,9 +121,8 @@ class Med(db.Model):
     med_id = db.Column(db.Integer,
                         autoincrement=True,
                         primary_key=True)
-    generic_name = db.Column(db.String,
+    med_name = db.Column(db.String,
                         nullable=False)
-    brand_name = db.Column(db.String)
     med_information = db.Column(db.String)
     official = db.Column(db.Boolean, nullable=False)
     added_by = db.Column(db.Integer)
@@ -132,13 +135,12 @@ class Med(db.Model):
 
     def __repr__(self):
         return f'<Med med_id={self.med_id}\
-        generic_name={self.generic_name} brand_name ={self.brand_name}>'
+        med_name={self.med_name}>'
 
     @classmethod
-    def create(cls, generic_name, brand_name, med_information, official, added_by=None):
+    def create(cls, med_name, med_information, official, added_by=None):
         """Create and return a Med object"""
-        return cls(generic_name=generic_name,
-                brand_name=brand_name,
+        return cls(med_name=med_name,
                 med_information=med_information,
                 official=official,
                 added_by = added_by)
@@ -149,14 +151,9 @@ class Med(db.Model):
         return cls.query.filter(cls.med_id == med_id).first()
 
     @classmethod
-    def get_by_generic_name(cls, generic_name):
-        """Find a med by its generic name"""
-        return cls.query.filter(Med.generic_name == generic_name).first()
-
-    @classmethod
-    def get_by_brand_name(cls, brand_name):
-        """Find a med by its brand name"""
-        return cls.query.filter(cls.brand_name == brand_name).first()
+    def get_by_med_name(cls, med_name):
+        """Find a med by its name"""
+        return cls.query.filter(Med.med_name == med_name).first()
 
     @classmethod
     def get_doses(cls, med_id):
@@ -190,13 +187,13 @@ class UserMed(db.Model):
                         default=False)
     taken_as_needed = db.Column(db.Boolean,
                         default=False)
-    taken_short_term = db.Column(db.Boolean,
-                        default=False)
+    # taken_short_term = db.Column(db.Boolean,
+    #                     default=False)
     currently_taking = db.Column(db.Boolean, default=True)
 
     typical_dose = db.Column(db.String, default=None)
 
-    typical_time = db.Column(db.Time, default=None)
+    # typical_time = db.Column(db.Time, default=None)
 
     last_updated_date = db.Column(db.Date, default=None)
     last_updated_time = db.Column(db.Time, default=None)
@@ -210,16 +207,26 @@ class UserMed(db.Model):
         return f'<UserMed usermed_id={self.usermed_id} user_id={self.user_id} med_id={self.med_id}>'
     
     @classmethod
-    def create(cls, user_id, med_id, taken_regularly, taken_as_needed, taken_short_term, currently_taking, typical_dose=None, typical_time=None, last_updated_date=None, last_updated_time=None):
+    def create(cls,
+                user_id,
+                med_id,
+                taken_regularly,
+                taken_as_needed,
+                # taken_short_term,
+                currently_taking,
+                typical_dose=None,
+                # typical_time=None,
+                last_updated_date=None,
+                last_updated_time=None):
         """Create and return a UserMed object"""
         return cls(user_id=user_id,
                 med_id=med_id,
                 taken_regularly=taken_regularly,
                 taken_as_needed=taken_as_needed,
-                taken_short_term=taken_short_term,
+                # taken_short_term=taken_short_term,
                 currently_taking=currently_taking,
                 typical_dose=typical_dose,
-                typical_time=typical_time,
+                # typical_time=typical_time,
                 last_updated_date=last_updated_date,
                 last_updated_time=last_updated_time)
 
@@ -242,10 +249,10 @@ class UserMed(db.Model):
         if usermed.taken_regularly ==True:
             usermed.taken_reguarly=False
 
-    @classmethod
-    def set_typical_time(cls, usermed_id, typical_time):
-        usermed = cls.query.get(usermed_id)
-        usermed.typical_time = typical_time
+    # @classmethod
+    # def set_typical_time(cls, usermed_id, typical_time):
+    #     usermed = cls.query.get(usermed_id)
+    #     usermed.typical_time = typical_time
 
     @classmethod
     def set_taken_as_needed(cls, usermed_id):
@@ -278,14 +285,6 @@ class UserMed(db.Model):
 
 
     @classmethod
-    def switch_taken_short_term(cls, usermed_id):
-        usermed = cls.query.get(usermed_id)
-        if usermed.taken_short_term == False:
-            usermed.taken_short_term = True
-        if usermed.taken_short_term ==True:
-            usermed.taken_short_term=False
-
-    @classmethod
     def as_needed_by_user(cls, user_id):
         return cls.query.filter(cls.taken_as_needed == True, cls.user_id == user_id).all()
 
@@ -309,6 +308,10 @@ class Accessory(db.Model):
     accessory_img = db.Column(db.String,
                         nullable=False)
     accessory_alt = db.Column(db.String)
+    is_hat = db.Column(db.Boolean, default=False)
+    is_glasses = db.Column(db.Boolean, default=False)
+    is_random = db.Column(db.Boolean, default=False)
+    is_background = db.Column(db.Boolean, default=False)
     users = db.relationship("User", secondary="user_accessory", backref="accessories")
     #compatible_buddies is a list of Buddy objects
 
@@ -316,13 +319,17 @@ class Accessory(db.Model):
         return f'<Accessory accessory_id={self.accessory_id} accessory_name={self.accessory_name}>'
     
     @classmethod
-    def create(cls, accessory_name, accessory_cost, accessory_description, accessory_img, accessory_alt):
+    def create(cls, accessory_name, accessory_cost, accessory_description, accessory_img, accessory_alt, is_hat, is_glasses, is_random, is_background):
         """Create and return an Accessory object"""
         return cls(accessory_name=accessory_name,
                 accessory_cost=accessory_cost,
                 accessory_description=accessory_description,
                 accessory_img=accessory_img,
-                accessory_alt=accessory_alt)
+                accessory_alt=accessory_alt,
+                is_hat=is_hat,
+                is_glasses=is_glasses,
+                is_random=is_random
+                )
 
     @classmethod
     def get_by_id(cls, accessory_id):
@@ -425,7 +432,7 @@ class Buddy(db.Model):
 
 
 class UserBuddy(db.Model):
-    """A user's buddies. (secondary table)"""
+    """A user's buddies."""
 
     __tablename__ = 'user_buddies'
 
@@ -437,10 +444,29 @@ class UserBuddy(db.Model):
     buddy_id = db.Column(db.Integer,
                         db.ForeignKey("buddies.buddy_id"),
                         nullable = False)
+    
+    primary_buddy = db.Column(db.Boolean, default=False)
+
+    buddy = db.relationship("Buddy", backref="userbuddies")
+    user = db.relationship("User", backref="userbuddies")
 
     def __repr__(self):
         return f'<UserBuddy userbuddy_id={self.userbuddy_id} user_id={self.user_id}\
-            buddy_id={self.buddy_id}>'
+            buddy_id={self.buddy_id} primary={self.primary_buddy}>'
+    
+    @classmethod
+    def create(cls, user_id, buddy_id, primary_buddy=False):
+        """Create and return a UserBuddy object"""
+        return cls(user_id=user_id,
+                buddy_id=buddy_id,
+                primary_buddy=primary_buddy)
+
+    @classmethod
+    def make_primary_buddy(cls, userbuddy_id):
+        """Mark a buddy as a user's primary buddy"""
+        userbuddy = cls.query.get(userbuddy_id)
+        userbuddy.primary_buddy = True
+    
 
 class WearableBy(db.Model):
     """Which buddies can wear which accessories. (secondary table)"""

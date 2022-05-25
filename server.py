@@ -19,6 +19,9 @@ import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import hashlib
 from googleapiclient.errors import HttpError
+# from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+
+
 
 CLIENT_SECRETS_FILE = "client_secret.json"
 SCOPES = ['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/userinfo.email', 'openid', 'https://www.googleapis.com/auth/userinfo.profile']
@@ -26,6 +29,13 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 app = Flask(__name__)
 app.secret_key = "ruvndexfdm"
+# login_manager = LoginManager()
+# login_manager.init_app(app)
+
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return User.get(user_id)
+
 
 @app.route('/')
 def home():
@@ -101,8 +111,9 @@ def search():
 
 
 @app.route('/authorize')
-#make sure to do a redirect
 def authorize():
+    """Authorizes Google Calendar"""
+
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
     'client_secret.json', scopes=SCOPES)
     flow.redirect_uri = url_for('oauth2callback', _external=True)
@@ -110,12 +121,12 @@ def authorize():
         access_type = 'offline',
         included_grant_scopes = 'true'
     )
-    print(f"the state from google is {state} ***********************")
     session['state'] = state
     return redirect(authorization_url)
 
 @app.route('/oauth2callback')
 def oauth2callback():
+    """Sets credentials"""
     state = session['state']
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(CLIENT_SECRETS_FILE, scopes = SCOPES, state = state)
     flow.redirect_uri = url_for('oauth2callback', _external=True)
@@ -137,6 +148,7 @@ def oauth2callback():
 @app.route("/users", methods=["POST"])
 def create_new_user():
     """Create a new user."""
+
     email = request.form.get("email")
     password = request.form.get("password")
     fname = request.form.get("fname")
@@ -168,7 +180,6 @@ def handle_login():
     else:
         session["user"] = user.user_id
         session.modified = True
-        print(session["user"])
         flash(f"Welcome back, {user.fname}!")
 
     return redirect("/")
@@ -180,7 +191,6 @@ def handle_logout():
         session.pop(key)
     flash("See you next time!")
     return redirect("/")
-
 
 @app.route('/add-med', methods=["POST"])
 def add_med():
@@ -194,11 +204,11 @@ def add_med():
     else:
         taken_regularly=False
 
-    taken_short_term=request.form.get("series")
-    if taken_short_term:
-        taken_short_term=True
-    else:
-        taken_short_term=False
+    # taken_short_term=request.form.get("series")
+    # if taken_short_term:
+    #     taken_short_term=True
+    # else:
+    #     taken_short_term=False
 
     taken_as_needed=request.form.get("as-needed")
     if taken_as_needed:
@@ -218,13 +228,13 @@ def add_med():
     else:
         typical_dose=None
     
-    typical_time=request.form.get("timepicker")
-    if typical_time:
-        typical_time = typical_time
-    else:
-        typical_time=None
+    # typical_time=request.form.get("timepicker")
+    # if typical_time:
+    #     typical_time = typical_time
+    # else:
+    #     typical_time=None
 
-    med = Med.get_by_generic_name(med_name)
+    med = Med.get_by_med_name(med_name)
 
     if med:
         med_id = med.med_id
@@ -232,38 +242,37 @@ def add_med():
                                     med_id=med_id,
                                     taken_regularly=taken_regularly,
                                     taken_as_needed=taken_as_needed,
-                                    taken_short_term=taken_short_term,
+                                    # taken_short_term=taken_short_term,
                                     currently_taking=currently_taking,
                                     typical_dose=typical_dose,
-                                    typical_time=typical_time,
+                                    # typical_time=typical_time,
                                     last_updated_date=date.today(),
                                     last_updated_time=datetime.now().time())
         
     else:
-        med = Med.create(generic_name=med_name,
-                                brand_name=None,
+        med = Med.create(med_name=med_name,
                                 med_information = None,
                                 official=False,
                                 added_by = int(user_id))
         db.session.add(med)
         db.session.commit()
-        med = Med.get_by_generic_name(med_name)
+        med = Med.get_by_med_name(med_name)
         med_id = med.med_id
         added_med = UserMed.create(user_id=user_id,
                                     med_id=med_id,
                                     taken_regularly=taken_regularly,
                                     taken_as_needed=taken_as_needed,
-                                    taken_short_term=taken_short_term,
+                                    # taken_short_term=taken_short_term,
                                     currently_taking=currently_taking,
                                     typical_dose=typical_dose,
-                                    typical_time=typical_time,
+                                    # typical_time=typical_time,
                                     last_updated_date=date.today(),
                                     last_updated_time=datetime.now().time())
 
     db.session.add(added_med)
     db.session.commit()
     session.modified = True
-    flash(f"{med.generic_name} was added to your profile.")
+    flash(f"{med.med_name} was added to your profile.")
     return redirect("/add")
 
 @app.route('/change')
@@ -283,7 +292,6 @@ def change_meds():
 def update_med():
     """Change a medication on a user's profile"""
 
-    user_id = session["user"]
     usermed_id = request.form.get("med-to-update")
     usermed_id = int(usermed_id)
 
@@ -291,18 +299,17 @@ def update_med():
     if taken_regularly:
         taken_regularly=True
         UserMed.make_taken_regularly(usermed_id)
-        typical_time=request.form.get("timepicker")
-        if typical_time:
-            print("TYPICAL TIMEEEE")
-            print(typical_time)
-            typical_time = typical_time
-            UserMed.set_typical_time(usermed_id=usermed_id, typical_time=typical_time)
+        # typical_time=request.form.get("timepicker")
+        # if typical_time:
+        #     print("TYPICAL TIMEEEE")
+        #     print(typical_time)
+        #     typical_time = typical_time
+        #     UserMed.set_typical_time(usermed_id=usermed_id, typical_time=typical_time)
 
     else:
         taken_regularly=False
         UserMed.make_not_taken_regularly(usermed_id)
         Dose.cancel_upcoming_doses_by_usermed(usermed_id)
-
 
     taken_as_needed=request.form.get("as-needed")
     if taken_as_needed:
@@ -344,23 +351,22 @@ def update_med():
     return redirect("/change")
 
 
-@app.route('/remove-med', methods=["POST"])
-def remove_med():
-    """Remove a med from a user's profile"""
-    user_id = session["user"]
-    med_id = request.form.get("med-to-remove")
-    med_id = int(med_id)
+# @app.route('/remove-med', methods=["POST"])
+# def remove_med():
+#     """Remove a med from a user's profile"""
+#     user_id = session["user"]
+#     med_id = request.form.get("med-to-remove")
+#     med_id = int(med_id)
 
-    #delete med from profile
-    old_med = crud.delete_med_from_user(user_id = user_id, med_id = med_id)
-    db.session.commit()
-    session.modified = True
-    flash(f"med {med_id} has been removed.")
+#     #delete med from profile
+#     old_med = crud.delete_med_from_user(user_id = user_id, med_id = med_id)
+#     db.session.commit()
+#     session.modified = True
+#     flash(f"med {med_id} has been removed.")
 
-    #delete all upcoming doses of that med from profile
-    doses_of_old_med = crud.delete_doses_of_med_from_user(user_id = user_id, med_id = med_id)
-    return redirect("/schedule")
-
+#     #delete all upcoming doses of that med from profile
+#     doses_of_old_med = crud.delete_doses_of_med_from_user(user_id = user_id, med_id = med_id)
+#     return redirect("/schedule")
 
 @app.route('/my-meds')
 def view_dose_history():
@@ -405,8 +411,9 @@ def add_buddy():
     else:
         buddy_id = request.form.get("buddy-id")
         buddy = Buddy.get_by_id(buddy_id)
-        new_buddy = crud.add_buddy_to_user(user_id = user_id, buddy_id = buddy_id)
-        new_points = User.spend_points(user_id, 15)
+        new_buddy = UserBuddy.create(user_id = user_id, buddy_id = buddy_id, primary_buddy = False)
+        db.session.add(new_buddy)
+        User.spend_points(user_id, 15)
         db.session.commit()
         flash(f"Welcome home, {buddy.buddy_name}. You'll love it here.")
         flash(f"{user.fname}, your new point total is {user.points}.")
@@ -550,7 +557,7 @@ def add_dose():
     meds = []
     for value in values:
         usermed = UserMed.get_by_user_and_med(user_id=user_id, med_id=value)
-        med_name = usermed.med.generic_name
+        med_name = usermed.med.med_name
         meds.append(med_name)
 
 
@@ -687,21 +694,11 @@ def data():
         usermeds = []
         for med in user.usermeds:
             usermeds.append({'id': med.med.med_id,
-                            'name': med.med.generic_name,
+                            'name': med.med.med_name,
                             'information': med.med.med_information,
                             'official': med.med.official,
                             'current': med.currently_taking})
 
-        userdoses = []
-        for dose in user.doses:
-            userdoses.append({ 'dose_id': dose.dose_id,
-                                        'med_id': dose.med_id,
-                                        'med_name': dose.med.generic_name,
-                                        'med_info': dose.med.med_information,
-                                        'date_time': dose.date_time,
-                                        'taken': dose.taken,
-                                        'time_taken': dose.time_taken
-                                        })
         user_dict = {
                     'id': id,
                     'fname' : fname,
@@ -712,7 +709,7 @@ def data():
                     'buddies': userbuddies,
                     'accessories': useraccessories,
                     'meds': usermeds,
-                    'doses': userdoses,
+                    # 'doses': userdoses,
                     'img': img
                     }
         return user_dict
@@ -728,8 +725,53 @@ def selector():
 @app.route('/dressup')
 def dressup():
     """View dressup page."""
+    if "user" in session:
+        user_id = session["user"]
+        user = User.get_by_id(user_id)
+        return render_template('dressup.html', user=user)
+    else:
+        flash(f"Looks like you need to log in!")
+        return redirect("/")
 
-    return render_template('dressup.html')
+@app.route('/customize')
+def customize():
+    """Select a main buddy and customize."""
+    if "user" in session:
+        user_id = session["user"]
+        user = User.get_by_id(user_id)
+        return render_template('customize.html', user=user)
+    else:
+        flash(f"Looks like you need to log in!")
+        return redirect("/")
+
+@app.route('/process-customization]', methods=["POST"])
+def process_customization():
+    """Process the customization"""
+
+    chosen_buddy = request.form.get("chosen-buddy")
+    chosen_buddy = int(chosen_buddy)
+    chosen_hat = request.form.getlist("chosen-hat")
+    chosen_glasses = request.form.getlist("chosen-glasses")
+    chosen_random = request.form.getlist("chosen-random")
+    chosen_background = request.form.getlist("chosen-background")
+    buddy_url = f"buddy{chosen_buddy}_{chosen_hat}_{chosen_glasses}_{chosen_random}_{chosen_background}"
+
+    UserBuddy.update_url(chosen_buddy, buddy_url)
+    return redirect("/customize")
+
+
+@app.route('/choose-buddy', methods=["POST"])
+def choose_buddy():
+    """Choose a main buddy and dress them with accessories (REACT)"""
+    user_id = session["user"]
+    chosen_buddy = request.form.get("chosen-buddy")
+    chosen_accessories = request.form.get("chosen-accessories")
+
+    main_buddy = UserBuddy.make_primary_buddy(userbuddy_id=chosen_buddy)
+    db.session.commit()
+    flash("Your main buddy has been updated!")
+
+    return render_template('/')
 
 
 
@@ -740,7 +782,7 @@ def med_data():
     official_meds = Med.get_official()
     official = []
     for med in official_meds:
-        official.append({'name': med.generic_name,
+        official.append({'name': med.med_name,
                         'info': med.med_information})
 
     if 'user' in session:
@@ -749,7 +791,7 @@ def med_data():
             unofficial_meds=Med.get_unofficial_by_user(user_id)
             unofficial = []
             for med in unofficial_meds:
-                unofficial.append({'name': med.generic_name,
+                unofficial.append({'name': med.med_name,
                                     'info': med.med_information})
         except:
             unofficial = None
