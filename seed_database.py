@@ -30,7 +30,6 @@ def create_buddies():
         buddy_img3 = (buddy_dicts[buddy_dict]["buddy_img3"])
         buddy_alt3 = (buddy_dicts[buddy_dict]["buddy_alt3"])
         buddy_img2_3 = (buddy_dicts[buddy_dict]["buddy_img2_3"])
-
         buddy_alt2_3 = (buddy_dicts[buddy_dict]["buddy_alt2_3"])
 
         buddy=model.Buddy.create(buddy_name = buddy_name,
@@ -66,8 +65,14 @@ def create_accessories():
         accessory_description=(accessory_dict[accessory]["accessory_description"])
         accessory_img=(accessory_dict[accessory]["accessory_img"])
         accessory_alt=(accessory_dict[accessory]["accessory_alt"])
+        is_hat=(accessory_dict[accessory]["is_hat"])
+        is_glasses=(accessory_dict[accessory]["is_glasses"])
+        is_random=(accessory_dict[accessory]["is_random"])
+        is_background=(accessory_dict[accessory]["is_background"])
+
         accessory=model.Accessory.create(accessory_name=accessory_name, accessory_cost=accessory_cost, 
-        accessory_description=accessory_description, accessory_img=accessory_img, accessory_alt=accessory_alt)
+        accessory_description=accessory_description, accessory_img=accessory_img, accessory_alt=accessory_alt,
+        is_hat=is_hat, is_glasses=is_glasses, is_random=is_random, is_background=is_background)
         accessories_in_db.append(accessory)
 
     model.db.session.add_all(accessories_in_db)

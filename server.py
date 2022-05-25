@@ -755,8 +755,9 @@ def process_customization():
     chosen_random = request.form.getlist("chosen-random")
     chosen_background = request.form.getlist("chosen-background")
     buddy_url = f"buddy{chosen_buddy}_{chosen_hat}_{chosen_glasses}_{chosen_random}_{chosen_background}"
-
-    UserBuddy.update_url(chosen_buddy, buddy_url)
+    buddy_alt = "Alt"
+    
+    UserBuddy.update_url(userbuddy_id=chosen_buddy, buddy_url=buddy_url, buddy_alt=buddy_alt)
     return redirect("/customize")
 
 

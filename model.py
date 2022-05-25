@@ -328,7 +328,8 @@ class Accessory(db.Model):
                 accessory_alt=accessory_alt,
                 is_hat=is_hat,
                 is_glasses=is_glasses,
-                is_random=is_random
+                is_random=is_random,
+                is_background=is_background
                 )
 
     @classmethod
@@ -446,6 +447,8 @@ class UserBuddy(db.Model):
                         nullable = False)
     
     primary_buddy = db.Column(db.Boolean, default=False)
+    url = db.Column(db.String, nullable=False)
+    alt = db.Column(db.String, nullable=False)
 
     buddy = db.relationship("Buddy", backref="userbuddies")
     user = db.relationship("User", backref="userbuddies")
@@ -455,11 +458,13 @@ class UserBuddy(db.Model):
             buddy_id={self.buddy_id} primary={self.primary_buddy}>'
     
     @classmethod
-    def create(cls, user_id, buddy_id, primary_buddy=False):
+    def create(cls, user_id, buddy_id, primary_buddy=False, url, alt):
         """Create and return a UserBuddy object"""
         return cls(user_id=user_id,
                 buddy_id=buddy_id,
-                primary_buddy=primary_buddy)
+                primary_buddy=primary_buddy,
+                url=url,
+                alt=alt)
 
     @classmethod
     def make_primary_buddy(cls, userbuddy_id):
@@ -467,6 +472,13 @@ class UserBuddy(db.Model):
         userbuddy = cls.query.get(userbuddy_id)
         userbuddy.primary_buddy = True
     
+    @classmethod
+    def update_url(cls, userbuddy_id, buddy_url, buddy_alt):
+        """Mark a buddy as a user's primary buddy"""
+        userbuddy = cls.query.get(userbuddy_id)
+        userbuddy.url = buddy_url
+        userbuddy.alt = buddy_alt
+
 
 class WearableBy(db.Model):
     """Which buddies can wear which accessories. (secondary table)"""

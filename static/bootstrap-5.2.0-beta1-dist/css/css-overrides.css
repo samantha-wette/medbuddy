@@ -35,7 +35,7 @@ html,body{
   min-width: 100vw;
 }
 .parent{
-  height: 25;
+  height: 100vh;
 }
 .parent>.row{
   display: flex;

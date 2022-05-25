@@ -1,4 +1,37 @@
 {% extends 'base.html' %}
+{% block body %}
+<body>
+  <script>
+  var limit = 1;
+$('input.single-hat').on('click', function (evt) {
+    if ($('.single-hat:checked').length > limit) {
+        this.checked = false;
+    }
+});
+
+var limit = 1;
+$('input.single-glasses').on('click', function (evt) {
+    if ($('.single-glasses:checked').length > limit) {
+        this.checked = false;
+    }
+});
+
+var limit = 1;
+$('input.single-random').on('click', function (evt) {
+    if ($('.single-random:checked').length > limit) {
+        this.checked = false;
+    }
+});
+
+var limit = 1;
+$('input.single-background').on('click', function (evt) {
+    if ($('.single-background:checked').length > limit) {
+        this.checked = false;
+    }
+});
+
+  </script>
+      {% endblock %}
 
 {% block content %}
 {% if not user.buddies %}
@@ -32,13 +65,13 @@
     <div class="container parent">
       <div class="row">
 
-      {% for accessory in user.accessories %}
-      <legend>How about a hat?</legend>
+      <h4>How about a hat?</h4>
       <div class="row">
-      {% if accessory.accessory.is_hat == True %}
+      {% for accessory in user.accessories %}
+      {% if accessory.is_hat == True %}
         <div class='col text-center'>
         <div class='form-check'>
-        <input type="checkbox" name="chosen-hat" id="{{ accessory.accessory_id }}" class="d-none imgbgchk" value="">
+        <input type="checkbox" name="chosen-hat" id="{{ accessory.accessory_id }}" class="d-none imgbgchk single-hat" value="">
           <label for="{{ accessory.accessory_id }}">
             <img src="{{ accessory.accessory_img }}" alt="{{accessory.accessory_alt}}">
             <div class="tick_container">
@@ -50,9 +83,75 @@
         </div>
         </div>
         {% endif %}
-        <div class="row">
-            
-          {% endfor %}
+        {% endfor %}
+      </div>
+
+      <h4>How about some glasses?</h4>
+      <div class="row">
+      {% for accessory in user.accessories %}
+      {% if accessory.is_glasses == True %}
+        <div class='col text-center'>
+        <div class='form-check'>
+        <input type="checkbox" name="chosen-hat" id="{{ accessory.accessory_id }}" class="d-none imgbgchk single-glasses" value="">
+          <label for="{{ accessory.accessory_id }}">
+            <img src="{{ accessory.accessory_img }}" alt="{{accessory.accessory_alt}}">
+            <div class="tick_container">
+              <div class="tick">
+                <i class="fa fa-check"></i>
+              </div>
+            </div>
+          </label>
+        </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+
+      </div>
+
+      <h4>How about a background?</h4>
+      <div class="row">
+      {% for accessory in user.accessories %}
+      {% if accessory.is_background == True %}
+        <div class='col text-center'>
+        <div class='form-check'>
+        <input type="checkbox" name="chosen-hat" id="{{ accessory.accessory_id }}" class="d-none imgbgchk single-background" value="">
+          <label for="{{ accessory.accessory_id }}">
+            <img src="{{ accessory.accessory_img }}" alt="{{accessory.accessory_alt}}">
+            <div class="tick_container">
+              <div class="tick">
+                <i class="fa fa-check"></i>
+              </div>
+            </div>
+          </label>
+        </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+
+      </div>
+
+      <h4>How about something else?</h4>
+      <div class="row">
+      {% for accessory in user.accessories %}
+      {% if accessory.is_random == True %}
+        <div class='col text-center'>
+        <div class='form-check'>
+        <input type="checkbox" name="chosen-hat" id="{{ accessory.accessory_id }}" class="d-none imgbgchk single-random" value="">
+          <label for="{{ accessory.accessory_id }}">
+            <img src="{{ accessory.accessory_img }}" alt="{{accessory.accessory_alt}}">
+            <div class="tick_container">
+              <div class="tick">
+                <i class="fa fa-check"></i>
+              </div>
+            </div>
+          </label>
+        </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+
+
       </div>
     </div>
 
