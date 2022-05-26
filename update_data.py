@@ -1,11 +1,11 @@
 from bs4 import BeautifulSoup
-from pyparsing import dict_of
 import requests
 import json
 
 
 def create_meds_dict():
     """Used to scrape up-to-date A-Z medication list from drugs.com"""
+
     meds_dict = {}
     med_list = []
     url_suffixes = ['0-9']
@@ -26,8 +26,9 @@ def create_meds_dict():
             doc = BeautifulSoup(result.text, "html.parser")
             meds = doc.find(class_="ddc-list-column-2")
 
+        #try searching for meds in lis
+
             for med in meds.find_all('li'):
-                print(f"THE MED IS {med}")
                 med_name = med.a.get_text()
                 med_name = str(med_name)
                 med_info = med.a.get('href')
@@ -35,10 +36,13 @@ def create_meds_dict():
                 url = f"https://www.drugs.com{med_info}"
                 url = str(url)
                 med_list.append((med_name, url))
+                print(f"{med} added to med_list")
+
         except:
             print(f"{url} appended to url_list_2, will try again")
             url_list_2.append(url)
 
+        #try searching for meds in ddc-list-unstyled uls
     for url in url_list_2:
         try:
             result=requests.get(url)
@@ -53,10 +57,11 @@ def create_meds_dict():
                 url = f"https://www.drugs.com{med_info}"
                 url = str(url)
                 med_list.append((med_name, url))
+                print(f"{med} added to med_list")
         except:
             print(f"There are no meds at {url}")
     
-    print(f"The med_list is {med_list}")
+    #put completed med list into JSON file
 
     index = 0
     for med, url in med_list:
@@ -69,16 +74,17 @@ def create_meds_dict():
     print('Data has been dumped into meds.json')
 
 def delete_duplicates():
+    """Remove duplicates from the med database"""
+
     no_duplicates = {}
     file = open('static/data/meds.json', 'r')
     json_data = json.load(file)
     dict_of_dicts = json.loads(json_data)
-    print(len(dict_of_dicts))
-    print("**********")
+
     for key, value in dict_of_dicts.items():
         if value not in no_duplicates.values():
             no_duplicates[key] = value
     meds_dict=json.dumps(no_duplicates)
     with open('static/data/meds.json', 'w') as json_file:
         json.dump(meds_dict, json_file)
-    print('DUMPED')
+    print('The data without duplicates has been dumped into meds.json')

@@ -342,11 +342,11 @@ class Accessory(db.Model):
         """Find a list of accessories by maximum price"""
         return cls.query.filter(cls.accessory_cost <= max_price).all()
 
-    @classmethod
-    def get_all_compatible_buddies(cls, accessory_id):
-        """Return a list of all buddies who can wear an acceessory"""
-        accessory = cls.query.options(db.joinedload('compatible_buddies')).get(accessory_id)
-        return accessory.compatible_buddies
+    # @classmethod
+    # def get_all_compatible_buddies(cls, accessory_id):
+    #     """Return a list of all buddies who can wear an acceessory"""
+    #     accessory = cls.query.options(db.joinedload('compatible_buddies')).get(accessory_id)
+    #     return accessory.compatible_buddies
 
     @classmethod
     def all_accessories(cls):
@@ -382,34 +382,104 @@ class Buddy(db.Model):
     buddy_name = db.Column(db.String,
                         nullable=False)
     buddy_description = db.Column(db.Text)
-    buddy_img = db.Column(db.String,
-                        nullable=False)
-    buddy_alt = db.Column(db.String)
-    buddy_img2 = db.Column(db.String)
-    buddy_alt2 = db.Column(db.String)
-    buddy_img3 = db.Column(db.String)
-    buddy_alt3 = db.Column(db.String)
-    buddy_img2_3 = db.Column(db.String)
-    buddy_alt2_3 = db.Column(db.String)
+
+    img_O_O = db.Column(db.String)
+    alt_O_O = db.Column(db.String)
+    img_O_a = db.Column(db.String)
+    alt_O_a = db.Column(db.String)
+    img_O_b = db.Column(db.String)
+    alt_O_b = db.Column(db.String)
+    img_O_c = db.Column(db.String)
+    alt_O_c = db.Column(db.String)
+    img_a_O = db.Column(db.String)
+    alt_a_O = db.Column(db.String)
+    img_a_a = db.Column(db.String)
+    alt_a_a = db.Column(db.String)
+    img_a_b = db.Column(db.String)
+    alt_a_b = db.Column(db.String)
+    img_a_c = db.Column(db.String)
+    alt_a_c = db.Column(db.String)
+    img_b_O = db.Column(db.String)
+    alt_b_O = db.Column(db.String)
+    img_b_a = db.Column(db.String)
+    alt_b_a = db.Column(db.String)
+    img_b_b = db.Column(db.String)
+    alt_b_b = db.Column(db.String)
+    img_b_c = db.Column(db.String)
+    alt_b_c = db.Column(db.String)
+    img_c_O = db.Column(db.String)
+    alt_c_O = db.Column(db.String)
+    img_c_a = db.Column(db.String)
+    alt_c_a = db.Column(db.String)
+    img_c_b = db.Column(db.String)
+    alt_c_b = db.Column(db.String)
+    img_c_c = db.Column(db.String)
+    alt_c_c = db.Column(db.String)
+
     user_id = db.Column(db.Integer,
                         db.ForeignKey("users.user_id"))
     users = db.relationship("User", secondary="user_buddies", backref="buddies")
-    wearable_accessories = db.relationship("Accessory", secondary="wearable_by", backref="compatible_buddies")
+    # wearable_accessories = db.relationship("Accessory", secondary="wearable_by", backref="compatible_buddies")
 
     @classmethod
-    def create(cls, buddy_name, buddy_description, buddy_img, buddy_alt,
-    buddy_img2, buddy_alt2, buddy_img3, buddy_alt3, buddy_img2_3, buddy_alt2_3):
+    def create(cls, buddy_name, buddy_description,
+    img_O_O, alt_O_O,
+    img_O_a, alt_O_a,
+    img_O_b, alt_O_b,
+    img_O_c, alt_O_c,
+    img_a_O, alt_a_O,
+    img_a_a, alt_a_a,
+    img_a_b, alt_a_b,
+    img_a_c, alt_a_c,
+    img_b_O, alt_b_O,
+    img_b_a, alt_b_a,
+    img_b_b, alt_b_b,
+    img_b_c, alt_b_c,
+    img_c_O, alt_c_O,
+    img_c_a, alt_c_a,
+    img_c_b, alt_c_b,
+    img_c_c, alt_c_c
+
+
+    ):
         """Create and return a Buddy object"""
         return cls(buddy_name=buddy_name,
                 buddy_description=buddy_description,
-                buddy_img=buddy_img,
-                buddy_alt=buddy_alt,
-                buddy_img2 = buddy_img2,
-                buddy_alt2 = buddy_alt2,
-                buddy_img3 = buddy_img3,
-                buddy_alt3 = buddy_alt3,
-                buddy_img2_3 = buddy_img2_3,
-                buddy_alt2_3 = buddy_alt2_3)
+
+
+                img_O_O = img_O_O,
+                alt_O_O = alt_O_O,
+                img_O_a = img_O_a,
+                alt_O_a = alt_O_a,
+                img_O_b = img_O_b,
+                alt_O_b = alt_O_b,
+                img_O_c = img_O_c,
+                alt_O_c = alt_O_c,
+                img_a_O = img_a_O,
+                alt_a_O = alt_a_O,
+                img_a_a = img_a_a,
+                alt_a_a = alt_a_a,
+                img_a_b = img_a_b,
+                alt_a_b = alt_a_b,
+                img_a_c = img_a_c,
+                alt_a_c = alt_a_c,
+                img_b_O = img_b_O,
+                alt_b_O = alt_b_O,
+                img_b_a = img_b_a,
+                alt_b_a = alt_b_a,
+                img_b_b = img_b_b,
+                alt_b_b = alt_b_b,
+                img_b_c = img_b_c,
+                alt_b_c = alt_b_c,
+                img_c_O = img_c_O,
+                alt_c_O = alt_c_O,
+                img_c_a = img_c_a,
+                alt_c_a = alt_c_a,
+                img_c_b = img_c_b,
+                alt_c_b = alt_c_b,
+                img_c_c = img_c_c,
+                alt_c_c = alt_c_c
+                )
 
     @classmethod
     def get_by_id(cls, buddy_id):
@@ -421,11 +491,11 @@ class Buddy(db.Model):
         """Find a user's buddies"""
         return cls.query.filter(cls.user_id == user_id).all()
 
-    @classmethod
-    def get_all_wearable_accessories(cls, buddy_id):
-        """Return a list of all accessories wearable by a buddy"""
-        buddy = cls.query.options(db.joinedload('wearable_accessories')).get(buddy_id)
-        return buddy.wearable_accessories
+    # @classmethod
+    # def get_all_wearable_accessories(cls, buddy_id):
+    #     """Return a list of all accessories wearable by a buddy"""
+    #     buddy = cls.query.options(db.joinedload('wearable_accessories')).get(buddy_id)
+    #     return buddy.wearable_accessories
 
     @classmethod
     def all_buddies(cls):
@@ -447,6 +517,7 @@ class UserBuddy(db.Model):
                         nullable = False)
     
     primary_buddy = db.Column(db.Boolean, default=False)
+
     url = db.Column(db.String, nullable=False)
     alt = db.Column(db.String, nullable=False)
 
@@ -458,7 +529,7 @@ class UserBuddy(db.Model):
             buddy_id={self.buddy_id} primary={self.primary_buddy}>'
     
     @classmethod
-    def create(cls, user_id, buddy_id, primary_buddy=False, url, alt):
+    def create(cls, user_id, buddy_id, url, alt, primary_buddy=False):
         """Create and return a UserBuddy object"""
         return cls(user_id=user_id,
                 buddy_id=buddy_id,
@@ -480,22 +551,22 @@ class UserBuddy(db.Model):
         userbuddy.alt = buddy_alt
 
 
-class WearableBy(db.Model):
-    """Which buddies can wear which accessories. (secondary table)"""
+# class WearableBy(db.Model):
+#     """Which buddies can wear which accessories. (secondary table)"""
 
-    __tablename__ = 'wearable_by'
+#     __tablename__ = 'wearable_by'
 
-    wearableby_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+#     wearableby_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
-    accessory_id = db.Column(db.Integer,
-                        db.ForeignKey("accessories.accessory_id"))
+#     accessory_id = db.Column(db.Integer,
+#                         db.ForeignKey("accessories.accessory_id"))
 
-    buddy_id = db.Column(db.Integer,
-                        db.ForeignKey("buddies.buddy_id"))
+#     buddy_id = db.Column(db.Integer,
+#                         db.ForeignKey("buddies.buddy_id"))
 
-    def __repr__(self):
-        return f'<WearableBy wearableby_id={self.wearableby_id}\
-            accessory_id={self.accessory_id} buddy_id={self.buddy_id}>'
+#     def __repr__(self):
+#         return f'<WearableBy wearableby_id={self.wearableby_id}\
+#             accessory_id={self.accessory_id} buddy_id={self.buddy_id}>'
 
 
 class Dose(db.Model):

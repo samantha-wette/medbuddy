@@ -73,21 +73,20 @@
           <td><div id="Anthony_chart_div" style="border: 1px solid #ccc"></div></td> -->
     <!-- </body> --> 
 {% block content %}
-<div class="accordion accordion-flush" id="accordionFlushExample">
+<div class="accordion accordion-flush" id="doseHistory">
   <div class="accordion-item">
-    <h2 class="accordion-header" id="flush-headingOne">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+    <h2 class="accordion-header" id="med-list">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
         My Med List
-      </button>
+        </button>
     </h2>
-    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="med-list" data-bs-parent="#doseHistory">
       <div class="accordion-body">
         <table class="table table-hover">
           <thead>
             <tr>
               <th scope="col">Medication</th>
               <th scope="col">Daily</th>
-              <!-- <th scope="col">Short-Term</th> -->
               <th scope="col">As Needed</th>
               <th scope="col">Currently Taking?</th>
               <th scope="col">Typical Dose</th>
@@ -98,11 +97,9 @@
             <tr>
               <th scope="row">{{ med.med.med_name }}</th>
               <td>{{ med.taken_regularly }}</td>
-              <!-- <td>{{ med.taken_short_term }}</td> -->
               <td>{{ med.taken_as_needed }}</td>
               <td>{{ med.currently_taking }}</td>
               <td>{{ med.typical_dose }}</td>
-
             </tr>
             {% endfor %}
           </tbody>
@@ -110,43 +107,72 @@
       </div>
     </div>
   </div>
+
   <div class="accordion-item">
-    <h2 class="accordion-header" id="flush-headingTwo">
+    <h2 class="accordion-header" id="dose-history">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
         Meds Taken
       </button>
     </h2>
-    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="dose-history" data-bs-parent="#doseHistory">
       <div class="accordion-body">
-        Doses Taken:<br>
-        {% for dose in doses_taken %}
-        <li>{{ dose.med.med_name }} (taken {{ dose.time_taken}})</li>
-        {% endfor %}<br><br>
-        
-
-
-
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Date/Time</th>
+              <th scope="col">Medication</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for dose in doses_taken %} 
+            <tr>
+              <th scope="row">{{ dose.time_taken }}</th>
+              <td>{{ med.taken_regularly }}</td>
+              <td>{{ dose.med.med_name }}</td>
+              <td>{{ dose.amount }}</td>
+              <td>{{ dose.notes }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+
+
+
   <div class="accordion-item">
-    <h2 class="accordion-header" id="flush-headingThree">
+    <h2 class="accordion-header" id="doses-missed">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
         Doses Missed
       </button>
     </h2>
-    <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+    <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="doses-missed" data-bs-parent="#doseHistory">
       <div class="accordion-body">
-        {% for dose in doses_missed %}
-<li>{{ dose.med.med_name }} (scheduled for {{dose.date}} at {{dose.time}}) </li>
-{% endfor %}<br><br>
-
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Scheduled Date</th>
+              <th scope="col">Scheduled Time</th>
+              <th scope="col">Medication</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for dose in doses_missed %} 
+            <tr>
+              <th scope="row">{{ dose.date }}</th>
+              <td>{{ dose.time }}</td>
+              <td>{{ dose.med.med_name }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 </div>
-
-
 
 
 

@@ -110,41 +110,41 @@ accessory_dict = {    "1a": {
 
 # },
 
-"4a": {
-    "accessory_name": "Trip to Outer Space",
-    "accessory_cost": 10,
-    "accessory_description": "Take your buddy out of this world with a trip to outer space!",
-    "accessory_img": "static/img/accessory4a.png",
-    "accessory_alt": "purple galaxy",
-    "is_hat": False,
-    "is_glasses": False,
-    "is_random": False,
-    "is_background": True
+# "4a": {
+#     "accessory_name": "Trip to Outer Space",
+#     "accessory_cost": 10,
+#     "accessory_description": "Take your buddy out of this world with a trip to outer space!",
+#     "accessory_img": "static/img/accessory4a.png",
+#     "accessory_alt": "purple galaxy",
+#     "is_hat": False,
+#     "is_glasses": False,
+#     "is_random": False,
+#     "is_background": True
 
-},
-"4a": {
-    "accessory_name": "Beach Vacation",
-    "accessory_cost": 10,
-    "accessory_description": "Kick back and relax! Take your buddy to the beach to chill.",
-    "accessory_img": "static/img/accessory4b.png",
-    "accessory_alt": "sandy beach with a teal ocean and blue sky",
-    "is_hat": False,
-    "is_glasses": False,
-    "is_random": False,
-    "is_background": True
+# },
+# "4a": {
+#     "accessory_name": "Beach Vacation",
+#     "accessory_cost": 10,
+#     "accessory_description": "Kick back and relax! Take your buddy to the beach to chill.",
+#     "accessory_img": "static/img/accessory4b.png",
+#     "accessory_alt": "sandy beach with a teal ocean and blue sky",
+#     "is_hat": False,
+#     "is_glasses": False,
+#     "is_random": False,
+#     "is_background": True
 
-},
+# },
 
-"4c": {
-    "accessory_name": "Forest Adventure",
-    "accessory_cost": 10,
-    "accessory_description": "Your buddy will find all kinds of cool critters in the forest!",
-    "accessory_img": "static/img/accessory4b.png",
-    "accessory_alt": "bright green forest with tall brown tree trunks",
-    "is_hat": False,
-    "is_glasses": False,
-    "is_random": False,
-    "is_background": True
+# "4c": {
+#     "accessory_name": "Forest Adventure",
+#     "accessory_cost": 10,
+#     "accessory_description": "Your buddy will find all kinds of cool critters in the forest!",
+#     "accessory_img": "static/img/accessory4b.png",
+#     "accessory_alt": "bright green forest with tall brown tree trunks",
+#     "is_hat": False,
+#     "is_glasses": False,
+#     "is_random": False,
+#     "is_background": True
 
 # }
 }

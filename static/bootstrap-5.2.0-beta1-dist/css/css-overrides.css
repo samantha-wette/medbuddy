@@ -9,6 +9,12 @@
 
 }
 
+.smaller-image { height: 100px
+
+
+}
+
+
 
 .content-section {
     background: lavender;
@@ -29,7 +35,7 @@
     top: 0;
     padding: 10px;
 }
-
+/* 
 html,body{
   min-height: 100vh;
   min-width: 100vw;
@@ -82,4 +88,4 @@ html,body{
   height: 40px;
   width: 40px;
   border-radius: 100%;
-}
+} */

@@ -8,7 +8,7 @@ from tracemalloc import start
 from flask import Flask, jsonify, render_template, request, flash, session, redirect, url_for, make_response
 from pyparsing import commonHTMLEntity
 from model import  connect_to_db, db, User, Med, UserMed, Accessory, \
-    UserAccessory, Buddy, UserBuddy, WearableBy, Dose
+    UserAccessory, Buddy, UserBuddy, Dose
 from jinja2 import StrictUndefined
 from random import choice
 # from authlib.integrations.flask_client import OAuth
@@ -411,7 +411,9 @@ def add_buddy():
     else:
         buddy_id = request.form.get("buddy-id")
         buddy = Buddy.get_by_id(buddy_id)
-        new_buddy = UserBuddy.create(user_id = user_id, buddy_id = buddy_id, primary_buddy = False)
+        url = buddy.img_O_O
+        alt = buddy.alt_O_O
+        new_buddy = UserBuddy.create(user_id = user_id, buddy_id = buddy_id, url = url, alt = alt, primary_buddy = False)
         db.session.add(new_buddy)
         User.spend_points(user_id, 15)
         db.session.commit()
@@ -577,9 +579,9 @@ def add_dose():
             amount=None,
             cancelled=False
             )
+            db.session.add(new_dose)
         count = count - 1
 
-        db.session.add(new_dose)
     
     db.session.commit()
     session.modified = True
@@ -744,35 +746,73 @@ def customize():
         flash(f"Looks like you need to log in!")
         return redirect("/")
 
-@app.route('/process-customization]', methods=["POST"])
+@app.route('/process-customization', methods=["POST"])
 def process_customization():
     """Process the customization"""
 
     chosen_buddy = request.form.get("chosen-buddy")
     chosen_buddy = int(chosen_buddy)
-    chosen_hat = request.form.getlist("chosen-hat")
-    chosen_glasses = request.form.getlist("chosen-glasses")
-    chosen_random = request.form.getlist("chosen-random")
-    chosen_background = request.form.getlist("chosen-background")
-    buddy_url = f"buddy{chosen_buddy}_{chosen_hat}_{chosen_glasses}_{chosen_random}_{chosen_background}"
-    buddy_alt = "Alt"
-    
+    if chosen_buddy == 1:
+        buddy_alt = "Frankie the cat"
+    if chosen_buddy == 2:
+        buddy_alt = "an unknown buddy"
+    if chosen_buddy == 3:
+        buddy_alt = "an unknown buddy"
+
+    chosen_hat = request.form.get("chosen-hat")
+    chosen_hat = int(chosen_hat)
+    if chosen_hat == 0:
+        chosen_hat = "O"
+        hat_alt = "no hat"
+    elif chosen_hat == 1:
+        chosen_hat = "a"
+        hat_alt = "a chef's hat"
+    elif chosen_hat == 2:
+        chosen_hat = "b"
+        hat_alt = "a cowboy hat"
+    elif chosen_hat == 3:
+        chosen_hat = "c"
+        hat_alt = "a party hat"
+
+    chosen_glasses = request.form.get("chosen-glasses")
+    chosen_glasses = int(chosen_glasses)
+    if chosen_glasses == 0:
+        chosen_glasses = "O"
+        glasses_alt = "no sunglasses"
+
+    elif chosen_glasses == 4:
+        chosen_glasses == "a"
+        glasses_alt = "black sunglasses"
+
+    elif chosen_glasses == 5:
+        chosen_glasses == "b"
+        glasses_alt = "heart shaped glasses"
+
+    elif chosen_glasses == 6:
+        chosen_glasses = "c"
+        glasses_alt = "a monocle"
+
+
+    buddy_url = f"buddy{chosen_buddy}_{chosen_hat}_{chosen_glasses}"
+    buddy_alt = f"Your buddy, {buddy_alt}, is wearing {hat_alt} and {glasses_alt}"
     UserBuddy.update_url(userbuddy_id=chosen_buddy, buddy_url=buddy_url, buddy_alt=buddy_alt)
+    db.session.commit()
+    flash("Your buddy looks great!")
     return redirect("/customize")
 
 
-@app.route('/choose-buddy', methods=["POST"])
-def choose_buddy():
-    """Choose a main buddy and dress them with accessories (REACT)"""
-    user_id = session["user"]
-    chosen_buddy = request.form.get("chosen-buddy")
-    chosen_accessories = request.form.get("chosen-accessories")
+# @app.route('/choose-buddy', methods=["POST"])
+# def choose_buddy():
+#     """Choose a main buddy and dress them with accessories (REACT)"""
+#     user_id = session["user"]
+#     chosen_buddy = request.form.get("chosen-buddy")
+#     chosen_accessories = request.form.get("chosen-accessories")
 
-    main_buddy = UserBuddy.make_primary_buddy(userbuddy_id=chosen_buddy)
-    db.session.commit()
-    flash("Your main buddy has been updated!")
+#     main_buddy = UserBuddy.make_primary_buddy(userbuddy_id=chosen_buddy)
+#     db.session.commit()
+#     flash("Your main buddy has been updated!")
 
-    return render_template('/')
+#     return render_template('/')
 
 
 

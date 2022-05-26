@@ -21,23 +21,81 @@ def create_buddies():
     buddies_in_db = []
     buddy_dicts = buddies.buddy_dict
     for buddy_dict in buddy_dicts:
+        print(buddy_dict)
+        print(buddy_dicts[buddy_dict])
+        print(buddy_dicts[buddy_dict]['buddy_name'])
+        print("****OK****")
         buddy_name = (buddy_dicts[buddy_dict]["buddy_name"])
         buddy_description = (buddy_dicts[buddy_dict]["buddy_description"])
-        buddy_img = (buddy_dicts[buddy_dict]["buddy_img1"])
-        buddy_alt = (buddy_dicts[buddy_dict]["buddy_alt1"])
-        buddy_img2 = (buddy_dicts[buddy_dict]["buddy_img2"])
-        buddy_alt2 = (buddy_dicts[buddy_dict]["buddy_alt2"])
-        buddy_img3 = (buddy_dicts[buddy_dict]["buddy_img3"])
-        buddy_alt3 = (buddy_dicts[buddy_dict]["buddy_alt3"])
-        buddy_img2_3 = (buddy_dicts[buddy_dict]["buddy_img2_3"])
-        buddy_alt2_3 = (buddy_dicts[buddy_dict]["buddy_alt2_3"])
+        img_O_O = (buddy_dicts[buddy_dict]["O_O"])
+        alt_O_O = (buddy_dicts[buddy_dict]["alt_O_O"])
+        img_O_a = (buddy_dicts[buddy_dict]["O_a"])
+        alt_O_a = (buddy_dicts[buddy_dict]["alt_O_a"])
+        img_O_b = (buddy_dicts[buddy_dict]["O_b"])
+        alt_O_b = (buddy_dicts[buddy_dict]["alt_O_b"])
+        img_O_c = (buddy_dicts[buddy_dict]["O_c"])
+        alt_O_c = (buddy_dicts[buddy_dict]["alt_O_c"])
+        img_a_O = (buddy_dicts[buddy_dict]["a_O"])
+        alt_a_O = (buddy_dicts[buddy_dict]["alt_a_O"])
+        img_a_a = (buddy_dicts[buddy_dict]["a_a"])
+        alt_a_a = (buddy_dicts[buddy_dict]["alt_a_a"])
+        img_a_b = (buddy_dicts[buddy_dict]["a_b"])
+        alt_a_b = (buddy_dicts[buddy_dict]["alt_a_b"])
+        img_a_c = (buddy_dicts[buddy_dict]["a_c"])
+        alt_a_c = (buddy_dicts[buddy_dict]["alt_a_c"])
+        img_b_O = (buddy_dicts[buddy_dict]["b_O"])
+        alt_b_O = (buddy_dicts[buddy_dict]["alt_b_O"])
+        img_b_a = (buddy_dicts[buddy_dict]["b_a"])
+        alt_b_a = (buddy_dicts[buddy_dict]["alt_b_a"])
+        img_b_b = (buddy_dicts[buddy_dict]["b_b"])
+        alt_b_b = (buddy_dicts[buddy_dict]["alt_b_b"])
+        img_b_c = (buddy_dicts[buddy_dict]["b_c"])
+        alt_b_c = (buddy_dicts[buddy_dict]["alt_b_c"])
+        img_c_O = (buddy_dicts[buddy_dict]["c_O"])
+        alt_c_O = (buddy_dicts[buddy_dict]["alt_c_O"])
+        img_c_a = (buddy_dicts[buddy_dict]["c_a"])
+        alt_c_a = (buddy_dicts[buddy_dict]["alt_c_a"])
+        img_c_b = (buddy_dicts[buddy_dict]["c_b"])
+        alt_c_b = (buddy_dicts[buddy_dict]["alt_c_b"])
+        img_c_c = (buddy_dicts[buddy_dict]["c_c"])
+        alt_c_c = (buddy_dicts[buddy_dict]["alt_c_c"])
 
-        buddy=model.Buddy.create(buddy_name = buddy_name,
-         buddy_description=buddy_description, 
-         buddy_img=buddy_img, buddy_alt=buddy_alt,
-         buddy_img2=buddy_img2, buddy_alt2=buddy_alt2,
-         buddy_img3=buddy_img3, buddy_alt3=buddy_alt3,
-         buddy_img2_3=buddy_img2_3, buddy_alt2_3=buddy_alt2_3)
+        buddy=model.Buddy.create(
+                buddy_name = buddy_name,
+                buddy_description = buddy_description,
+                img_O_O = img_O_O,
+                alt_O_O = alt_O_O,
+                img_O_a = img_O_a,
+                alt_O_a = alt_O_a,
+                img_O_b = img_O_b,
+                alt_O_b = alt_O_b,
+                img_O_c = img_O_c,
+                alt_O_c = alt_O_c,
+                img_a_O = img_a_O,
+                alt_a_O = alt_a_O,
+                img_a_a = img_a_a,
+                alt_a_a = alt_a_a,
+                img_a_b = img_a_b,
+                alt_a_b = alt_a_b,
+                img_a_c = img_a_c,
+                alt_a_c = alt_a_c,
+                img_b_O = img_b_O,
+                alt_b_O = alt_b_O,
+                img_b_a = img_b_a,
+                alt_b_a = alt_b_a,
+                img_b_b = img_b_b,
+                alt_b_b = alt_b_b,
+                img_b_c = img_b_c,
+                alt_b_c = alt_b_c,
+                img_c_O = img_c_O,
+                alt_c_O = alt_c_O,
+                img_c_a = img_c_a,
+                alt_c_a = alt_c_a,
+                img_c_b = img_c_b,
+                alt_c_b = alt_c_b,
+                img_c_c = img_c_c,
+                alt_c_c = alt_c_c)
+
         buddies_in_db.append(buddy)
     model.db.session.add_all(buddies_in_db)
     model.db.session.commit()

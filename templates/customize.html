@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block body %}
+<!-- {% block body %}
 <body>
   <script>
   var limit = 1;
@@ -16,39 +16,98 @@ $('input.single-glasses').on('click', function (evt) {
     }
 });
 
-var limit = 1;
-$('input.single-random').on('click', function (evt) {
-    if ($('.single-random:checked').length > limit) {
-        this.checked = false;
-    }
-});
+// var limit = 1;
+// $('input.single-random').on('click', function (evt) {
+//     if ($('.single-random:checked').length > limit) {
+//         this.checked = false;
+//     }
+// });
 
-var limit = 1;
-$('input.single-background').on('click', function (evt) {
-    if ($('.single-background:checked').length > limit) {
-        this.checked = false;
-    }
-});
+// var limit = 1;
+// $('input.single-background').on('click', function (evt) {
+//     if ($('.single-background:checked').length > limit) {
+//         this.checked = false;
+//     }
+// });
 
-  </script>
-      {% endblock %}
+  </script> 
+        {% endblock %}
+
+-->
 
 {% block content %}
 {% if not user.buddies %}
 {{ user.fname }}, you need to <a href="/adopt">adopt a buddy</a>!
 {% endif %}
 
+<form id="process-customization" action="/process-customization" method="POST">
+  <legend>Pick a buddy!</legend>
+<div>
+  <div class="row">
+    {% for buddy in user.userbuddies %}
+    <div class='col text-center'>
+    <input type="radio" name="chosen-buddy" id="{{ buddy.userbuddy_id}}" value="{{buddy.userbuddy_id}}">
+    <img src="{{ buddy.buddy.img_O_O }}" alt="{{buddy.buddy.alt_O_O}}" class="rounded mx-auto d-block smaller-image" >
+    <label for="{{ buddy.userbuddy_id}}">{{buddy.buddy.buddy_name}}</label>
+    </div>
+    {% endfor %}
+  </div>
+  <legend>Pick some accessories!</legend>
+  <div class="row">
+    <div class='col text-center'>
+      <input type="radio" name="chosen-hat" id="no-hat" value="0">
+      <img src="static/img/none.png" alt="No hat selected" class="rounded mx-auto d-block smaller-image" >
+      <label for="no-hat">No Hat</label>
+      </div>  
+    {% for accessory in user.accessories %}
+    {% if accessory.is_hat == True %}
+    <div class='col text-center'>
+    <input type="radio" name="chosen-hat" id="{{ accessory.accessory_id}}" value="{{accessory.accessory_id}}">
+    <img src="{{ accessory.accessory_img }}" alt="{{accessory.accessory_alt}}" class="rounded mx-auto d-block smaller-image" >
+    <label for="{{ accessory.accessory_id}}">{{accessory.accessory_name}}</label>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+<div class="row">
+  <div class='col text-center'>
+    <input type="radio" name="chosen-glasses" id="no-glasses" value="0">
+    <img src="static/img/none.png" alt="No glasses selected" class="rounded mx-auto d-block smaller-image" >
+    <label for="no-glasses">No Glasses</label>
+    </div>  
+  {% for accessory in user.accessories %}
+  {% if accessory.is_glasses == True %}
+  <div class='col text-center'>
+  <input type="radio" name="chosen-glasses" id="{{ accessory.accessory_id}}" value="{{accessory.accessory_id}}">
+  <img src="{{ accessory.accessory_img }}" alt="{{accessory.accessory_alt}}" class="rounded mx-auto d-block smaller-image" >
+  <label for="{{ accessory.accessory_id}}">{{accessory.accessory_name}}</label>
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+</div>
+<div class="row">
+  <button class="btn btn-primary" type="submit">Submit form</button>
+</div>
 
+
+</form>
+
+
+
+
+
+<!-- 
 <form action="/process-customization">
 
   <legend>Pick a buddy!</legend>
-    <div class="container parent">
+    <div class="container">
       <div class="row">
         {% for buddy in user.userbuddies %}
         <div class='col text-center'>
         <input type="radio" name="chosen-buddy" id="{{ buddy.userbuddy_id }}" class="d-none imgbgchk" value="{{buddy.userbuddy_id}}">
           <label for="{{ buddy.userbuddy_id }}">
-            <img src="{{ buddy.buddy.buddy_img }}" alt="{{buddy.buddy.buddy_alt}}">
+            <img src="{{ buddy.buddy.img_O_O }}" alt="{{buddy.buddy.alt_O_O}}">
             <div class="tick_container">
               <div class="tick">
                   <i class="fa fa-check"></i>
@@ -62,16 +121,27 @@ $('input.single-background').on('click', function (evt) {
 
   <legend>Choose Some Accessories</legend>
 
-    <div class="container parent">
+    <div class="container">
       <div class="row">
 
       <h4>How about a hat?</h4>
-      <div class="row">
+      <div class="container">
+        <div class='col text-center'>
+          <input type="radio" name="chosen-hat" id="no-hat" class="d-none imgbgchk" value="no-hat">
+            <label for="no-hat">
+              <img src="static/img/none.png" alt="No hat selected">
+              <div class="tick_container">
+                <div class="tick">
+                    <i class="fa fa-check"></i>
+                </div>
+              </div>
+            </label>
+          </div>
+  
       {% for accessory in user.accessories %}
       {% if accessory.is_hat == True %}
         <div class='col text-center'>
-        <div class='form-check'>
-        <input type="checkbox" name="chosen-hat" id="{{ accessory.accessory_id }}" class="d-none imgbgchk single-hat" value="">
+        <input type="radio" name="chosen-hat" id="{{ accessory.accessory_id }}" class="d-none imgbgchk single-hat" value="{{ accessory.accessory_id }}">
           <label for="{{ accessory.accessory_id }}">
             <img src="{{ accessory.accessory_img }}" alt="{{accessory.accessory_alt}}">
             <div class="tick_container">
@@ -80,7 +150,6 @@ $('input.single-background').on('click', function (evt) {
               </div>
             </div>
           </label>
-        </div>
         </div>
         {% endif %}
         {% endfor %}
@@ -92,7 +161,7 @@ $('input.single-background').on('click', function (evt) {
       {% if accessory.is_glasses == True %}
         <div class='col text-center'>
         <div class='form-check'>
-        <input type="checkbox" name="chosen-hat" id="{{ accessory.accessory_id }}" class="d-none imgbgchk single-glasses" value="">
+        <input type="checkbox" name="chosen-glasses" id="{{ accessory.accessory_id }}" class="d-none imgbgchk single-glasses" value="{{ accessory.accessory_id }}">
           <label for="{{ accessory.accessory_id }}">
             <img src="{{ accessory.accessory_img }}" alt="{{accessory.accessory_alt}}">
             <div class="tick_container">
@@ -106,8 +175,8 @@ $('input.single-background').on('click', function (evt) {
         {% endif %}
         {% endfor %}
 
-      </div>
-
+      </div> -->
+<!-- 
       <h4>How about a background?</h4>
       <div class="row">
       {% for accessory in user.accessories %}
@@ -150,8 +219,8 @@ $('input.single-background').on('click', function (evt) {
         {% endif %}
         {% endfor %}
       </div>
-
-
+ -->
+<!-- 
       </div>
     </div>
 
@@ -161,7 +230,7 @@ $('input.single-background').on('click', function (evt) {
         
     </div>
 
-  </form>
+  </form> -->
 
 {% endblock %}
 
