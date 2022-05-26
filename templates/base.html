@@ -32,11 +32,16 @@
   {% block header %}
   <div>
     <header>
-      <nav class="navbar bg-light fixed-top">
+      
+      <nav class="navbar nav-custom fixed-top">
+  
         <div class="container-fluid">
-          <a class="navbar-brand" href="/">
-            <img src="static/img/buddy2_O_O.png" alt="cat" height="24"
-                  class="d-inline-block align-text-top"> MedBuddy</a>
+          <a class="navbar-brand round" href="/" aria-label="Click to go to the home">
+            <img src="static/img/logo.png" alt="heart with M and B" height="50"
+                  class="d-inline-block">
+          </a>
+          {% block banner %}
+          {% endblock %}
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -100,15 +105,14 @@
 
 {% endblock %}
 
-<div class="container-fluid top-margin-hi flexibly-sticky">
+<div class="container-fluid top-margin-hi">
   <div class="row">
     <div class="col">
-      <div class="container-fluid">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
         <div class="container-fluid">
           {% with messages = get_flashed_messages() %}
           {% if messages %}
-          <ul class="flashes alert alert-primary" role="alert">
+          <ul class="flashes alert alert-custom" role="alert">
               {% for message in messages %}
                   {{ message }}
               {% endfor %}
@@ -123,8 +127,6 @@
 
       </div>
     
-{% block banner %}
-{% endblock %}
     </div>
     <div class="row">
       <div class="col-9">
@@ -138,7 +140,7 @@
       <div class="col position-sticky">
         <div class="sidebar-section">
 {% block sidebar %}
-<div class="sidebar-item">
+<div class="sidebar-item text-center">
   <div class="sidebar-content">
 Hey there, {{ user.fname }}!
 </div>
@@ -146,12 +148,12 @@ Hey there, {{ user.fname }}!
 
 <div class="sidebar-item">
   <div class="sidebar-content">
-You have {{ user.points }} points! </div>
+<!-- You have {{ user.points }} points! </div> -->
 
-<div id="allBuddies" class="carousel slide carousel-dark" data-bs-ride="carousel">
+<div id="allBuddies" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="static/img/accessory1b.png" class="d-block w-100" alt="welcome back!">
+      <img src="static/img/logo.png" class="d-block w-100" alt="Heart with a M and B">
     </div>
 
     {% for buddy in user.userbuddies %}
@@ -170,23 +172,42 @@ You have {{ user.points }} points! </div>
 </div>
 
 
+<div class="sidebar-item text-center">
+  <div class="sidebar-content">
+    You have <b>{{ user.points }}</b> points.<br>
+    To earn more, you can<br>
+    <b><a href="/log">log meds</a></b>.
+</div>
+</div>
+MedBuddy Starter Pack:<br>
+{% if user.buddies %}
+[X]{% else %}
+[]{% endif %}  <a href="/adopt">Adopt</a> a buddy <br>
+
+{% if user.usermeds %}
+[X]{% else %}
+[]{% endif %} <a href="/add">Add</a> medications to your med list<br>
+[] <a href="/authorize">Authorize</a> google calendar<br>
+{% if user.doses %}
+[X]{% else %}
+[]{% endif %} <a href="/schedule">Schedule</a> some med doses
 <div class="sidebar-item">
   <div class="sidebar-content">
-Upcoming Doses:
-</div>
-</div>
 
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
 {% endblock %}
 
   </div>
 </div>
-
+</div>
 {% block footer %}
-<div>
 <footer>
-    <nav class="navbar sticky-bottom bg-light">
-        <div class="container-fluid">
-        </div>
+    <nav class="navbar sticky-bottom nav-custom">
       </nav>
     </footer>
 </div>

@@ -29,7 +29,7 @@
       </script>
       {% endblock %}
       {% block banner %}
-<h1>New Medication</h1>
+<h1>New Medications</h1>
 {% endblock %}
 {% block content %}
 
@@ -37,20 +37,20 @@
 
   <div class="row mb-3">
     <div class="col">
-      <input type="text" class="form-control" placeholder="Medication Name" aria-label="Medication" id="searchBox" name="search"/>
+      <input type="text" class="form-control" placeholder="Medication Name" aria-label="Medication" id="searchBox" name="search" required/>
     </div>
   </div>
       <div class="input-group mb-3">
         <input type="checkbox" class="btn-check" name="regular" id="regular" autocomplete="off">
-        <label class="btn btn-outline-primary" for="regular">I take this med daily.</label>
+        <label class="btn btn-outline-dark" for="regular">I take this med daily.</label>
 
 
         <input type="checkbox" class="btn-check" name="as-needed" id="as-needed" autocomplete="off">
-        <label class="btn btn-outline-primary" for="as-needed">I take this med as needed.</label>
+        <label class="btn btn-outline-dark" for="as-needed">I take this med as needed.</label>
         <!-- <input type="checkbox" class="btn-check" name="series" id="series" autocomplete="off">
         <label class="btn btn-outline-primary" for="series">I take this med short-term, as a limited series.</label> -->
         <input type="checkbox" class="btn-check" name="current" id="current" autocomplete="off">
-        <label class="btn btn-outline-primary" for="current">I am currently taking this med.</label>
+        <label class="btn btn-outline-dark" for="current">I am currently taking this med.</label>
       </div>
       <!-- <div>
         <label for="daily-time">If daily, what time do you take it?</label>

@@ -388,13 +388,19 @@ def view_dose_history():
 @app.route('/adopt')
 def view_adoption_page():
     """View adoption center"""
+
     buddies = Buddy.all_buddies()
     if "user" in session:
         user_id = session["user"]
         user = User.get_by_id(user_id)
-    
+        if user.buddies:
+            buddy = choice(user.buddies)
+        else:
+            buddy = None
+
         return render_template('adopt.html',
                                 buddies = buddies,
+                                buddy = buddy,
                                 user = user)
     else:
         flash(f"Looks like you need to log in!")
@@ -459,6 +465,11 @@ def med_taken():
         date_time = datetime.now()
     dose_ids = request.form.getlist('dose-id')
     med_ids = request.form.getlist('med-id')
+
+    if not dose_ids and not med_ids:
+        flash("Please select at least one med to log!")
+        return redirect('/log')
+
     if med_ids:
         for med_id in med_ids:
             notes = request.form.get(f'notes-{med_id}')
@@ -554,6 +565,11 @@ def add_dose():
         initial_count = 1
 
     values = request.form.getlist('medfordose')
+    if not values:
+        flash("Please select at least one medication to schedule.")
+        return redirect('/schedule')
+
+
     starting_date = datetime.strptime(starting_date, '%Y-%m-%d')
     
     meds = []
@@ -753,7 +769,7 @@ def process_customization():
     chosen_buddy = request.form.get("chosen-buddy")
     chosen_buddy = int(chosen_buddy)
     if chosen_buddy == 1:
-        buddy_alt = "Frankie the cat"
+        buddy_alt = "Frodo the bird"
     if chosen_buddy == 2:
         buddy_alt = "an unknown buddy"
     if chosen_buddy == 3:
@@ -781,20 +797,21 @@ def process_customization():
         glasses_alt = "no sunglasses"
 
     elif chosen_glasses == 4:
-        chosen_glasses == "a"
+        chosen_glasses = "a"
         glasses_alt = "black sunglasses"
 
     elif chosen_glasses == 5:
-        chosen_glasses == "b"
+        chosen_glasses = "b"
         glasses_alt = "heart shaped glasses"
 
     elif chosen_glasses == 6:
         chosen_glasses = "c"
         glasses_alt = "a monocle"
 
-
-    buddy_url = f"buddy{chosen_buddy}_{chosen_hat}_{chosen_glasses}"
+    buddy_url = f"static/img/buddy{chosen_buddy}_{chosen_hat}_{chosen_glasses}.png"
     buddy_alt = f"Your buddy, {buddy_alt}, is wearing {hat_alt} and {glasses_alt}"
+    print(buddy_url)
+    print("BUDDY URL ****")
     UserBuddy.update_url(userbuddy_id=chosen_buddy, buddy_url=buddy_url, buddy_alt=buddy_alt)
     db.session.commit()
     flash("Your buddy looks great!")

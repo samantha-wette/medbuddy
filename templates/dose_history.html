@@ -72,6 +72,9 @@
      <div id="calendar_chart_div" style="width: 1000px; height: 350px;"></div></td>
           <td><div id="Anthony_chart_div" style="border: 1px solid #ccc"></div></td> -->
     <!-- </body> --> 
+    {% block banner %}
+    <h1>Medication History</h1>
+    {% endblock %}
 {% block content %}
 <div class="accordion accordion-flush" id="doseHistory">
   <div class="accordion-item">
@@ -129,7 +132,7 @@
             {% for dose in doses_taken %} 
             <tr>
               <th scope="row">{{ dose.time_taken }}</th>
-              <td>{{ med.taken_regularly }}</td>
+              <td>{{ dose.taken_regularly }}</td>
               <td>{{ dose.med.med_name }}</td>
               <td>{{ dose.amount }}</td>
               <td>{{ dose.notes }}</td>

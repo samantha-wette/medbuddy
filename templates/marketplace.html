@@ -14,11 +14,11 @@ You'll need to adopt a buddy before you can shop in the marketplace.
 {% endif %}
 </div>
 
-<div class="row row-cols-1 row-cols-md-4 g-4">
+<div class="row row-cols-1 row-cols-md-3 g-4">
     {% for accessory in accessories %}
     <form id="add-accessory" action="/add-accessory" method="POST">
     <div class="col">
-    <div class="card text-center">
+    <div class="card h-100 text-center">
         <img class="card-img-top" src="{{accessory.accessory_img}}"
         alt = "{{accessory.accessory_alt}}">
         <div class="card-body">

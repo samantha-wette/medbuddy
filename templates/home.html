@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
 {% block banner %}
-Welcome to MedBuddy!
-{% endblock %}
+<h1>MedBuddy</h1>{% endblock %}
 {% block content %}
 TEST 123
 {% endblock %}
+{% block body %}
+hi
+{% endblock %}
+
 <!-- 
 {% if user %}
 Welcome, {{ user.fname }}!<br>
@@ -33,13 +36,21 @@ Your med list is:<br>
 {% endfor %}<br>
 
 {% endif %} -->
+
+
+
 {% block sidebar %}
 {% if user %}
-hi :) 
+<div class="sidebar-item">
+    <div class="sidebar-content">
+Welcome back, {{user.fname}}
 
+    </div>
+</div>
 {% else %}
+<div class="sidebar-item">
+  <div class="sidebar-content">
 
-User Profile<br>
 
 <form id="log-in" action="/login" method="POST">
     <fieldset>
@@ -53,6 +64,12 @@ User Profile<br>
     </fieldset>
 </form>
 <br>
+</div>
+</div>
+<div class="sidebar-item">
+    <div class="sidebar-content">
+  
+  
 <form id="create-account" action="/users" method="POST">
     <fieldset>
         <legend>Create New Account:</legend>
@@ -68,6 +85,10 @@ User Profile<br>
         <input type="submit" aria-label="submit-and-create-account" value="Create My Account">
     </fieldset>
 </form>
+</div>
+</div>
+
+
 {% endif %}
 {% endblock %}
 

@@ -1,25 +1,47 @@
+.theme-colors {
+  color: #403b3c;
+  color: #f2f0f0;
+  color: #b3dae6;
+  color: #d9d9d9;
+  color: #0d0d0d;
+  color: #d76b63;
+}
 .top-margin-hi {    margin-top: 75px;
 }
 
+/* html { background-color: #d9d9d9;} */
+h1 { color: #0d0d0d;
+  font-family: 'Calibri', 'Trebuchet MS', sans-serif;
+  font-weight: bold;
+  text-align: center;
+
+}
 .top-banner { margin-top: 75px;
 }
 
 .flexibly-sticky { align-items: flex-start;
-
-
 }
 
 .smaller-image { height: 100px
-
-
 }
 
-
+.nav-custom {
+  background-color: #f2f0f0;
+  color:#0d0d0d;
+  font-family: 'Calibri', 'Trebuchet MS', sans-serif;
+}
 
 .content-section {
-    background: lavender;
+    background: #b3dae6;
     height: 100%;
     padding: 10px;
+    color: #0d0d0d;
+    font-family: 'Calibri', 'Trebuchet MS', sans-serif;
+
+  }
+
+  .alert-custom {
+    background-color: #d9d9d9;
   }
 
 .sidebar-section {
@@ -27,14 +49,42 @@
     height: auto;
     position: sticky;
     top: 0;
+    background: #b3dae6;
+    color: #0d0d0d;
+
   }
 
+  .border-past {
+    border-color: #d76b63;
+  }
+
+  .border-current {
+    border-color: #403b3c;
+  }
+/* 
+  .custom-control-label:before{
+    background-color: #b3dae6;
+  }
+  .custom-checkbox .custom-control-input:checked~.custom-control-label::before{
+    background-color:#403b3c;
+  } */
+  
+
 .sidebar-content {
-    background: cornflowerblue;
-    position: sticky;
+    background: #b3dae6;
     top: 0;
     padding: 10px;
+    color: #0d0d0d;
+    font-family: 'Calibri', 'Trebuchet MS', sans-serif;
+
+
 }
+
+body {
+  background-color: #f2f0f0;
+}
+
+
 /* 
 html,body{
   min-height: 100vh;
@@ -64,7 +114,7 @@ html,body{
 }
 
 /* ANIMATION */
-
+/* 
 .imgbgchk:checked + label>img{
   transform: scale(1.25);
   opacity: 0.3;
@@ -88,4 +138,4 @@ html,body{
   height: 40px;
   width: 40px;
   border-radius: 100%;
-} */
+} */ 

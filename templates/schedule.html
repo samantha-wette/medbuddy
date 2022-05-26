@@ -30,8 +30,8 @@
       </script>
 {% endblock %}
 {% block banner %}
-<h5>
-Schedule Your Meds</h5>
+<h1>
+Schedule Your Meds</h1>
 {% endblock %}
 {% block content %}
 
@@ -62,6 +62,7 @@ Schedule Your Meds</h5>
               <div class="col-sm">
                 <div class="form-check">
                   <div><input class="form-check-input" type="checkbox" name="medfordose" value="{{ med.med_id }}" id="{{ med.med_id}}">
+                    <span aria-hidden="true"></span>
                     <label for="{{ med.med_id }}">
                     {{ med.med.med_name }}
                     </label>
@@ -80,17 +81,17 @@ Schedule Your Meds</h5>
                 </label>
               </div>
               <div class="col-sm-10">
-                <input type="time" name="time" id="time" class="form-control">
+                <input type="time" name="time" id="time" class="form-control" required>
               </div>
             </div>
             <div class="row mb-3">
               <div class="col-sm-2 col-form-label">
-                <label for="date">
+                <label for="date" required>
                   Date of First Dose:
                 </label>
               </div>
               <div class="col-sm-10">
-                <input type="date" name="date" id="date" class="form-control">
+                <input type="date" name="date" id="date" class="form-control" required>
               </div>
             </div>
             <div class="row mb-3">

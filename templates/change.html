@@ -3,81 +3,73 @@
 <h1>View and Change Meds</h1>
 {% endblock %}
 {% block content %}
-  <div class="row row-cols-1 row-cols-md-3 g-4">
-
-    {% for med in user.usermeds %}
-    <form id="change-med" action="/change-med" method="POST">
-
-    {% if med.currently_taking == True %}
-      <div class="card h-100 border-info mb-3" style="max-width: 18rem;">
-      <!-- <div class="card-header">Currently Taking</div> -->
-    
-    {% else %} 
-      <div class="card border-warning mb-3" style="max-width: 18rem;">
+<div class="row row-cols-1 row-cols-md-3 g-4">
+{% for med in user.usermeds %}
+<form id="change-med" action="/change-med" method="POST">
+{% if med.currently_taking == True %}
+  <div class="card h-100" style="max-width: 18rem;">
+    <div class="card-header text-center">Taking Now!</div>
+{% else %} 
+  <div class="card h-100" style="max-width: 18rem;">
       <!-- <div class="card-header">Not Currently Taking</div> -->
     {% endif %}
-
+    
       <div class="card-body text-center">
-      <h5 class="card-title" id="med to update">{{ med.med.med_name }}</h5>
-      <input type="hidden" id="med-to-update" name="med-to-update" value="{{ med.usermed_id }}">
-
-      <p class="card-text">
-        {% if med.med.official == True %}
-        Learn about your medication <a href="{{ med.med.med_information }}">here</a>!
-        {% else %}
-        You added this medication to the database. </p>
-        {% endif %}
+        <h5 class="card-title" id="med to update">{{ med.med.med_name }}</h5>
+          <input type="hidden" id="med-to-update" name="med-to-update" value="{{ med.usermed_id }}">
+            <p class="card-text">
+            {% if med.med.official == True %}
+            Learn about this medication <a href="{{ med.med.med_information }}">here</a>!
+            {% else %}
+            Added by {{user.fname}}</p>
+            {% endif %}
       </div>
       <div class="card-body">
         <div class="form-check form-switch">
           {% if med.taken_regularly == True %}
             <input class="form-check-input" type="checkbox" role="switch" id="daily" name="regular" checked>
             <label class="form-check-label" for="daily">I take this daily.</label>
-        </div>
-            <!-- <div>
-              <label for="daily-time">If daily, what time do you take it?</label>
-              <input type="time" name="timepicker" class="timepicker" id="daily-time" value="{{med.typical_time}}"/> -->
-            {% else %}
+          {% else %}
             <input class="form-check-input" type="checkbox" role="switch" id="daily" name="regular">
             <label class="form-check-label" for="daily">I take this daily.</label>
-          </div>
-          <!-- <div>
-            <label for="daily-time">If daily, what time do you take it?</label>
-            <input type="time" name="timepicker" class="timepicker" id="daily-time"/> -->
-          {% endif %}
-          <!-- </div> -->
+        {% endif %}
+        </div>
 
-          <div class="form-check form-switch">
-            {% if med.taken_as_needed == True %}
+
+        <div class="form-check form-switch">
+          {% if med.taken_as_needed == True %}
             <input class="form-check-input" type="checkbox" role="switch" name="as-needed" id="as-needed" checked>
             <label class="form-check-label" for="as-needed">I take this as needed.</label>
           {% else %}
-          <input class="form-check-input" type="checkbox" role="switch" id="as-needed" name="as-needed">
-          <label class="form-check-label" for="as-needed">I take this as needed.</label>
-          {% endif %}
-          </div>
-
-          <div class="form-check form-switch">
-            {% if med.currently_taking == True %}
-            <input class="form-check-input" type="checkbox" role="switch" name="current" id="current" checked>
-            <label class="form-check-label" for="current">I am currently taking this.</label>
-            {% else %}
-            <input class="form-check-input" type="checkbox" role="switch" name="current" id="current">
-            <label class="form-check-label" for="current">I am currently taking this.</label>
-{% endif %}
-          </div>
-          {% if med.typical_dose == None %}
-          <label for="dose">Typical Dose</label>
-          <input type="text" id="dose" name="dose-amount">
-
-          {% else %}
-          <label for="dose">Typical Dose</label>
-          <input type="text" id="dose" name="dose-amount" value="{{med.typical_dose}}">
+            <input class="form-check-input" type="checkbox" role="switch" id="as-needed" name="as-needed">
+            <label class="form-check-label" for="as-needed">I take this as needed.</label>
           {% endif %}
         </div>
-        <div class="text-center">
-        <input type="submit" aria-label="update med" value="Update">
-      </div>
+
+        <div class="form-check form-switch">
+          {% if med.currently_taking == True %}
+            <input class="form-check-input" type="checkbox" role="switch" name="current" id="current" checked>
+            <label class="form-check-label" for="current">I am currently taking this.</label>
+          {% else %}
+            <input class="form-check-input" type="checkbox" role="switch" name="current" id="current">
+            <label class="form-check-label" for="current">I am currently taking this.</label>
+          {% endif %}
+        </div>
+          
+        <div class="card-body">
+          {% if med.typical_dose == None %}
+            <label for="dose">Typical Dose</label>
+            <input type="text" id="dose" name="dose-amount">
+          {% else %}
+            <label for="dose">Typical Dose</label>
+            <input type="text" id="dose" name="dose-amount" value="{{med.typical_dose}}">
+          {% endif %}
+        </div>
+        <div class="card-body text-center">
+          <input type="submit" aria-label="update med" value="Update">
+        </div>
+  
+        </div>
       <div class="card-footer">
         <small class="text-muted">Last updated {{ med.last_updated_date }} at {{ med.last_updated_time }} </small>
       </div>  

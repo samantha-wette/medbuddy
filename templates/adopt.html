@@ -1,12 +1,21 @@
 {% extends 'base.html' %}
-{% block body %}
-{% endblock %}
+
 {% block banner %}
   <h1> Adoption Center </h1>
 {% endblock %}    
 {% block content %}
-
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+<div class="container-fluid">
+    <h1> Marketplace </h1>
+    Welcome to the adoption center, {{ user.fname }}! 
+    {% if buddy %}
+    Will {{ buddy.buddy_name }} be getting a friend today?
+    {% endif %}
+    {% if not buddy %}
+    Who will you take home to be your buddy today?
+    {% endif %}
+    </div>
+    
+<div class="row row-cols-1 row-cols-md-3 g-4">
 
   <form id="add-buddy" action="/add-buddy" method="POST">
         {% for buddy in buddies %}
