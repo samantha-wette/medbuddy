@@ -1,21 +1,20 @@
 
 {% extends 'base.html' %}
-<!-- {% block body %}
-{% endblock %} -->
+
 {% block content %}
 <div class="container">
-    <div class="row">
-        <div class="col">
-<form id="log-meds" action="/med-taken" method="POST">
-  <div class="row mb-3">
-    <div class="col-sm-2 col-form-label">
-        <label for="datetime">Date/Time Taken:</label>
-    </div>
-    <div class="col-sm-10">
-        <input type="datetime-local" name="datetime" id="datetime" class="form-control">
-    </div>
-  </div>
-    <fieldset class="row mb-3">
+  <div class="row">
+    <div class="col">
+      <form id="log-meds" action="/med-taken" method="POST">
+        <div class="row mb-3">
+          <div class="col-sm-2 col-form-label">
+            <label for="datetime">Date/Time Taken:</label>
+          </div>
+          <div class="col-sm-10">
+            <input type="datetime-local" name="datetime" id="datetime" class="form-control" value="{{now}}" required>
+          </div>
+        </div>
+        <fieldset class="row mb-3">
         <legend class="col-form-label col-sm-2 pt-0">Today's Meds:</legend>
         <div class="col-sm-10">
             {% if not user_doses %}

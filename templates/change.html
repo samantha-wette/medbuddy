@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block banner %}
 <h1>View and Change Meds</h1>
+{{ ordered_meds }}
 {% endblock %}
 {% block content %}
 <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -31,7 +32,7 @@
             <label class="form-check-label" for="daily">I take this daily.</label>
           {% else %}
             <input class="form-check-input" type="checkbox" role="switch" id="daily" name="regular">
-            <label class="form-check-label" for="daily">I take this daily.</label>
+            <label class="form-check-label" for="daily">Not Currently Taking</label>
         {% endif %}
         </div>
 

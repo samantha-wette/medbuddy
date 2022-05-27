@@ -17,8 +17,9 @@
     
 <div class="row row-cols-1 row-cols-md-3 g-4">
 
-  <form id="add-buddy" action="/add-buddy" method="POST">
         {% for buddy in buddies %}
+  <form id="add-buddy" action="/add-buddy" method="POST">
+
     <div class="col">
     <div class="card h-100">
       <img class=" card-img-top " src="{{ buddy.img_O_O }}" 
@@ -27,8 +28,8 @@
           <h5 class="card-title">{{buddy.buddy_name}}</h5>
           <h6 class="card-subtitle mb-2 text-muted"> 15 points </h6>
           <p>{{ buddy.buddy_description }}</p>
-          <input id="{{buddy.buddy_id}}" name="buddy-id"
-            value ="{{buddy.buddy_id}}" type="hidden">
+          <input id="{{ buddy.buddy_id }}" name="buddy-id"
+            value ="{{ buddy.buddy_id }}" type="hidden">
           {% if buddy in user.buddies %}
           <input type="submit" value="Adopt Now" aria-label="you already have this buddy" class="btn btn-primary" disabled>
           {% else %}
@@ -40,7 +41,7 @@
         </small>
     </div>
 </div>
-    {% endfor %}
 </form>
+    {% endfor %}
 </div>
 {% endblock %}

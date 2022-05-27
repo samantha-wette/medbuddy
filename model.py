@@ -204,7 +204,7 @@ class UserMed(db.Model):
     #doses is a list of Dose objects
 
     def __repr__(self):
-        return f'<UserMed usermed_id={self.usermed_id} user_id={self.user_id} med_id={self.med_id}>'
+        return f'<UserMed usermed_id={self.usermed_id} user_id={self.user_id} med_id={self.med_id} taken_regularly={self.taken_regularly}>'
     
     @classmethod
     def create(cls,
@@ -230,6 +230,12 @@ class UserMed(db.Model):
                 last_updated_date=last_updated_date,
                 last_updated_time=last_updated_time)
 
+    # @classmethod
+    # def ordered_meds_by_user(cls, user_id):
+    #     print(f"THE USER_ID WE TOOK IN IS {user_id}*******************")
+    #     user = cls.query.filter(user_id == user_id).order_by(Med.med_name.desc())
+    #     return user
+    
     @classmethod
     def update_last_updated(cls, usermed_id):
         usermed = cls.query.get(usermed_id)
@@ -246,8 +252,11 @@ class UserMed(db.Model):
     @classmethod
     def make_not_taken_regularly(cls, usermed_id):
         usermed = cls.query.get(usermed_id)
+        print(f"THE UESRMED IS {usermed}")
         if usermed.taken_regularly ==True:
-            usermed.taken_reguarly=False
+            usermed.taken_regularly=False
+        print(f"UPDATED USERMED IS {usermed}")
+
 
     # @classmethod
     # def set_typical_time(cls, usermed_id, typical_time):
@@ -291,6 +300,7 @@ class UserMed(db.Model):
     @classmethod
     def get_by_user_and_med(cls, user_id, med_id):
         return cls.query.filter(cls.user_id == user_id, cls.med_id == med_id,).first()
+
 
 class Accessory(db.Model):
     """An accessory available for purchase with points."""

@@ -282,8 +282,21 @@ def change_meds():
     if "user" in session:
         user_id = int(session["user"])
         user = User.get_by_id(user_id)
+        # usermed = UserMed.ordered_meds_by_user(user_id)
+        # print(f"THE ORDERED USERMED IS {usermed} ********************************")
+        # usermed = User.
+        #query usermeds in this order: CUrrent(alphabetical), Past(alphabetical)
+
+        usermeds = user.usermeds
+        ordered_meds = sorted(usermeds, key=lambda med: med.med.med_name)
+
+        print(f"ORDERED_MEDS IS {ordered_meds} **********")
+
         return render_template("change.html",
-                                    user = user)
+                                    user = user
+                                    ,
+                                    ordered_meds = ordered_meds
+                                    )
     else: 
         flash(f"Looks like you need to log in!")
         return redirect("/")
@@ -294,9 +307,13 @@ def update_med():
 
     usermed_id = request.form.get("med-to-update")
     usermed_id = int(usermed_id)
+    print(f"***************the usermed_id is {usermed_id} **********************")
 
     taken_regularly=request.form.get("regular")
-    if taken_regularly:
+    print(f"*********************taken_regularly is {taken_regularly} *****************")
+
+    if taken_regularly == "on":
+        print("******************* TAKEN REGULARLY IS ON ********************")
         taken_regularly=True
         UserMed.make_taken_regularly(usermed_id)
         # typical_time=request.form.get("timepicker")
@@ -307,12 +324,15 @@ def update_med():
         #     UserMed.set_typical_time(usermed_id=usermed_id, typical_time=typical_time)
 
     else:
+        print("*****************ELSE*******************")
         taken_regularly=False
         UserMed.make_not_taken_regularly(usermed_id)
+        print("THE USERMED WAS MADE NOT TAKEN REGULARLY")
         Dose.cancel_upcoming_doses_by_usermed(usermed_id)
+        print("DOSES WERE CANCELLED")
 
     taken_as_needed=request.form.get("as-needed")
-    if taken_as_needed:
+    if taken_as_needed == "on":
         taken_as_needed=True
         UserMed.set_taken_as_needed(usermed_id)
 
@@ -321,7 +341,7 @@ def update_med():
         UserMed.set_not_taken_as_needed(usermed_id)
 
     currently_taking=request.form.get("current")
-    if currently_taking:
+    if currently_taking == "on":
         currently_taking=True
         UserMed.set_currently_taking(usermed_id)
     else:
@@ -416,9 +436,14 @@ def add_buddy():
         flash("Sorry! You don't have enough points for that buddy.")
     else:
         buddy_id = request.form.get("buddy-id")
+        print(f"THE BUDDY_ID IS {buddy_id}")
         buddy = Buddy.get_by_id(buddy_id)
+        print(f" THIS BUDDY IS: {buddy.buddy_name}")
         url = buddy.img_O_O
+        print(f"THE URL IS {url}")
         alt = buddy.alt_O_O
+        print(f"THE ALT IS {alt}")
+
         new_buddy = UserBuddy.create(user_id = user_id, buddy_id = buddy_id, url = url, alt = alt, primary_buddy = False)
         db.session.add(new_buddy)
         User.spend_points(user_id, 15)
@@ -446,11 +471,14 @@ def log_med():
         user = User.get_by_id(user_id)
         user_doses = Dose.get_upcoming_by_user(user_id=user_id)
         as_needed = UserMed.as_needed_by_user(user_id=user_id)
+        now=datetime.now()
+        now = now.strftime("%Y-%m-%dT%H:%M")
 
         return render_template('log.html',
                                 user = user,
                                 user_doses = user_doses,
-                                as_needed=as_needed)
+                                as_needed=as_needed,
+                                now=now)
     else:
         flash(f"Looks like you need to log in!")
         return redirect("/")
@@ -531,7 +559,7 @@ def schedule_med_page():
         return render_template('schedule.html',
                                 user = user,
                                 user_doses = user_doses,
-                                as_needed=as_needed)
+                                as_needed=as_needed) 
     else:
         flash(f"Looks like you need to log in!")
         return redirect("/")
