@@ -289,12 +289,10 @@ def change_meds():
 
         usermeds = user.usermeds
         ordered_meds = sorted(usermeds, key=lambda med: med.med.med_name)
-
-        print(f"ORDERED_MEDS IS {ordered_meds} **********")
+        ordered_meds = sorted(ordered_meds, key=lambda med: med.currently_taking, reverse=True)
 
         return render_template("change.html",
-                                    user = user
-                                    ,
+                                    user = user,
                                     ordered_meds = ordered_meds
                                     )
     else: 
@@ -448,8 +446,11 @@ def add_buddy():
         db.session.add(new_buddy)
         User.spend_points(user_id, 15)
         db.session.commit()
+        print(f"the new buddy is {new_buddy} **********")
+
         flash(f"Welcome home, {buddy.buddy_name}. You'll love it here.")
         flash(f"{user.fname}, your new point total is {user.points}.")
+
         session.modified = True
     return redirect("/")
 
@@ -794,14 +795,20 @@ def customize():
 def process_customization():
     """Process the customization"""
 
-    chosen_buddy = request.form.get("chosen-buddy")
+    userbuddy_id = request.form.get("chosen-buddy")
+    userbuddy_id = int(userbuddy_id)
+
+    print(f"THE USERBUDDY ID IS {userbuddy_id}")
+    chosen_buddy = UserBuddy.get_buddy_by_userbuddy(userbuddy_id)
+    print(f"THE CHOSEN_BUDDY IS {chosen_buddy}")
+    chosen_buddy = chosen_buddy.userbuddy_id
     chosen_buddy = int(chosen_buddy)
     if chosen_buddy == 1:
         buddy_alt = "Frodo the bird"
     if chosen_buddy == 2:
-        buddy_alt = "an unknown buddy"
+        buddy_alt = "Frankie the cat"
     if chosen_buddy == 3:
-        buddy_alt = "an unknown buddy"
+        buddy_alt = "Felix the dog"
 
     chosen_hat = request.form.get("chosen-hat")
     chosen_hat = int(chosen_hat)
@@ -840,7 +847,7 @@ def process_customization():
     buddy_alt = f"Your buddy, {buddy_alt}, is wearing {hat_alt} and {glasses_alt}"
     print(buddy_url)
     print("BUDDY URL ****")
-    UserBuddy.update_url(userbuddy_id=chosen_buddy, buddy_url=buddy_url, buddy_alt=buddy_alt)
+    UserBuddy.update_url(userbuddy_id=userbuddy_id, buddy_url=buddy_url, buddy_alt=buddy_alt)
     db.session.commit()
     flash("Your buddy looks great!")
     return redirect("/customize")

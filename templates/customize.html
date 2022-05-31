@@ -48,9 +48,9 @@ $('input.single-glasses').on('click', function (evt) {
   <div class="row">
     {% for buddy in user.userbuddies %}
     <div class='col text-center'>
-    <input type="radio" name="chosen-buddy" id="{{ buddy.userbuddy_id}}" value="{{buddy.userbuddy_id}}" required>
+    <input type="radio" name="chosen-buddy" id="{{ buddy.buddy_id}}" value="{{buddy.buddy_id}}" required>
     <img src="{{ buddy.buddy.img_O_O }}" alt="{{buddy.buddy.alt_O_O}}" class="rounded mx-auto d-block smaller-image" >
-    <label for="{{ buddy.userbuddy_id}}">{{buddy.buddy.buddy_name}}</label>
+    <label for="{{ buddy.buddy_id}}">{{buddy.buddy.buddy_name}}</label>
     </div>
     {% endfor %}
   </div>

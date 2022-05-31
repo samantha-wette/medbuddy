@@ -548,6 +548,14 @@ class UserBuddy(db.Model):
                 alt=alt)
 
     @classmethod
+    def get_buddy_by_userbuddy(cls, userbuddy_id):
+        """Get a buddy's ID based on the userbuddy ID"""
+        print(f"IN THE CLASS METHOD, userbuddy_id is {userbuddy_id}")
+        userbuddy = cls.query.get(userbuddy_id)
+        print(f"we found {userbuddy} as the userbuddy")
+        return userbuddy
+
+    @classmethod
     def make_primary_buddy(cls, userbuddy_id):
         """Mark a buddy as a user's primary buddy"""
         userbuddy = cls.query.get(userbuddy_id)

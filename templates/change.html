@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% block banner %}
 <h1>View and Change Meds</h1>
-{{ ordered_meds }}
 {% endblock %}
 {% block content %}
 <div class="row row-cols-1 row-cols-md-3 g-4">
-{% for med in user.usermeds %}
+{% for med in ordered_meds %}
+
 <form id="change-med" action="/change-med" method="POST">
 {% if med.currently_taking == True %}
   <div class="card h-100" style="max-width: 18rem;">
