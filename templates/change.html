@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
-{% block banner %}
-<h1>View and Change Meds</h1>
-{% endblock %}
 {% block content %}
+<div class="content-section">
 <div class="row row-cols-1 row-cols-md-3 g-4">
 {% for med in ordered_meds %}
 
@@ -78,4 +76,5 @@
         </form>
         {% endfor %}
       </div>
+    </div>
 {% endblock %}

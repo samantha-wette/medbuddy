@@ -28,10 +28,10 @@
       });
       </script>
       {% endblock %}
-      {% block banner %}
-<h1>New Medications</h1>
-{% endblock %}
+
+
 {% block content %}
+<div class="content-section">
 
 <form id="add-med" action="/add-med" method="POST">
 
@@ -57,13 +57,15 @@
         <input type="time" name="timepicker" class="timepicker" id="daily-time"/>
       </div> -->
       <div>
-        <label for="dose-amount">What is your typical dose?</label>
-        <input type="text" name="dose-amount" id="dose-amount"/>
+        <!-- <label for="dose-amount">What is your typical dose?</label> -->
+        <input type="text" class="form-control" name="dose-amount" id="dose-amount" placeholder="Typical Dose" aria-label="typical dose"/>
+      </div>
       <div>
         <input type="submit" aria-label="add med to list" value="Add Med to List"/>
-</div>     
+      </div> 
 </form> 
 </div>
+
   {% endblock %}
 
   {% block js %}

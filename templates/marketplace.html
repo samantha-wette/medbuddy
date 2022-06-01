@@ -2,16 +2,20 @@
 {% block body %}
 {% endblock %}
 {% block content %}
-<div class="container-fluid">
+<div class="content-section">
+
+<div class="container-fluid text-center">
 <h1> Marketplace </h1>
-Welcome to the marketplace, {{ user.fname }}! 
+<p>Welcome to the marketplace, {{ user.fname }}! 
 {% if buddy %}
-Will {{ buddy.buddy_name }} be getting something special today? You have {{ user.points }}
+Will {{ buddy.buddy_name }} be getting something special today?<br>
+You have {{ user.points }} points
 to shop with.
 {% endif %}
 {% if not buddy %}
 You'll need to adopt a buddy before you can shop in the marketplace.
 {% endif %}
+</p>
 </div>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -46,5 +50,6 @@ You'll need to adopt a buddy before you can shop in the marketplace.
 </form>
 {% endfor %}
 
+</div>
 </div>
 {% endblock %}

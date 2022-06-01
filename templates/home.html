@@ -1,12 +1,147 @@
 {% extends 'base.html' %}
-{% block banner %}
-<h1>MedBuddy</h1>{% endblock %}
+
 {% block content %}
-TEST 123
 {% endblock %}
-{% block body %}
-hi
+{% block home %}
+<header>
+
+    <!-- This div is  intentionally blank. It creates the transparent black overlay over the video which you can modify in the CSS -->
+    <div class="overlay"></div>
+  
+    <!-- The HTML5 video element that will create the background video on the header -->
+    <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+      <source src="static/img/homevideo.mp4" type="video/mp4">
+    </video>
+  
+    <!-- The header content -->
+    <div class="container h-100">
+      <div class="d-flex h-100 text-center align-items-center">
+        <div class="w-100">
+          <h1 class="display-3">MedBuddy</h1>
+          <h2 class="display-8">Your Partner in Healing</h2>
+        </div>
+      </div>
+    </div>
+  </header>
+  {% endblock %}
+  {% block body %}
+
+  <!-- Page section example for content below the video header -->
+  <section class="my-9">
+    <div class="container">
+      <div class="row">
+          
+        {% if not user %}
+
+        <div class="col-md-3 mx-auto homepage-content text-center">
+            <h4 class="text-center">Track</h4>
+            <p>Test 456</p>
+
+        
+        </div>
+
+          <div class="col-md-3 mx-auto homepage-content text-center">
+                <h4 class="text-center">Earn</h4>
+                <p>Test 456</p>
+                <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                    Get Started
+                  </button>
+                  
+
+        </div>
+            <div class="col-md-3 mx-auto homepage-content text-center">
+                <h4 class="text-center">Learn</h4>
+                <p>Test 456</p>
+
+
+            </div>
+        
+            {% else %}
+            <div class="col-md-3 mx-auto homepage-content">
+
+                <div id="allBuddies" class="carousel slide" data-bs-ride="carousel">
+                    <h4 class="text-center"> My MedBuddy </h4>
+
+                    <p class="text-center">
+                        You have {{ user.points }} points.
+                        </p>
+
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <img src="static/img/logo.png" class="d-block w-100" alt="Heart with a M and B">
+                      </div>
+                  
+                      {% for buddy in user.userbuddies %}
+                      <div class="carousel-item">
+                        <img src="{{buddy.url}}" class="d-block w-100" alt="{{buddy.alt}}">
+                      </div>
+                    {% endfor %}
+                    <button class="carousel-control-prev" type="button" data-bs-target="#allBuddies" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#allBuddies" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
+                </div>
+            </div>
+    
+            <div class="col-md-3 mx-auto homepage-content">
+                <h4 class="text-center"> Today's Meds </h4>
+                    <p>
+                        {% if upcoming_doses %}
+            {% for dose in upcoming_doses %}
+                <li>{{ dose.med.med_name }} - {{ dose.time }}</li>
+                {% endfor %}
+                <p class="mb-0 text-center">
+                    To get points, <a href="/log">log now</a>!
+                  </p>
+                  <p class="mb-0 text-center">
+                      You can also <a href="/change">change</a> your med profile
+                      or <a href="/my-meds">view</a> your med data. 
+                    </p>
+  
+                {% else %}
+                <p class="text-center">
+                It looks like you don't have any doses scheduled.</p>
+                <p class="text-center">
+                You can <a href="/log">log</a> as-needed meds for points.
+                You can also <a href="/add">add</a> meds to your list or <a href="/schedule">schedule</a> a dose.
+                        {% endif %}
+                </p>
+            </p>
+            </div>
+
+            <div class="col-md-3 mx-auto homepage-content">
+                <h4 class="text-center">Did You Know?</h4>
+                <p class="text-center">With MedBuddy, you can:</p>
+                <p>
+                    <li><a href="/my-meds">View</a> your medication history</li>
+                    <li><a href="/change">Learn</a> about your medications</li>
+                    <li><a href="/authorize">Authorize</a> Google Calendar for seamless medication reminders.
+                    <li><a href="/adopt">Adopt</a> up to three unique buddies. 
+                    <li><a href="/marketplace">Shop</a> in the marketplace for accessories to <a href="/customize">customize</a> your buddies. 
+
+                    </p>
+            </div>
+
+        {% endif %}
+
+
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- 
+<div class="sidebar-item">
+  <div class="sidebar-content"> -->
+
+
 {% endblock %}
+
+
 
 <!-- 
 {% if user %}
@@ -39,58 +174,6 @@ Your med list is:<br>
 
 
 
-{% block sidebar %}
-{% if user %}
-<div class="sidebar-item">
-    <div class="sidebar-content">
-Welcome back, {{user.fname}}
-
-    </div>
-</div>
-{% else %}
-<div class="sidebar-item">
-  <div class="sidebar-content">
-
-
-<form id="log-in" action="/login" method="POST">
-    <fieldset>
-        <legend>Log In:</legend>
-        <label for="email">Email Address:</label>
-        <input type="email" id="email" name="email"><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br>
-        <input type="submit" aria-label="log-in" value="Log In"><br>
-        <a href="">Forgot Password?</a>
-    </fieldset>
-</form>
-<br>
-</div>
-</div>
-<div class="sidebar-item">
-    <div class="sidebar-content">
-  
-  
-<form id="create-account" action="/users" method="POST">
-    <fieldset>
-        <legend>Create New Account:</legend>
-        <label for="fname">First Name:</label>
-        <input type="text" id="fname" name="fname"><br>
-        <label for="lname">Last Name (optional):</label>
-        <input type="text" id="lname" name="lname"><br>
-        <label for="email">Email Address:</label>
-        <input type="email" id="email" name="email"><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br>
-    
-        <input type="submit" aria-label="submit-and-create-account" value="Create My Account">
-    </fieldset>
-</form>
-</div>
-</div>
-
-
-{% endif %}
-{% endblock %}
 
 <!-- <body>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -133,3 +216,5 @@ Welcome back, {{user.fname}}
      data-width="40">
 </div> -->
 
+{% block sidebar %}
+{% endblock %}

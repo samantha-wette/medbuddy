@@ -43,10 +43,13 @@ def home():
     try:
             user_id = session["user"]
             user = User.get_by_id(user_id)
+            upcoming_doses = Dose.get_upcoming_by_user(user_id)
+
     except:
             user = None
+            upcoming_doses = None
     
-    return render_template('home.html', user = user)
+    return render_template('home.html', user = user, upcoming_doses=upcoming_doses)
 
 @app.route('/search', methods=['POST'])
 def search():

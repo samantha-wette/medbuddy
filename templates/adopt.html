@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
-{% block banner %}
-  <h1> Adoption Center </h1>
-{% endblock %}    
 {% block content %}
-<div class="container-fluid">
-    <h1> Marketplace </h1>
-    Welcome to the adoption center, {{ user.fname }}! 
-    {% if buddy %}
-    Will {{ buddy.buddy_name }} be getting a friend today?
-    {% endif %}
-    {% if not buddy %}
-    Who will you take home to be your buddy today?
-    {% endif %}
+<div class="content-section">
+
+<div class="container-fluid text-center">
+    <h1> Adoption Center </h1>
+    <p>    Welcome to the adoption center, {{ user.fname }}! 
+      {% if buddy %}
+      Will {{ buddy.buddy_name }} be getting a friend today?
+      {% endif %}
+      {% if not buddy %}
+      Who will you take home to be your buddy today?
+      {% endif %}
+  </p>
     </div>
     
 <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -21,7 +21,7 @@
   <form id="add-buddy" action="/add-buddy" method="POST">
 
     <div class="col">
-    <div class="card h-100">
+    <div class="card h-100 text-center">
       <img class=" card-img-top " src="{{ buddy.img_O_O }}" 
       alt ="{{ buddy.alt_O_O }}">
         <div class="card-body">
@@ -36,12 +36,13 @@
           <input type="submit" value="Adopt Now" aria-label="adopt buddy" class="btn btn-primary">
           {% endif %}
         </div>
-        <small class="card-footer text-muted">
+        <!-- <small class="card-footer text-muted">
         Take me home!
-        </small>
+        </small> -->
     </div>
 </div>
 </form>
     {% endfor %}
+</div>
 </div>
 {% endblock %}
