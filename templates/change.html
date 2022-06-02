@@ -1,36 +1,45 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="content-section">
+  <div class="container-fluid text-center">
+    <h1> My Medications </h1>
+    <p>    View, change, and learn about your medications
+  </p>
+    </div>
+
 <div class="row row-cols-1 row-cols-md-3 g-4">
 {% for med in ordered_meds %}
 
 <form id="change-med" action="/change-med" method="POST">
 {% if med.currently_taking == True %}
   <div class="card h-100" style="max-width: 18rem;">
-    <div class="card-header text-center">Taking Now!</div>
+    <div class="card-header text-center">Active</div>
 {% else %} 
   <div class="card h-100" style="max-width: 18rem;">
-      <!-- <div class="card-header">Not Currently Taking</div> -->
+      <div class="card-header text-center">Inactive</div>
     {% endif %}
     
       <div class="card-body text-center">
         <h5 class="card-title" id="med to update">{{ med.med.med_name }}</h5>
           <input type="hidden" id="med-to-update" name="med-to-update" value="{{ med.usermed_id }}">
             <p class="card-text">
+              <h6 class="card-subtitle mb-2 text-muted card-footer">
             {% if med.med.official == True %}
-            Learn about this medication <a href="{{ med.med.med_information }}">here</a>!
+            
+            <a href="{{ med.med.med_information }}">Information</a>
             {% else %}
-            Added by {{user.fname}}</p>
+            Added by {{user.fname}}
             {% endif %}
+              </h6>
       </div>
-      <div class="card-body">
+      <div class="card-footer">
         <div class="form-check form-switch">
           {% if med.taken_regularly == True %}
             <input class="form-check-input" type="checkbox" role="switch" id="daily" name="regular" checked>
             <label class="form-check-label" for="daily">I take this daily.</label>
           {% else %}
             <input class="form-check-input" type="checkbox" role="switch" id="daily" name="regular">
-            <label class="form-check-label" for="daily">Not Currently Taking</label>
+            <label class="form-check-label" for="daily">I take this daily.</label>
         {% endif %}
         </div>
 
@@ -48,29 +57,27 @@
         <div class="form-check form-switch">
           {% if med.currently_taking == True %}
             <input class="form-check-input" type="checkbox" role="switch" name="current" id="current" checked>
-            <label class="form-check-label" for="current">I am currently taking this.</label>
+            <label class="form-check-label" for="current">I currently take this.</label>
           {% else %}
             <input class="form-check-input" type="checkbox" role="switch" name="current" id="current">
-            <label class="form-check-label" for="current">I am currently taking this.</label>
+            <label class="form-check-label" for="current">I currently take this.</label>
           {% endif %}
         </div>
           
-        <div class="card-body">
+        <div class="card-footer">
           {% if med.typical_dose == None %}
-            <label for="dose">Typical Dose</label>
-            <input type="text" id="dose" name="dose-amount">
+            <input type="text" id="dose" name="dose-amount" class="form-control" placeholder="Typical Dose (optional)" aria-label="Typical Dose" >
           {% else %}
-            <label for="dose">Typical Dose</label>
-            <input type="text" id="dose" name="dose-amount" value="{{med.typical_dose}}">
+            <input type="text" id="dose" name="dose-amount" value="{{med.typical_dose}}" class="form-control" placeholder="Typical Dose (optional)" aria-label="Typical Dose">
           {% endif %}
         </div>
-        <div class="card-body text-center">
-          <input type="submit" aria-label="update med" value="Update">
+        <div class="card-footer text-center">
+          <input type="submit" aria-label="update med" value="Update" class="btn btn-dark">
         </div>
   
         </div>
-      <div class="card-footer">
-        <small class="text-muted">Last updated {{ med.last_updated_date }} at {{ med.last_updated_time }} </small>
+      <div class="card-footer text-center">
+        <small class="text-muted">Last updated {{ med.last_updated_date.strftime("%m/%d/%y") }} at {{ med.last_updated_time.strftime("%I:%M %p")}} </small>
       </div>  
     </div>
         </form>

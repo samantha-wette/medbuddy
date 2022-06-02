@@ -18,30 +18,31 @@
 <div class="row row-cols-1 row-cols-md-3 g-4">
 
         {% for buddy in buddies %}
-  <form id="add-buddy" action="/add-buddy" method="POST">
 
     <div class="col">
     <div class="card h-100 text-center">
+
       <img class=" card-img-top " src="{{ buddy.img_O_O }}" 
       alt ="{{ buddy.alt_O_O }}">
         <div class="card-body">
           <h5 class="card-title">{{buddy.buddy_name}}</h5>
           <h6 class="card-subtitle mb-2 text-muted"> 15 points </h6>
           <p>{{ buddy.buddy_description }}</p>
-          <input id="{{ buddy.buddy_id }}" name="buddy-id"
-            value ="{{ buddy.buddy_id }}" type="hidden">
-          {% if buddy in user.buddies %}
-          <input type="submit" value="Adopt Now" aria-label="you already have this buddy" class="btn btn-primary" disabled>
-          {% else %}
-          <input type="submit" value="Adopt Now" aria-label="adopt buddy" class="btn btn-primary">
-          {% endif %}
         </div>
-        <!-- <small class="card-footer text-muted">
-        Take me home!
-        </small> -->
+        <div class="card-footer">
+          <form id="add-buddy" action="/add-buddy" method="POST">
+          <input id="{{ buddy.buddy_id }}" name="buddy-id"
+          value ="{{ buddy.buddy_id }}" type="hidden">
+
+          {% if buddy in user.buddies %}
+          <input type="submit" value="Adopted" aria-label="you already have this buddy" class="btn btn-dark" disabled>
+          {% else %}
+          <input type="submit" value="Adopt Now" aria-label="adopt buddy" class="btn btn-dark">
+          {% endif %}
+        </form>
+        </div>
     </div>
 </div>
-</form>
     {% endfor %}
 </div>
 </div>

@@ -32,6 +32,12 @@
 
 {% block content %}
 <div class="content-section">
+  <div class="container-fluid text-center">
+    <h1> Add Medications </h1>
+    <p>    You can add medications from our database or add your own!
+      When you add a medication from our database, you can learn about your med.
+  </p>
+    </div>
 
 <form id="add-med" action="/add-med" method="POST">
 
@@ -40,28 +46,22 @@
       <input type="text" class="form-control" placeholder="Medication Name" aria-label="Medication" id="searchBox" name="search" required/>
     </div>
   </div>
-      <div class="input-group mb-3">
+      <div class="input-group btn-group mb-3">
         <input type="checkbox" class="btn-check" name="regular" id="regular" autocomplete="off">
         <label class="btn btn-outline-dark" for="regular">I take this med daily.</label>
 
 
         <input type="checkbox" class="btn-check" name="as-needed" id="as-needed" autocomplete="off">
         <label class="btn btn-outline-dark" for="as-needed">I take this med as needed.</label>
-        <!-- <input type="checkbox" class="btn-check" name="series" id="series" autocomplete="off">
-        <label class="btn btn-outline-primary" for="series">I take this med short-term, as a limited series.</label> -->
         <input type="checkbox" class="btn-check" name="current" id="current" autocomplete="off">
         <label class="btn btn-outline-dark" for="current">I am currently taking this med.</label>
       </div>
-      <!-- <div>
-        <label for="daily-time">If daily, what time do you take it?</label>
-        <input type="time" name="timepicker" class="timepicker" id="daily-time"/>
-      </div> -->
       <div>
-        <!-- <label for="dose-amount">What is your typical dose?</label> -->
-        <input type="text" class="form-control" name="dose-amount" id="dose-amount" placeholder="Typical Dose" aria-label="typical dose"/>
+        <input type="text" class="form-control" name="dose-amount" id="dose-amount" placeholder="Typical Dose (optional)" aria-label="typical dose"/>
       </div>
+      <br>
       <div>
-        <input type="submit" aria-label="add med to list" value="Add Med to List"/>
+        <input class="btn btn-dark" type="submit" aria-label="add med to list" value="Add Med to List"/>
       </div> 
 </form> 
 </div>

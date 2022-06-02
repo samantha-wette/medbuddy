@@ -3,6 +3,12 @@
 
 {% block content %}
 <div class="container content-section">
+    <div class="container-fluid text-center">
+        <h1> Log </h1>
+        <p>    Log your medications to get points!
+      </p>
+        </div>
+    
   <div class="row">
     <div class="col">
       <form id="log-meds" action="/med-taken" method="POST">
@@ -27,18 +33,18 @@
             <div class="col-sm">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="{{ dose }}" name="dose-id" value="{{ dose.dose_id }}">
-                    <label for="{{ dose }}"><b>{{dose.med.med_name}}</b></label><br><i>{{dose.time}}</i>
+                    <label for="{{ dose }}"><b>{{dose.med.med_name}}</b></label><br><i>{{dose.time.strftime("%I:%M %p")}}</i>
                 </div>
             </div>
 
             <div class="col-sm">
-                <input class="form-control" type="text" id="{{ med }}-notes" name="notes-{{med}}" placeholder="Notes" aria-label="dose">
+                <input class="form-control" type="text" id="{{ med }}-notes" name="notes-{{med}}" placeholder="Notes (optional)" aria-label="notes">
             </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     {% if dose.usermed.typical_dose == None %}
-                <input class="form-control" type="text" id="{{ dose }}" name="amount-dose" placeholder="Amount" aria-label="dose">
+                <input class="form-control" type="text" id="{{ dose }}" name="amount-dose" placeholder="Amount (optional)" aria-label="dose">
                     {% else %}
-                <input class="form-control" type="text" id="{{ dose }}" name="amount-dose" placeholder="Amount" aria-label="dose" value="{{dose.usermed.typical_dose}}"/>
+                <input class="form-control" type="text" id="{{ dose }}" name="amount-dose" placeholder="Amount (optional)" aria-label="dose" value="{{dose.usermed.typical_dose}}"/>
                     {% endif %}
                 </div>
         </div>
@@ -62,18 +68,19 @@
             <div class="form-check">
             <input class="form-check-input" type="checkbox" id="{{ med }}" name="med-id" value="{{ med.med_id }}">
             <label for="{{ med }}"><b>{{med.med.med_name}}</b></label>
+            <br><br>
             </div>
         </div>
         <div class="col-sm">
-            <input class="form-control" type="text" id="{{ med }}-notes" name="notes-{{med}}" placeholder="Notes" aria-label="dose">
+            <input class="form-control" type="text" id="{{ med }}-notes" name="notes-{{med}}" placeholder="Notes (optional)" aria-label="notes">
         </div>
         {% if med.typical_dose == None %}
-        <div class="col-sm-2">
-            <input class="form-control" type="text" id="{{ med }}-as-needed" name="amount-{{med}}" placeholder="Amount" aria-label="dose">
+        <div class="col-sm-3">
+            <input class="form-control" type="text" id="{{ med }}-as-needed" name="amount-{{med}}" placeholder="Amount (optional)" aria-label="dose">
         </div>
         {% else %}
-        <div class="col-sm-2">
-            <input class="form-control" type="text" id="{{ med }}-as-needed" name="amount-{{med}}" placeholder="Amount" aria-label="dose" value="{{med.typical_dose}}">
+        <div class="col-sm-3">
+            <input class="form-control" type="text" id="{{ med }}-as-needed" name="amount-{{med}}" placeholder="Amount (optional)" aria-label="dose" value="{{med.typical_dose}}">
         </div>
         {% endif %}
     </div>
@@ -81,8 +88,8 @@
     {% endif %}
 </div>
       </fieldset>
-      <input type="submit" aria-label="Submit" value="Get Points!">
-      <input type="reset" aria-label="reset" value="Reset"><br>
+      <input type="submit" aria-label="Submit" value="Get Points!" class="btn btn-dark">
+      <input type="reset" aria-label="reset" value="Reset" class="btn btn-dark"><br>
     </form>
 </div>
 </div>

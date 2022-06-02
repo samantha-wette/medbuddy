@@ -3,6 +3,7 @@
 {% block content %}
 {% endblock %}
 {% block home %}
+
 <header>
 
     <!-- This div is  intentionally blank. It creates the transparent black overlay over the video which you can modify in the CSS -->
@@ -19,12 +20,25 @@
         <div class="w-100">
           <h1 class="display-3">MedBuddy</h1>
           <h2 class="display-8">Your Partner in Healing</h2>
+          {% if not user %}
+          <button class="btn btn-dark btn-lg" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+            Get Started
+          </button>
+          {% else %}
+          <button class="btn btn-dark btn-lg" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+            Navigate
+          </button>
+          {% endif %}
+
         </div>
       </div>
     </div>
+
   </header>
+
   {% endblock %}
   {% block body %}
+  <div class="container-fluid top-banner">
 
   <!-- Page section example for content below the video header -->
   <section class="my-9">
@@ -35,14 +49,18 @@
 
         <div class="col-md-3 mx-auto homepage-content text-center">
             <h4 class="text-center">Track</h4>
-            <p>Test 456</p>
+            <p>Whether you are tracking the occasional supplement or multiple daily medications, MedBuddy was built with you in mind. MedBuddy empowers users to distinguish their daily and as-needed meds and keep their med list up to date.</p>
+            <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                Get Started
+              </button>
+              
 
         
         </div>
 
           <div class="col-md-3 mx-auto homepage-content text-center">
-                <h4 class="text-center">Earn</h4>
-                <p>Test 456</p>
+                <h4 class="text-center">Heal</h4>
+                <p>MedBuddy is more than a medication tracker. With a robust database of medications and supplements, you can research the products that you use. View your med data at any time to keep your care team updated on your med list.</p>
                 <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                     Get Started
                   </button>
@@ -50,83 +68,111 @@
 
         </div>
             <div class="col-md-3 mx-auto homepage-content text-center">
-                <h4 class="text-center">Learn</h4>
-                <p>Test 456</p>
+                <h4 class="text-center">Play</h4>
+                <p>Your adorable Buddy (and helpful Google Calendar notifications) will keep you coming back and logging your meds. Every time you log a dose, you can buy fun accessories for your buddy. You can even adopt additional buddies!</p>
+                <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                    Get Started
+                  </button>
+                  
 
 
             </div>
         
             {% else %}
             <div class="col-md-3 mx-auto homepage-content">
+              <h4 class="text-center">Top Features</h4>
+              <p>
+                <ul class="fa-ul">
+                  <li><i class="fa-li fa fa-solid fa-magnifying-glass"></i><a href="/my-meds">View</a> your medication history</li>
+                  <li><i class="fa-li fa fa-solid fa-book-medical"></i><a href="/change">Learn</a> about your medications</li>
+                  <li><i class="fa-li fa fa-regular fa-calendar"></i>Enable <a href="/authorize">Google Calendar</a> notifications for seamless medication reminders.</li>
+                  <li><i class="fa-li fa fa-solid fa-paw"></i><a href="/adopt">Adopt</a> up to three unique buddies. </li>
+                  <li><i class="fa-li fa fa-solid fa-bag-shopping"></i><a href="/marketplace">Shop</a> in the marketplace for accessories to <a href="/customize">customize</a> your buddies.</li> 
+                </ul>
+                  </p>
+          </div>
 
-                <div id="allBuddies" class="carousel slide" data-bs-ride="carousel">
-                    <h4 class="text-center"> My MedBuddy </h4>
-
-                    <p class="text-center">
-                        You have {{ user.points }} points.
-                        </p>
-
-                    <div class="carousel-inner">
-                      <div class="carousel-item active">
-                        <img src="static/img/logo.png" class="d-block w-100" alt="Heart with a M and B">
-                      </div>
-                  
-                      {% for buddy in user.userbuddies %}
-                      <div class="carousel-item">
-                        <img src="{{buddy.url}}" class="d-block w-100" alt="{{buddy.alt}}">
-                      </div>
-                    {% endfor %}
-                    <button class="carousel-control-prev" type="button" data-bs-target="#allBuddies" data-bs-slide="prev">
-                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                      <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#allBuddies" data-bs-slide="next">
-                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                      <span class="visually-hidden">Next</span>
-                    </button>
-                  </div>
-                </div>
-            </div>
-    
             <div class="col-md-3 mx-auto homepage-content">
                 <h4 class="text-center"> Today's Meds </h4>
                     <p>
                         {% if upcoming_doses %}
+                        <form id="log-meds" action="/med-taken" method="POST">
+
             {% for dose in upcoming_doses %}
-                <li>{{ dose.med.med_name }} - {{ dose.time }}</li>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="{{ dose }}" name="dose-id" value="{{ dose.dose_id }}">
+              <label for="{{ dose }}"><b>{{dose.med.med_name}}</b></label> | <i>{{dose.time.strftime("%I:%M %p")}}</i>
+          </div>
                 {% endfor %}
                 <p class="mb-0 text-center">
-                    To get points, <a href="/log">log now</a>!
-                  </p>
-                  <p class="mb-0 text-center">
-                      You can also <a href="/change">change</a> your med profile
-                      or <a href="/my-meds">view</a> your med data. 
-                    </p>
+                  <input type="submit" aria-label="Submit" value="Log Now!" class="btn btn-outline-dark">
+                </p>
   
                 {% else %}
                 <p class="text-center">
                 It looks like you don't have any doses scheduled.</p>
                 <p class="text-center">
-                You can <a href="/log">log</a> as-needed meds for points.
-                You can also <a href="/add">add</a> meds to your list or <a href="/schedule">schedule</a> a dose.
+              <a class="btn btn-outline-dark" type="button" href="/schedule" class="justify-content-center">
+                Schedule Meds
+            </a>
                         {% endif %}
+
+<p class="text-center">
+                <a class="btn btn-outline-dark" type="button" href="/log" class="justify-content-center">
+                  Log As-Needed Meds
+              </a>
+            </p>
                 </p>
             </p>
             </div>
 
+
             <div class="col-md-3 mx-auto homepage-content">
-                <h4 class="text-center">Did You Know?</h4>
-                <p class="text-center">With MedBuddy, you can:</p>
-                <p>
-                    <li><a href="/my-meds">View</a> your medication history</li>
-                    <li><a href="/change">Learn</a> about your medications</li>
-                    <li><a href="/authorize">Authorize</a> Google Calendar for seamless medication reminders.
-                    <li><a href="/adopt">Adopt</a> up to three unique buddies. 
-                    <li><a href="/marketplace">Shop</a> in the marketplace for accessories to <a href="/customize">customize</a> your buddies. 
 
-                    </p>
-            </div>
+              <div id="allBuddies" class="carousel slide" data-bs-ride="carousel">
+                  <h4 class="text-center"> My MedBuddy </h4>
 
+                  <p class="text-center">
+                      You have {{ user.points }} points.
+                      </p>
+
+                  <div class="carousel-inner">
+                    {% if not user.userbuddies %}
+                    <div class="carousel-item active">
+                      <a href="/adopt" aria-label="click to go to the buddy adoption page">
+
+                      <img src="static/img/logo.png" class="d-block w-100" alt="Adopt a buddy today">
+                      </a>
+                    </div>
+                    {% else %}
+                    {% for buddy in user.userbuddies %}
+                    {% if buddy == user.userbuddies[0] %}
+                    <div class="carousel-item active">
+                      <a href="/customize" aria-label="click to go to the buddy customization page">
+                      <img src="{{buddy.url}}" class="d-block w-100" alt="{{buddy.alt}}"></a>
+                    </div>
+                    {% else %}
+                    <div class="carousel-item">
+                      <a href="/customize" aria-label="click to go to the buddy customization page">
+                      <img src="{{buddy.url}}" class="d-block w-100" alt="{{buddy.alt}}"></a>
+                    </div>
+                    {% endif %}
+                  {% endfor %}
+                  {% endif %}
+                  {% if user.userbuddies[1] %}
+                  <button class="carousel-control-prev" type="button" data-bs-target="#allBuddies" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#allBuddies" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                  {% endif %}
+                </div>
+              </div>
+          </div>
+  
         {% endif %}
 
 
@@ -134,87 +180,8 @@
       </div>
     </div>
   </section>
-<!-- 
-<div class="sidebar-item">
-  <div class="sidebar-content"> -->
-
-
-{% endblock %}
-
-
-
-<!-- 
-{% if user %}
-Welcome, {{ user.fname }}!<br>
-Your point total is {{ user.points }}.<br>
-{% for buddy in user.buddies %}
-<figure class="figure">
-    <img src="{{ buddy.buddy_img }}" class="figure-img img-fluid rounded" alt="{{ buddy.buddy_alt }}"><br>
-    <figcaption class="figure-caption">{{ buddy.buddy_name }} missed you!
-    </figcaption>
-  </figure>
-  
-{% endfor %}<br>
-
-Your Buddies:<br>
-{% for buddy in user.buddies %}
-<li>{{ buddy.buddy_name }}
-    {% endfor %} <br>
-Look at all your nice stuff:<br>
-{% for accessory in user.accessories %}
-<li> {{ accessory.accessory_name }}</li>
-{% endfor %} <br>
-
-Your med list is:<br>
-{% for med in user.usermeds %}
-<li>{{ med.med.med_name }}</li>
-{% endfor %}<br>
-
-{% endif %} -->
-
-
-
-
-<!-- <body>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <div id="g_id_onload"
-         data-client_id=" {{client_id}} "
-         data-context="signin"
-         data-ux_mode="popup"
-         data-login_uri="http://localhost:5000/oauth2callback"
-         data-nonce=""
-         data-auto_prompt="false">
-    </div>
-    
-    <div class="g_id_signin"
-         data-type="standard"
-         data-shape="pill"
-         data-theme="outline"
-         data-text="signin_with"
-         data-size="large"
-         data-logo_alignment="left"
-         data-width="40">
-    </div></body>
-    
-<br>
-
-<div id="g_id_onload"
-     data-client_id="{{ client_id }}"
-     data-context="signup"
-     data-ux_mode="popup"
-     data-login_uri="http://localhost:5000/oauth2callback"
-     data-auto_prompt="false">
 </div>
-
-<div class="g_id_signin"
-     data-type="standard"
-     data-shape="pill"
-     data-theme="outline"
-     data-text="signup_with"
-     data-size="large"
-     data-logo_alignment="left"
-     data-width="40">
-</div> -->
+{% endblock %}
 
 {% block sidebar %}
 {% endblock %}

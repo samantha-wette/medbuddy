@@ -3,7 +3,7 @@ import json
 from datetime import datetime, timedelta, date
 from re import M
 from select import select
-from time import strftime
+from time import strftime, strptime
 from tracemalloc import start
 from flask import Flask, jsonify, render_template, request, flash, session, redirect, url_for, make_response
 from pyparsing import commonHTMLEntity
@@ -457,13 +457,17 @@ def add_buddy():
         session.modified = True
     return redirect("/")
 
-@app.route('/meds')
-def view_all_meds():
-    """View all meds in the database"""
+# @app.route('/meds')
+# def view_all_meds():
+#     """View all meds in the database"""
+#     if "user" in session:
+#         user_id = session["user"]
+#         user = User.get_by_id(user_id)
 
-    official_meds = Med.get_official()
-    return render_template('meds.html',
-                            official_meds = official_meds )
+#     official_meds = Med.get_official()
+#     return render_template('meds.html',
+#                             official_meds = official_meds,
+#                             user = user )
 
 
 @app.route('/log')
@@ -500,7 +504,7 @@ def med_taken():
 
     if not dose_ids and not med_ids:
         flash("Please select at least one med to log!")
-        return redirect('/log')
+        return redirect('/')
 
     if med_ids:
         for med_id in med_ids:
@@ -534,7 +538,7 @@ def med_taken():
     session.modified = True
     user_points = User.get_points(user_id=user_id)
     flash(f"Nice! You now have {user_points} points!")
-    return redirect('/log')
+    return redirect('/')
 
 
 @app.route('/add')
@@ -649,11 +653,16 @@ def add_dose():
                     'timeZone': 'America/Los_Angeles',
             },
             'recurrence': [f'RRULE:FREQ=DAILY;COUNT={initial_count}'],
+            'location': 'http://www.samanthawette.com/medbuddy'
         }
         event = service.events().insert(calendarId='primary', body=event).execute()
 
+    # pretty_date = starting_date.strftime("%m/%d/%y")
 
-    flash(f"Meds scheduled!")
+    if initial_count == 1:
+        flash(f"Meds scheduled")
+    else:
+        flash(f"Meds scheduled for {initial_count} days")
 
     
     return redirect('/schedule')
@@ -687,7 +696,9 @@ def add_accessory():
     """Add a purchased accessory to a user's inventory"""
     
     accessory_id = request.form.get("accessory-id")
+    print(f"THE ACCESSORY ID IS {accessory_id}")
     accessory = Accessory.get_by_id(accessory_id)
+    print(f"******** THE ACCESSORY IS ******** {accessory}")
     user_id = session["user"]
     user = User.get_by_id(user_id)
 
@@ -804,13 +815,13 @@ def process_customization():
     print(f"THE USERBUDDY ID IS {userbuddy_id}")
     chosen_buddy = UserBuddy.get_buddy_by_userbuddy(userbuddy_id)
     print(f"THE CHOSEN_BUDDY IS {chosen_buddy}")
-    chosen_buddy = chosen_buddy.userbuddy_id
+    chosen_buddy = chosen_buddy.buddy_id
     chosen_buddy = int(chosen_buddy)
     if chosen_buddy == 1:
         buddy_alt = "Frodo the bird"
-    if chosen_buddy == 2:
+    elif chosen_buddy == 2:
         buddy_alt = "Frankie the cat"
-    if chosen_buddy == 3:
+    elif chosen_buddy == 3:
         buddy_alt = "Felix the dog"
 
     chosen_hat = request.form.get("chosen-hat")

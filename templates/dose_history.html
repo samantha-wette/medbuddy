@@ -74,6 +74,11 @@
     <!-- </body> --> 
 {% block content %}
 <div class="content-section">
+  <div class="container-fluid text-center">
+    <h1> Medication Data </h1>
+    <p>    View your current and past medications and your dose history
+  </p>
+    </div>
 
 <div class="accordion accordion-flush" id="doseHistory">
   <div class="accordion-item">
@@ -90,7 +95,7 @@
               <th scope="col">Medication</th>
               <th scope="col">Daily</th>
               <th scope="col">As Needed</th>
-              <th scope="col">Currently Taking?</th>
+              <th scope="col">Active</th>
               <th scope="col">Typical Dose</th>
             </tr>
           </thead>
@@ -98,10 +103,26 @@
             {% for med in user.usermeds %} 
             <tr>
               <th scope="row">{{ med.med.med_name }}</th>
-              <td>{{ med.taken_regularly }}</td>
-              <td>{{ med.taken_as_needed }}</td>
-              <td>{{ med.currently_taking }}</td>
-              <td>{{ med.typical_dose }}</td>
+              {% if med.taken_regularly == True %}
+              <td>&nbsp;&nbsp;<i class="fa-solid fa-circle-check" aria-label="Yes, taken daily"></i></td>
+              {% else %}
+              <td>&nbsp;&nbsp;<i class="fa-solid fa-circle-xmark" aria-label="No, not taken daily"></i></td>
+
+              {% endif %}
+              {% if med.taken_as_needed == True %}
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-circle-check" aria-label="Yes, taken as needed"></i></td>
+              {% else %}
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-circle-xmark" aria-label="No, not taken as needed"></i></td>
+{% endif %}
+{% if med.currently_taking == True %}
+
+              <td>&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-circle-check" aria-label="Yes, currently taking"></i></td>
+              {% else %}
+              <td>&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-circle-xmark" aria-label="No, not currently taking"></i></td>
+              {% endif %}
+
+              <td> {{med.typical_dose}}</i></td>
+
             </tr>
             {% endfor %}
           </tbody>
@@ -121,7 +142,9 @@
         <table class="table table-hover">
           <thead>
             <tr>
-              <th scope="col">Date/Time</th>
+              <th scope="col">Date</th>
+              <th scope="col">Time</th>
+
               <th scope="col">Medication</th>
               <th scope="col">Quantity</th>
               <th scope="col">Notes</th>
@@ -130,10 +153,20 @@
           <tbody>
             {% for dose in doses_taken %} 
             <tr>
-              <th scope="row">{{ dose.time_taken }}</th>
+              <th scope="row">{{ dose.time_taken.strftime("%m/%d/%y") }}</th>
+              <td>{{ dose.time_taken.strftime("%I:%M %p") }}</td>
               <td>{{ dose.med.med_name }}</td>
+              {% if dose.amount == None %} 
+              <td><i class="fa-solid fa-circle-xmark" aria-label="No, not taken as needed"></i></td>
+              {% else %}
               <td>{{ dose.amount }}</td>
+              {% endif %}
+              {% if dose.notes == None %}
+              <td><i class="fa-solid fa-circle-xmark" aria-label="No, not taken as needed"></i></td>
+              {% else %}
+
               <td>{{ dose.notes }}</td>
+              {% endif %}
             </tr>
             {% endfor %}
           </tbody>
@@ -163,8 +196,8 @@
           <tbody>
             {% for dose in doses_missed %} 
             <tr>
-              <th scope="row">{{ dose.date }}</th>
-              <td>{{ dose.time }}</td>
+              <th scope="row">{{ dose.date.strftime("%m/%d/%y") }}</th>
+              <td>{{ dose.time.strftime("%I:%M %p") }}</td>
               <td>{{ dose.med.med_name }}</td>
             </tr>
             {% endfor %}

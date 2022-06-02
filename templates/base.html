@@ -22,7 +22,10 @@
     {% block js %}
     {% endblock %}
     <link href="/static/css/site.css" rel="stylesheet">
-    <link href="/static/bootstrap-5.2.0-beta1-dist/css/css-overrides.css" rel="stylesheet">
+    <link href="static/custom-css/css-overrides.css" rel="stylesheet">
+    {% if not user %}
+    <link href="static/custom-css/logged-out.css" rel="stylesheet">
+    {% endif %}
 
     {% endblock %}
     </head>
@@ -40,85 +43,66 @@
           {% block banner %}
           {% endblock %}
             <button class="navbar-toggler navbar-toggler-left" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-              <span class="fa-solid fa-pills"></span>
+              <i class="fa-solid fa-heart-pulse"></i><b>MedBuddy</b>
             </button>
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
               <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">MedBuddy</h5>
+                <a class="offcanvas-title navbar-brand" href="/" id="offcanvasNavbarLabel">
+                  <i class="fa-solid fa-heart-pulse"></i><b>
+                  MedBuddy</b></a>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
               </div>
               <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home</a>
-                  </li>
                   {% if user %}
                   <li class="nav-item">
-                    <a class="nav-link active" href="/log">Log Meds</a>
+                    <span class="fa-solid fa-pills"></span>
+                    <!-- Meds -->
+                  <li class="nav-item">
+                    <a class="dropdown-item" href="/log">Log Meds</a>
                     </li>
 
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/add">Add to Med list</a>
+                    <a class="dropdown-item" aria-current="page" href="/add">Add to Med list</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/change">View & Change Med List</a>
+                    <a class="dropdown-item" aria-current="page" href="/change">View/Change Med Profile</a>
                   </li>
                   <li class="nav-item">
-                  <a class="nav-link active" href="/schedule">Schedule Doses</a>
+                  <a class="dropdown-item" href="/schedule">Schedule Meds</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" href="/my-meds">View Data</a>
+                    <a class="dropdown-item" href="/my-meds">View Data</a>
+                    </li>
+                  </li>
+                    <li class="nav-item">
+                      <i class="fa-solid fa-paw"></i>
+                    <li class="nav-item">
+                    <a class="dropdown-item" href="/adopt">Adoption Center</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link active" href="/adopt">Adopt a Buddy</a>
+                    <a class="dropdown-item" href="/marketplace">Marketplace</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link active" href="/marketplace">Marketplace</a>
+                    <a class="dropdown-item" href="/customize">Buddy Customization</a>
                     </li>
-                    <li class="nav-item">
-                    <a class="nav-link active" href="/customize">Accessorize</a>
-                    </li>
+                  </li>
 
-                  <!-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      My Med Profile
-                    </a>
-                  <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
-                    <li><a class="dropdown-item" href="/add">Add New Med</a></li>
-                    <li><a class="dropdown-item" href="/change">View and Change Meds</a></li>
-                    <li><a class="dropdown-item" href="/schedule">Schedule Doses</a></li>
-                    <li><a class="dropdown-item" href="/my-meds">View Med Data</a></li>
-                    <li><a class="dropdown-item" href="/log">Log Meds</a></li>
-                  </ul>
-                  </li> -->
-                  <!-- <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    My Buddy Profile
-                  </a>
-
-                  <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
-                  </ul> -->
-                    <li>
-                      <hr class="dropdown-divider">
-                    </li>
-                    
-                    <li class="nav-item">
-                      <a class="nav-link" href="/logout">Log Out</a>
-                      <a class="nav-link" href="/authorize">Authorize Google Calendar</a>
-                      
+                    <li class="nav-item d-grid gap-2">
+                      <a class="btn btn-outline-dark" href="/logout">Log Out</a>
+                    </li> 
                       {% else %}
                     <li class="nav-item">
             
                     <h6 class="text-center">Log In</h6>
                     <form id="log-in" action="/login" method="POST">
                         <fieldset>
-                            <!-- <label for="email">Email Address:</label> -->
                             <input type="email" id="email" name="email" class="form-control" placeholder="Email Address" aria-label="Email Address" required><br>
                             <input type="password" id="password" name="password" class="form-control" placeholder="Password" aria-label="Password" required><br>
-                            <input type="submit" aria-label="log-in"  value="Log In"><br>
+                            <input type="submit" class="btn btn-outline-dark" aria-label="log-in"  value="Log In"><br>
                         </fieldset>
                     </form>
-    
+
             </li>
             <li class="nav-item">
               <h6 class="text-center">Create New Account</h6>
@@ -128,8 +112,7 @@
                       <input type="text" id="lname" name="lname" class="form-control" placeholder="Last Name (optional)" aria-label="Last Name (optional)"><br>
                       <input type="email" id="email" name="email" class="form-control" placeholder="Email" aria-label="Email Address"><br>
                       <input type="password" id="password" name="password" class="form-control" placeholder="Password" aria-label="Password"><br>
-                  
-                      <input type="submit" aria-label="submit-and-create-account" value="Create My Account">
+                      <input type="submit" class="btn btn-outline-dark" aria-label="submit-and-create-account" value="Create My Account">
                   </fieldset>
               </form>
 
@@ -142,9 +125,7 @@
 </div>
 
 {% endblock %}
-{% block home %}
-{% endblock %}
-<div class="container-fluid top-margin-hi">
+<div class="container-fluid top-banner">
   <div class="row">
     <div class="col">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
@@ -159,7 +140,11 @@
           {% endif %}
           {% endwith %}
         </div>
+        {% block home %}
+{% endblock %}
+
         <body>
+          
         {% block body %}
         {% endblock %}
       </body>
@@ -191,15 +176,34 @@ Hey there, {{ user.fname }}!
 
 <div id="allBuddies" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-inner">
+    {% if not user.userbuddies %}
     <div class="carousel-item active">
-      <img src="static/img/logo.png" class="d-block w-100" alt="Heart with a M and B">
-    </div>
+      <a href="/adopt" aria-label="click to go to the buddy adoption page">
 
-    {% for buddy in user.userbuddies %}
-    <div class="carousel-item">
-      <img src="{{buddy.url}}" class="d-block w-100" alt="{{buddy.alt}}">
+      <img src="static/img/logo.png" class="d-block w-100" alt="It looks like you need a buddy. Click here to adopt.">
+      </a>
     </div>
-  {% endfor %}
+    {% else %}
+    {% for buddy in user.userbuddies %}
+    {% if buddy == user.userbuddies[0] %}
+    <div class="carousel-item active">
+      <a href="/customize" aria-label="click to go to the buddy customization page">
+
+      <img src="{{buddy.url}}" class="d-block w-100" alt="{{buddy.alt}}">
+      </a>
+    </div>
+    {% else %}
+      <div class="carousel-item">
+      <a href="/customize" aria-label="click to go to the buddy customization page">
+
+      <img src="{{buddy.url}}" class="d-block w-100" alt="{{buddy.alt}}">
+      </a>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% if user.userbuddies[1] %}
+
   <button class="carousel-control-prev" type="button" data-bs-target="#allBuddies" data-bs-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Previous</span>
@@ -208,28 +212,43 @@ Hey there, {{ user.fname }}!
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Next</span>
   </button>
+  {% endif %}
 </div>
 
 
 <div class="sidebar-item text-center">
   <div class="sidebar-content">
-    You have <b>{{ user.points }}</b> points.<br>
+    {% if user.points == 1%}
+    You have <b>1</b> point.{% else %}
+    You have <b>{{ user.points }}</b> points.
+    {% endif%}<br>
     To earn more, you can<br>
     <b><a href="/log">log meds</a></b>.
+    <div class="row">
+    <a class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+      Explore MedBuddy
+    </a>
+      <a class="btn btn-outline-dark" href="/logout">Log Out</a>
+  </div>
+
 </div>
 </div>
-MedBuddy Starter Pack:<br>
+{% if not user.buddies or not user.usermeds or not user.doses %}
+Get Started With MedBuddy:<br>
 {% if user.buddies %}
-[X]{% else %}
-[]{% endif %}  <a href="/adopt">Adopt</a> a buddy <br>
+<i class="fa-regular fa-circle-check" aria-label="done"></i>
+{% else %}
+<i class="fa-regular fa-circle" aria-label="not done"></i>{% endif %}  <a href="/adopt">Adopt</a> a buddy <br>
 
 {% if user.usermeds %}
-[X]{% else %}
-[]{% endif %} <a href="/add">Add</a> medications to your med list<br>
-[] <a href="/authorize">Authorize</a> google calendar<br>
+<i class="fa-regular fa-circle-check" aria-label="done"></i>
+{% else %}
+<i class="fa-regular fa-circle" aria-label="not done"></i>{% endif %} <a href="/add">Add</a> medications to your med list<br>
 {% if user.doses %}
-[X]{% else %}
-[]{% endif %} <a href="/schedule">Schedule</a> some med doses
+<i class="fa-regular fa-circle-check" aria-label="done"></i>
+{% else %}
+<i class="fa-regular fa-circle" aria-label="not done"></i>{% endif %} <a href="/schedule">Schedule</a> some med doses
+{% endif %}
 <div class="sidebar-item">
   <div class="sidebar-content">
 

@@ -29,12 +29,14 @@
       
       </script>
 {% endblock %}
-{% block banner %}
-<h1>
-Schedule Your Meds</h1>
-{% endblock %}
 {% block content %}
 <div class="content-section">
+  <div class="container-fluid text-center">
+    <h1> Schedule Meds </h1>
+    <p>    Schedule medications on Medbuddy. <a href="/authorize">Authorize Google</a> to add your doses to your Google Calendar.
+  </p>
+    </div>
+
 <div class="container">
   <div class="row">
     <div class="col">
@@ -91,7 +93,7 @@ Schedule Your Meds</h1>
                 </label>
               </div>
               <div class="col-sm-10">
-                <input type="date" name="date" id="date" class="form-control" " required>
+                <input type="date" name="date" id="date" class="form-control" required>
               </div>
             </div>
             <div class="row mb-3">
@@ -111,8 +113,8 @@ Schedule Your Meds</h1>
               </label>
             </p>
             <p>
-            <input type="submit" value="Add to MedBuddy Schedule" aria-label="Add to Schedule"></input>
-            <input type="reset" aria-label="reset" value="Reset">
+            <input type="submit" value="Add to MedBuddy Schedule" aria-label="Add to Schedule" class="btn btn-dark"></input>
+            <input type="reset" aria-label="reset" value="Reset" class="btn btn-dark">
             </p>
           </div>
           </form>
