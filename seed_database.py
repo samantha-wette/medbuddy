@@ -143,7 +143,7 @@ def create_users():
         password = f"test{n}"
         fname = f"User{n}"
         lname = f"{n}user"
-        points = 40
+        points = 25
 
         user=model.User.create(email, password, fname, lname, points)
         model.db.session.add(user)

@@ -1,7 +1,7 @@
 accessory_dict = {    "1a": {
     "accessory_name": "Chef's Hat",
     "accessory_cost": 5,
-    "accessory_description": "With this chef's hat, your buddy is unstoppable in the kitchen! What delicious snacks will they create?",
+    "accessory_description": "With this chef's hat, your buddy is unstoppable in the kitchen!",
     "accessory_img": "static/img/accessory1a.png",
     "accessory_alt": "poufy white chef's hat",
     "is_hat": True,
@@ -35,7 +35,7 @@ accessory_dict = {    "1a": {
 
 "2a": {
     "accessory_name": "Black Shades",
-    "accessory_cost": 5,
+    "accessory_cost": 8,
     "accessory_description": "Keep your buddy looking fly and protected from the sun with these shades.",
     "accessory_img": "static/img/accessory2a.png",
     "accessory_alt": "sunglasses with black rounded frames",
@@ -48,7 +48,7 @@ accessory_dict = {    "1a": {
 
 "2b": {
     "accessory_name": "Heart-Shaped Glasses",
-    "accessory_cost": 8,
+    "accessory_cost": 10,
     "accessory_description": "Your buddy will see love all around them through these stylish frames.",
     "accessory_img": "static/img/accessory2b.png",
     "accessory_alt": "heart-shaped glasses with purple frames",
@@ -61,8 +61,8 @@ accessory_dict = {    "1a": {
 
 "2c": {
     "accessory_name": "Monacle",
-    "accessory_cost": 8,
-    "accessory_description": "Let's go in for a closer look...",
+    "accessory_cost": 4,
+    "accessory_description": "Half the glass, half the price.",
     "accessory_img": "static/img/accessory2c.png",
     "accessory_alt": "green monacle with a black chain",
     "is_hat": False,

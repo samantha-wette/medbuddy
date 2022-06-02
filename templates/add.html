@@ -34,8 +34,9 @@
 <div class="content-section">
   <div class="container-fluid text-center">
     <h1> Add Medications </h1>
-    <p>    You can add medications from our database or add your own!
-      When you add a medication from our database, you can learn about your med.
+    <p>    Add a product from our database or your own!
+      When you add a medication from our database of medications and supplements,
+      you gain access to a wealth of knowledge about the product.
   </p>
     </div>
 
@@ -46,15 +47,15 @@
       <input type="text" class="form-control" placeholder="Medication Name" aria-label="Medication" id="searchBox" name="search" required/>
     </div>
   </div>
-      <div class="input-group btn-group mb-3">
-        <input type="checkbox" class="btn-check" name="regular" id="regular" autocomplete="off">
-        <label class="btn btn-outline-dark" for="regular">I take this med daily.</label>
-
-
+  <div class="row">
+      <div class="btn-group btn-block mb-3 ">
+        <input type="checkbox" class="btn-check my-auto" name="regular" id="regular" autocomplete="off">
+        <label class="btn btn-outline-dark text-center" for="regular">I take this daily.</label>
         <input type="checkbox" class="btn-check" name="as-needed" id="as-needed" autocomplete="off">
-        <label class="btn btn-outline-dark" for="as-needed">I take this med as needed.</label>
+        <label class="btn btn-outline-dark text-center" for="as-needed">I take this as needed.</label>
         <input type="checkbox" class="btn-check" name="current" id="current" autocomplete="off">
-        <label class="btn btn-outline-dark" for="current">I am currently taking this med.</label>
+        <label class="btn btn-outline-dark text-center" for="current">I currently take this.</label>
+      </div>
       </div>
       <div>
         <input type="text" class="form-control" name="dose-amount" id="dose-amount" placeholder="Typical Dose (optional)" aria-label="typical dose"/>

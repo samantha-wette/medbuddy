@@ -24,11 +24,26 @@ h4 {color: #0d0d0d;
   font-weight: bolder;
 
 }
+.btn-group.btn-block {
+  display: flex;
+}
+.btn-group.btn-block > .btn {
+  flex: 1;
+}
 
+.text-stroke {
+  -webkit-text-stroke: 2px #b3dae6;
+}
+.inverted-stroke {
+  -webkit-text-stroke: 2px #403b3c;
+}
 .no-decoration {
   text-decoration: none;
 }
-.top-banner { margin-top: 75px;
+.top-banner { margin-top: 60px;
+}
+
+.home-content {margin-top: 25px;
 }
 
 .flexibly-sticky { align-items: flex-start;
@@ -41,6 +56,8 @@ h4 {color: #0d0d0d;
   background-color: #f2f0f0;
   color:#0d0d0d;
   font-family: 'Calibri', 'Trebuchet MS', sans-serif;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 .content-section {

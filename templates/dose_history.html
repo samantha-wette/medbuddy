@@ -1,96 +1,24 @@
 {% extends 'base.html' %}
 
-  <!-- <head>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  </head> -->
-
-
-  <!-- HTML -->
-  <!-- 
-<html>
-  <head>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load("current", {packages:["calendar"]});
-      google.charts.setOnLoadCallback(drawChart);
-
-   function drawChart() {
-       var dataTable = new google.visualization.DataTable();
-       dataTable.addColumn({ type: 'date', id: 'Date' });
-       dataTable.addColumn({ type: 'number', id: 'Won/Loss' });
-       dataTable.addColumn({ type: 'string', id: 'info', role: 'tooltip'})
-       dataTable.addRows([
-        [ new Date(2022, 5, 17), 1, "med1, med2"],
-          [ new Date(2022, 5, 18), 0, "med5, med6"]
-        ]);
-        // // for dose in user.doses:
-        // for (i=0), //conditional logic --> 
-<!-- 
-        // [ new Date(dose.year, dose.month, dose.day), percent,
-        // `Meds taken: ${meds}`, `Meds missed: ${meds_missed}`],
-
-
-       var chart = new google.visualization.Calendar(document.getElementById('calendar_basic'));
-
-       var options = {
-         title: "Medication History",
-         height: 350,
-         coloraxis:  {minValue: 0,  maxValue: 1,}
-       };
-
-       chart.draw(dataTable, options);
-   }
-    </script>
-  </head>
-  <body>
-    <div id="calendar_basic" style="width: 1000px; height: 350px;"></div>
-  </body>
-</html> -->
-
-
-    <!-- function drawCalendarChart() {
-       var dataTable = new google.visualization.DataTable();
-       dataTable.addColumn({ type: 'date', id: 'Date' });
-       dataTable.addColumn({ type: 'number', id: 'Percent Meds Taken' });
-    //    dataTable.addColumn({ type: 'string', id: 'Meds Taken'})
-    //    dataTable.addColumn({ type: 'string', id: 'Meds Missed'})
-       dataTable.addColumn({ type: 'string', id: 'Meds taken and missed', role: 'tooltip'});
-       dataTable.addRows([    
-        var options = {
-         title: "Medication History",
-         height: 350,
-        //   colors: ['#FF0000', '#00FF00']}
-       };
-
-       var chart = new google.visualization.Calendar(document.getElementById('calendar_chart_div'));
-
-       chart.draw(dataTable, options);
-   }
-    </script>
-  </head>
-  <body>
-     <div id="calendar_chart_div" style="width: 1000px; height: 350px;"></div></td>
-          <td><div id="Anthony_chart_div" style="border: 1px solid #ccc"></div></td> -->
-    <!-- </body> --> 
 {% block content %}
 <div class="content-section">
   <div class="container-fluid text-center">
     <h1> Medication Data </h1>
-    <p>View your current and past medications and your dose history</p>
+    <p>View your detailed med list and dose history.</p>
   </div>
-<div id="collapse-group">
+<div id="selector">
     <p class="text-center">
-    <button class="btn btn-dark" data-parent="#collapse-group" type="button" data-bs-toggle="collapse" data-bs-target="#med-list" aria-expanded="true" aria-controls="med-list">
+    <button class=" btn btn-dark" data-bs-parent="#selector" type="button" data-bs-toggle="collapse" data-bs-target="#med-list" aria-expanded="true" aria-controls="med-list">
       My Med List
     </button>
-    <button class="btn btn-dark" data-parent="#collapse-group" type="button" data-bs-toggle="collapse" data-bs-target="#taken" aria-expanded="false" aria-controls="med-list">
+    <button class=" btn btn-dark" data-bs-parent="#selector" type="button" data-bs-toggle="collapse" data-bs-target="#taken" aria-expanded="false" aria-controls="med-list">
       Doses Taken
     </button>
-    <button class="btn btn-dark" data-parent="#collapse-group" type="button" data-bs-toggle="collapse" data-bs-target="#missed" aria-expanded="false" aria-controls="med-list">
+    <button class=" btn btn-dark" data-bs-parent="#selector" type="button" data-bs-toggle="collapse" data-bs-target="#missed" aria-expanded="false" aria-controls="med-list">
       Doses Missed
     </button>
   </p>
-  <div class="collapse show" id="med-list" data-parent="#collapse-group">
+  <div class="collapse show" id="med-list" data-bs-parent="#selector" >
     <div class="card card-body">
       <table class="table table-hover">
         <thead>
@@ -133,7 +61,7 @@
   </div>
   </div>
   
-<div class="collapse" id="taken" data-parent="#collapse-group">
+<div class="collapse" id="taken" data-bs-parent="#selector">
   <div class="card card-body">
     <table class="table table-hover">
       <thead>
@@ -170,7 +98,7 @@
 </div>
 </div>
 
-<div class="collapse" id="missed" data-parent="#collapse-group">
+<div class="collapse" id="missed" data-bs-parent="#selector">
   <div class="card card-body">
 <table class="table table-hover">
   <thead>

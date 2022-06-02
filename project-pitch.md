@@ -29,7 +29,7 @@ When life is busy, a phone or calendar reminder is not enough to follow through 
   - Jinja
 - APIs/external data sources:
   - Google Calendar API: used to schedule medication doses
-  - OpenFDA API: used to search for medications
+  - Drugs.com: medication and supplement data scraped with BeautifulSoup
 - Browser/client-side dependencies:
   - Bootstrap
   - React
@@ -46,8 +46,6 @@ When life is busy, a phone or calendar reminder is not enough to follow through 
 
 ### Sprint 2
 
-- Google Login integration
-- OpenFDA integration: return search results to enhance medication profile creation
+- Drugs.com integration: return search results to enhance medication profile creation
 - Google Calendar integration: set medication reminders
-- React frontend for editing medication profile
-- React frontend for sprite upgrades/point marketplace
+- Bootstrap frontend

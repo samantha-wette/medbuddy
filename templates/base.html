@@ -2,7 +2,7 @@
   <html lang="en">
     <head>
     {% block head %}
-    <title> MedBuddy</title>
+    <title> MedBuddy is a medication tracking web application</title>
     <meta charset="utf-8">
     <meta name="description" content="making med tracking fun">
     <meta name="developer" content="Samantha Wette">
@@ -42,14 +42,14 @@
           </a> -->
           {% block banner %}
           {% endblock %}
-              <button class="navbar-toggler navbar-toggler-left" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-              <i class="fa-solid fa-bars"></i>
-              </button>
-              <a href="/" class="navbar-toggler navbar-toggler-left no-decoration" type="button">
+              <a href="/" class="navbar-toggler navbar-toggler-left no-decoration" type="button" aria-label="click to go to home page">
                 <i class="fa-solid fa-heart-pulse"></i><b>MedBuddy</b>
               </a>
-
-            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+              <button class="navbar-toggler navbar-toggler-left" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="click here to access nav bar">
+                <i class="fa-solid fa-bars"></i>
+                </button>
+  
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
               <div class="offcanvas-header">
                 <a class="offcanvas-title navbar-brand" href="/" id="offcanvasNavbarLabel">
                   <i class="fa-solid fa-heart-pulse"></i><b>
@@ -208,11 +208,11 @@ Hey there, {{ user.fname }}!
     {% endif %}
     {% if user.userbuddies[1] %}
 
-  <button class="carousel-control-prev" type="button" data-bs-target="#allBuddies" data-bs-slide="prev">
+  <button class="carousel-control-prev" type="button" data-bs-target="#allBuddies" data-bs-slide="prev" aria-label="click here for previous buddy">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Previous</span>
   </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#allBuddies" data-bs-slide="next">
+  <button class="carousel-control-next" type="button" data-bs-target="#allBuddies" data-bs-slide="next" aria-label="click here for next buddy">
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Next</span>
   </button>
@@ -228,12 +228,24 @@ Hey there, {{ user.fname }}!
     {% endif%}<br>
     To earn more, you can<br>
     <b><a href="/log">log meds</a></b>.
+  </div>
+  <div class="sidebar-item text-center">
+    <div class="sidebar-content">
+
     <div class="row">
-    <a class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+    <a class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="click here to open nav bar">
       Explore MedBuddy
     </a>
+  </div>
+  </div>    
+</div>
+<div class="sidebar-item text-center">
+  <div class="sidebar-content">
+
+  <div class="row">
       <a class="btn btn-outline-dark" href="/logout">Log Out</a>
   </div>
+</div>
 
 </div>
 </div>
@@ -270,8 +282,8 @@ Get Started With MedBuddy:<br>
 </div>
 {% block footer %}
 <footer>
-    <nav class="navbar sticky-bottom nav-custom">
-      </nav>
+    <div class="navbar sticky-bottom nav-custom">
+    </div>
     </footer>
 </div>
 {% endblock %}

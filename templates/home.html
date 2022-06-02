@@ -10,22 +10,22 @@
     <div class="overlay"></div>
   
     <!-- The HTML5 video element that will create the background video on the header -->
-    <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
-      <source src="static/img/homevideo.mp4" type="video/mp4">
+    <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop" aria-label="video montage of adults smiling, no sound">
+      <source src="static/img/homevideo.mp4" type="video/mp4" alt="video montage of adults smiling">
     </video>
   
     <!-- The header content -->
     <div class="container h-100">
       <div class="d-flex h-100 text-center align-items-center">
         <div class="w-100">
-          <h1 class="display-3">MedBuddy</h1>
-          <h2 class="display-8">Your Partner in Healing</h2>
+          <h1 class="display-2 text-stroke">MedBuddy</h1>
+          <h2 class="display-8 inverted-stroke">Your Partner in Healing</h2>
           {% if not user %}
-          <button class="btn btn-dark btn-lg" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+          <button class="btn btn-dark btn-lg" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="open nav bar to log in or create new account">
             Get Started
           </button>
           {% else %}
-          <button class="btn btn-dark btn-lg" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+          <button class="btn btn-dark btn-lg" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="open nav bar">
             Navigate
           </button>
           {% endif %}
@@ -38,19 +38,19 @@
 
   {% endblock %}
   {% block body %}
-  <div class="container-fluid top-banner">
+  <div class="container-fluid">
 
   <!-- Page section example for content below the video header -->
   <section class="my-9">
-    <div class="container">
+    <div class="container home-content">
       <div class="row">
           
         {% if not user %}
 
         <div class="col-md-3 mx-auto homepage-content text-center">
-            <h4 class="text-center">Track</h4>
+            <h3 class="text-center">Track</h3>
             <p>Whether you are tracking the occasional supplement or multiple daily medications, MedBuddy was built with you in mind. MedBuddy empowers users to distinguish their daily and as-needed meds and keep their med list up to date.</p>
-            <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+            <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="click to open nav bar">
                 Get Started
               </button>
               
@@ -59,18 +59,18 @@
         </div>
 
           <div class="col-md-3 mx-auto homepage-content text-center">
-                <h4 class="text-center">Heal</h4>
+                <h3 class="text-center">Heal</h4>
                 <p>MedBuddy is more than a medication tracker. With a robust database of medications and supplements, you can research the products that you use. View your med data at any time to keep your care team updated on your med list.</p>
-                <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="click to open nav bar">
                     Get Started
                   </button>
                   
 
         </div>
             <div class="col-md-3 mx-auto homepage-content text-center">
-                <h4 class="text-center">Play</h4>
+                <h3 class="text-center">Play</h3>
                 <p>Your adorable Buddy (and helpful Google Calendar notifications) will keep you coming back and logging your meds. Every time you log a dose, you can buy fun accessories for your buddy. You can even adopt additional buddies!</p>
-                <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="click to open nav bar">
                     Get Started
                   </button>
                   
@@ -80,7 +80,7 @@
         
             {% else %}
             <div class="col-md-3 mx-auto homepage-content">
-              <h4 class="text-center">Top Features</h4>
+              <h3 class="text-center">Top Features</h3>
               <p>
                 <ul class="fa-ul">
                   <li><i class="fa-li fa fa-solid fa-magnifying-glass"></i><a href="/my-meds">View</a> your medication history</li>
@@ -93,7 +93,7 @@
           </div>
 
             <div class="col-md-3 mx-auto homepage-content">
-                <h4 class="text-center"> Today's Meds </h4>
+                <h3 class="text-center"> Today's Meds </h3>
                     <p>
                         {% if upcoming_doses %}
                         <form id="log-meds" action="/med-taken" method="POST">
@@ -116,13 +116,13 @@
                 It looks like you don't have any doses scheduled.
                 </p>
                 <p class="text-center">
-              <a class="btn btn-outline-dark" type="button" href="/schedule" class="justify-content-center">
+              <a class="btn btn-outline-dark" type="button" href="/schedule" class="justify-content-center" aria-label="click to schedule med doses">
                 Schedule Meds
             </a>
                         {% endif %}
                         <br>
                   <p class="text-center">
-                <a class="btn btn-outline-dark" type="button" href="/log" class="justify-content-center">
+                <a class="btn btn-outline-dark" type="button" href="/log" class="justify-content-center" aria-label="click to log meds">
                   Log As-Needed Meds
               </a>
             </p>
@@ -134,9 +134,10 @@
             <div class="col-md-3 mx-auto homepage-content">
 
               <div id="allBuddies" class="carousel slide" data-bs-ride="carousel">
-                  <h4 class="text-center"> My MedBuddy </h4>
+                  <h3 class="text-center"> My MedBuddy </h3>
 
                   <p class="text-center">
+                    <p class="text-center">
                       You have {{ user.points }} points.
                       </p>
 
@@ -164,15 +165,16 @@
                   {% endfor %}
                   {% endif %}
                   {% if user.userbuddies[1] %}
-                  <button class="carousel-control-prev" type="button" data-bs-target="#allBuddies" data-bs-slide="prev">
+                  <button class="carousel-control-prev" type="button" data-bs-target="#allBuddies" data-bs-slide="prev" aria-label="click to go to previous buddy">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                   </button>
-                  <button class="carousel-control-next" type="button" data-bs-target="#allBuddies" data-bs-slide="next">
+                  <button class="carousel-control-next" type="button" data-bs-target="#allBuddies" data-bs-slide="next" aria-label="click to go to next buddy">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                   </button>
                   {% endif %}
+                </p>
                 </div>
               </div>
           </div>

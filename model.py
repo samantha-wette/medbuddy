@@ -1,11 +1,7 @@
 """Models for medication tracker app"""
 
 from flask_sqlalchemy import SQLAlchemy
-from datetime import date, datetime, timedelta
-# from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
-
-# from flask_login import UserMixin
-
+from datetime import date, datetime
 from sqlalchemy import CheckConstraint
 
 db = SQLAlchemy()
@@ -126,11 +122,8 @@ class Med(db.Model):
     med_information = db.Column(db.String)
     official = db.Column(db.Boolean, nullable=False)
     added_by = db.Column(db.Integer)
-
-    # users = db.relationship("User", backref="meds")
     
     #doses is a list of Dose objects
-
     #usermeds is a list of UserMed objects
 
     def __repr__(self):
@@ -187,17 +180,10 @@ class UserMed(db.Model):
                         default=False)
     taken_as_needed = db.Column(db.Boolean,
                         default=False)
-    # taken_short_term = db.Column(db.Boolean,
-    #                     default=False)
     currently_taking = db.Column(db.Boolean, default=True)
-
     typical_dose = db.Column(db.String, default=None)
-
-    # typical_time = db.Column(db.Time, default=None)
-
     last_updated_date = db.Column(db.Date, default=None)
     last_updated_time = db.Column(db.Time, default=None)
-
     med = db.relationship("Med", backref="usermeds")
     user = db.relationship("User", backref="usermeds")
 
@@ -212,10 +198,8 @@ class UserMed(db.Model):
                 med_id,
                 taken_regularly,
                 taken_as_needed,
-                # taken_short_term,
                 currently_taking,
                 typical_dose=None,
-                # typical_time=None,
                 last_updated_date=None,
                 last_updated_time=None):
         """Create and return a UserMed object"""
@@ -223,18 +207,10 @@ class UserMed(db.Model):
                 med_id=med_id,
                 taken_regularly=taken_regularly,
                 taken_as_needed=taken_as_needed,
-                # taken_short_term=taken_short_term,
                 currently_taking=currently_taking,
                 typical_dose=typical_dose,
-                # typical_time=typical_time,
                 last_updated_date=last_updated_date,
                 last_updated_time=last_updated_time)
-
-    # @classmethod
-    # def ordered_meds_by_user(cls, user_id):
-    #     print(f"THE USER_ID WE TOOK IN IS {user_id}*******************")
-    #     user = cls.query.filter(user_id == user_id).order_by(Med.med_name.desc())
-    #     return user
     
     @classmethod
     def update_last_updated(cls, usermed_id):
@@ -256,12 +232,6 @@ class UserMed(db.Model):
         if usermed.taken_regularly ==True:
             usermed.taken_regularly=False
         print(f"UPDATED USERMED IS {usermed}")
-
-
-    # @classmethod
-    # def set_typical_time(cls, usermed_id, typical_time):
-    #     usermed = cls.query.get(usermed_id)
-    #     usermed.typical_time = typical_time
 
     @classmethod
     def set_taken_as_needed(cls, usermed_id):
@@ -352,12 +322,6 @@ class Accessory(db.Model):
         """Find a list of accessories by maximum price"""
         return cls.query.filter(cls.accessory_cost <= max_price).all()
 
-    # @classmethod
-    # def get_all_compatible_buddies(cls, accessory_id):
-    #     """Return a list of all buddies who can wear an acceessory"""
-    #     accessory = cls.query.options(db.joinedload('compatible_buddies')).get(accessory_id)
-    #     return accessory.compatible_buddies
-
     @classmethod
     def all_accessories(cls):
         return cls.query.all()
@@ -379,7 +343,6 @@ class UserAccessory(db.Model):
     def __repr__(self):
         return f'<UserAccessory useraccessory_id={self.useraccessory_id}\
              user_id={self.user_id} accessory_id={self.accessory_id}'
-
 
 class Buddy(db.Model):
     """A buddy that a user can have."""
@@ -429,7 +392,6 @@ class Buddy(db.Model):
     user_id = db.Column(db.Integer,
                         db.ForeignKey("users.user_id"))
     users = db.relationship("User", secondary="user_buddies", backref="buddies")
-    # wearable_accessories = db.relationship("Accessory", secondary="wearable_by", backref="compatible_buddies")
 
     @classmethod
     def create(cls, buddy_name, buddy_description,
@@ -501,12 +463,6 @@ class Buddy(db.Model):
         """Find a user's buddies"""
         return cls.query.filter(cls.user_id == user_id).all()
 
-    # @classmethod
-    # def get_all_wearable_accessories(cls, buddy_id):
-    #     """Return a list of all accessories wearable by a buddy"""
-    #     buddy = cls.query.options(db.joinedload('wearable_accessories')).get(buddy_id)
-    #     return buddy.wearable_accessories
-
     @classmethod
     def all_buddies(cls):
         return cls.query.all()
@@ -567,25 +523,6 @@ class UserBuddy(db.Model):
         userbuddy = cls.query.get(userbuddy_id)
         userbuddy.url = buddy_url
         userbuddy.alt = buddy_alt
-
-
-# class WearableBy(db.Model):
-#     """Which buddies can wear which accessories. (secondary table)"""
-
-#     __tablename__ = 'wearable_by'
-
-#     wearableby_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-
-#     accessory_id = db.Column(db.Integer,
-#                         db.ForeignKey("accessories.accessory_id"))
-
-#     buddy_id = db.Column(db.Integer,
-#                         db.ForeignKey("buddies.buddy_id"))
-
-#     def __repr__(self):
-#         return f'<WearableBy wearableby_id={self.wearableby_id}\
-#             accessory_id={self.accessory_id} buddy_id={self.buddy_id}>'
-
 
 class Dose(db.Model):
     """A schedule of a user's medication doses."""
@@ -671,27 +608,16 @@ class Dose(db.Model):
     def get_missed_by_user(cls, user_id):
         """Get all doses missed by a user"""
         today = date.today()
-        # hours = int(-2)
-        # hours_subtracted = timedelta(hours=hours)
-        # two_hours_ago = today + hours_subtracted
         return cls.query.filter(Dose.user_id == user_id, Dose.taken == False, Dose.date < today).all()
 
     @classmethod
     def get_upcoming_by_user(cls, user_id):
         """Get all today's upcoming doses by a user."""
                 
-        # now = datetime.now()
-        # hours_added = timedelta(hours = 12)
-
-        # hours_subtracted = timedelta(hours= -2)
-        # two_hours_ago = now + hours_subtracted
-
-        # twelve_hours_from_now = now + hours_added
         today = date.today()
 
         return cls.query.filter(Dose.user_id == user_id, Dose.taken == False,
         Dose.date == today).all()
-        # Dose.date_time < twelve_hours_from_now, Dose.date_time > two_hours_ago).all()
 
     @classmethod
     def mark_taken(cls, dose_id, time_taken, notes=None, amount=None):

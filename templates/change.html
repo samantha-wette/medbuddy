@@ -3,14 +3,14 @@
 <div class="content-section">
   <div class="container-fluid text-center">
     <h1> My Medications </h1>
-    <p>    View, change, and learn about your medications
+    <p>View, change, and learn about your medications.   
   </p>
     </div>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
 {% for med in ordered_meds %}
 
-<form id="change-med" action="/change-med" method="POST">
+<form id="change-med" action="/change-med" method="POST" aria-label="change the medication in the user profile">
 {% if med.currently_taking == True %}
   <div class="card h-100" style="max-width: 18rem;">
     <div class="card-header text-center">Active</div>
@@ -22,11 +22,12 @@
       <div class="card-body text-center">
         <h5 class="card-title" id="med to update">{{ med.med.med_name }}</h5>
           <input type="hidden" id="med-to-update" name="med-to-update" value="{{ med.usermed_id }}">
-            <p class="card-text">
-              <h6 class="card-subtitle mb-2 text-muted card-footer">
+            </div>
+              <div class="card-footer text-center">
+              <h6 class="card-subtitle mb-2 text-muted">
             {% if med.med.official == True %}
             
-            <a href="{{ med.med.med_information }}">Information</a>
+            <a href="{{ med.med.med_information }}" aria-label="click to go to the drugs.com page about this medication">About This Med</a>
             {% else %}
             Added by {{user.fname}}
             {% endif %}
@@ -35,10 +36,10 @@
       <div class="card-footer">
         <div class="form-check form-switch">
           {% if med.taken_regularly == True %}
-            <input class="form-check-input" type="checkbox" role="switch" id="daily" name="regular" checked>
+            <input class="form-check-input" type="checkbox" role="switch" id="daily" name="regular" aria-checked="true" checked>
             <label class="form-check-label" for="daily">I take this daily.</label>
           {% else %}
-            <input class="form-check-input" type="checkbox" role="switch" id="daily" name="regular">
+            <input class="form-check-input" type="checkbox" role="switch" id="daily" name="regular" aria-checked="false">
             <label class="form-check-label" for="daily">I take this daily.</label>
         {% endif %}
         </div>
@@ -46,20 +47,20 @@
 
         <div class="form-check form-switch">
           {% if med.taken_as_needed == True %}
-            <input class="form-check-input" type="checkbox" role="switch" name="as-needed" id="as-needed" checked>
+            <input class="form-check-input" type="checkbox" role="switch" name="as-needed" id="as-needed" aria-checked="true" checked>
             <label class="form-check-label" for="as-needed">I take this as needed.</label>
           {% else %}
-            <input class="form-check-input" type="checkbox" role="switch" id="as-needed" name="as-needed">
+            <input class="form-check-input" type="checkbox" role="switch" id="as-needed" name="as-needed" aria-checked="false">
             <label class="form-check-label" for="as-needed">I take this as needed.</label>
           {% endif %}
         </div>
 
         <div class="form-check form-switch">
           {% if med.currently_taking == True %}
-            <input class="form-check-input" type="checkbox" role="switch" name="current" id="current" checked>
+            <input class="form-check-input" type="checkbox" role="switch" name="current" id="current" aria-checked="true" checked>
             <label class="form-check-label" for="current">I currently take this.</label>
           {% else %}
-            <input class="form-check-input" type="checkbox" role="switch" name="current" id="current">
+            <input class="form-check-input" type="checkbox" role="switch" name="current" id="current" aria-checked="false">
             <label class="form-check-label" for="current">I currently take this.</label>
           {% endif %}
         </div>

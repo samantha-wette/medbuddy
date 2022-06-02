@@ -131,7 +131,8 @@ def authorize():
 def oauth2callback():
     """Sets credentials"""
     state = session['state']
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(CLIENT_SECRETS_FILE, scopes = SCOPES, state = state)
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+        CLIENT_SECRETS_FILE, scopes = SCOPES, state = state)
     flow.redirect_uri = url_for('oauth2callback', _external=True)
 
     authorization_response = request.url
@@ -207,12 +208,6 @@ def add_med():
     else:
         taken_regularly=False
 
-    # taken_short_term=request.form.get("series")
-    # if taken_short_term:
-    #     taken_short_term=True
-    # else:
-    #     taken_short_term=False
-
     taken_as_needed=request.form.get("as-needed")
     if taken_as_needed:
         taken_as_needed=True
@@ -231,12 +226,6 @@ def add_med():
     else:
         typical_dose=None
     
-    # typical_time=request.form.get("timepicker")
-    # if typical_time:
-    #     typical_time = typical_time
-    # else:
-    #     typical_time=None
-
     med = Med.get_by_med_name(med_name)
 
     if med:
@@ -245,10 +234,8 @@ def add_med():
                                     med_id=med_id,
                                     taken_regularly=taken_regularly,
                                     taken_as_needed=taken_as_needed,
-                                    # taken_short_term=taken_short_term,
                                     currently_taking=currently_taking,
                                     typical_dose=typical_dose,
-                                    # typical_time=typical_time,
                                     last_updated_date=date.today(),
                                     last_updated_time=datetime.now().time())
         
@@ -265,10 +252,8 @@ def add_med():
                                     med_id=med_id,
                                     taken_regularly=taken_regularly,
                                     taken_as_needed=taken_as_needed,
-                                    # taken_short_term=taken_short_term,
                                     currently_taking=currently_taking,
                                     typical_dose=typical_dose,
-                                    # typical_time=typical_time,
                                     last_updated_date=date.today(),
                                     last_updated_time=datetime.now().time())
 
@@ -285,11 +270,6 @@ def change_meds():
     if "user" in session:
         user_id = int(session["user"])
         user = User.get_by_id(user_id)
-        # usermed = UserMed.ordered_meds_by_user(user_id)
-        # print(f"THE ORDERED USERMED IS {usermed} ********************************")
-        # usermed = User.
-        #query usermeds in this order: CUrrent(alphabetical), Past(alphabetical)
-
         usermeds = user.usermeds
         ordered_meds = sorted(usermeds, key=lambda med: med.med.med_name)
         ordered_meds = sorted(ordered_meds, key=lambda med: med.currently_taking, reverse=True)
@@ -308,29 +288,17 @@ def update_med():
 
     usermed_id = request.form.get("med-to-update")
     usermed_id = int(usermed_id)
-    print(f"***************the usermed_id is {usermed_id} **********************")
 
     taken_regularly=request.form.get("regular")
-    print(f"*********************taken_regularly is {taken_regularly} *****************")
 
     if taken_regularly == "on":
-        print("******************* TAKEN REGULARLY IS ON ********************")
         taken_regularly=True
         UserMed.make_taken_regularly(usermed_id)
-        # typical_time=request.form.get("timepicker")
-        # if typical_time:
-        #     print("TYPICAL TIMEEEE")
-        #     print(typical_time)
-        #     typical_time = typical_time
-        #     UserMed.set_typical_time(usermed_id=usermed_id, typical_time=typical_time)
 
     else:
-        print("*****************ELSE*******************")
         taken_regularly=False
         UserMed.make_not_taken_regularly(usermed_id)
-        print("THE USERMED WAS MADE NOT TAKEN REGULARLY")
         Dose.cancel_upcoming_doses_by_usermed(usermed_id)
-        print("DOSES WERE CANCELLED")
 
     taken_as_needed=request.form.get("as-needed")
     if taken_as_needed == "on":
@@ -370,24 +338,6 @@ def update_med():
     # #delete all upcoming doses of that med from profile
     # doses_of_old_med = crud.delete_doses_of_med_from_user(user_id = user_id, med_id = med_id)
     return redirect("/change")
-
-
-# @app.route('/remove-med', methods=["POST"])
-# def remove_med():
-#     """Remove a med from a user's profile"""
-#     user_id = session["user"]
-#     med_id = request.form.get("med-to-remove")
-#     med_id = int(med_id)
-
-#     #delete med from profile
-#     old_med = crud.delete_med_from_user(user_id = user_id, med_id = med_id)
-#     db.session.commit()
-#     session.modified = True
-#     flash(f"med {med_id} has been removed.")
-
-#     #delete all upcoming doses of that med from profile
-#     doses_of_old_med = crud.delete_doses_of_med_from_user(user_id = user_id, med_id = med_id)
-#     return redirect("/schedule")
 
 @app.route('/my-meds')
 def view_dose_history():
@@ -437,19 +387,17 @@ def add_buddy():
         flash("Sorry! You don't have enough points for that buddy.")
     else:
         buddy_id = request.form.get("buddy-id")
-        print(f"THE BUDDY_ID IS {buddy_id}")
         buddy = Buddy.get_by_id(buddy_id)
-        print(f" THIS BUDDY IS: {buddy.buddy_name}")
         url = buddy.img_O_O
-        print(f"THE URL IS {url}")
         alt = buddy.alt_O_O
-        print(f"THE ALT IS {alt}")
 
-        new_buddy = UserBuddy.create(user_id = user_id, buddy_id = buddy_id, url = url, alt = alt, primary_buddy = False)
+        new_buddy = UserBuddy.create(user_id = user_id,
+                                    buddy_id = buddy_id,
+                                    url = url, alt = alt,
+                                    primary_buddy = False)
         db.session.add(new_buddy)
         User.spend_points(user_id, 15)
         db.session.commit()
-        print(f"the new buddy is {new_buddy} **********")
 
         flash(f"Welcome home, {buddy.buddy_name}. You'll love it here.")
         flash(f"{user.fname}, your new point total is {user.points}.")
@@ -585,7 +533,6 @@ def add_dose():
 
     user_id = session["user"]
     starting_date = request.form.get('date')
-    print(f"**************out of the form, the starting_date is {starting_date} which is a {type(starting_date)} object")
     time = request.form.get('time')
     initial_count = request.form.get('repeat')
     try:
@@ -657,8 +604,6 @@ def add_dose():
         }
         event = service.events().insert(calendarId='primary', body=event).execute()
 
-    # pretty_date = starting_date.strftime("%m/%d/%y")
-
     if initial_count == 1:
         flash(f"Meds scheduled")
     else:
@@ -696,9 +641,7 @@ def add_accessory():
     """Add a purchased accessory to a user's inventory"""
     
     accessory_id = request.form.get("accessory-id")
-    print(f"THE ACCESSORY ID IS {accessory_id}")
     accessory = Accessory.get_by_id(accessory_id)
-    print(f"******** THE ACCESSORY IS ******** {accessory}")
     user_id = session["user"]
     user = User.get_by_id(user_id)
 
@@ -812,9 +755,7 @@ def process_customization():
     userbuddy_id = request.form.get("chosen-buddy")
     userbuddy_id = int(userbuddy_id)
 
-    print(f"THE USERBUDDY ID IS {userbuddy_id}")
     chosen_buddy = UserBuddy.get_buddy_by_userbuddy(userbuddy_id)
-    print(f"THE CHOSEN_BUDDY IS {chosen_buddy}")
     chosen_buddy = chosen_buddy.buddy_id
     chosen_buddy = int(chosen_buddy)
     if chosen_buddy == 1:
@@ -859,8 +800,6 @@ def process_customization():
 
     buddy_url = f"static/img/buddy{chosen_buddy}_{chosen_hat}_{chosen_glasses}.png"
     buddy_alt = f"Your buddy, {buddy_alt}, is wearing {hat_alt} and {glasses_alt}"
-    print(buddy_url)
-    print("BUDDY URL ****")
     UserBuddy.update_url(userbuddy_id=userbuddy_id, buddy_url=buddy_url, buddy_alt=buddy_alt)
     db.session.commit()
     flash("Your buddy looks great!")
