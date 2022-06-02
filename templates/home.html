@@ -101,23 +101,27 @@
             {% for dose in upcoming_doses %}
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="{{ dose }}" name="dose-id" value="{{ dose.dose_id }}">
-              <label for="{{ dose }}"><b>{{dose.med.med_name}}</b></label> | <i>{{dose.time.strftime("%I:%M %p")}}</i>
-          </div>
+              <label for="{{ dose }}">
+                <div class="row"><div class="col-1"><i class="fa-solid fa-pills"></i></div><div class="col"> {{dose.med.med_name}}</div></div><div class="row"><div class="col-1"><i class="fa-regular fa-clock"></i></div><div class="col"><i> {{dose.time.strftime("%I:%M %p")}}</i></div></div>
+              </label>
+              </div>
                 {% endfor %}
+                <br>
                 <p class="mb-0 text-center">
                   <input type="submit" aria-label="Submit" value="Log Now!" class="btn btn-outline-dark">
                 </p>
   
                 {% else %}
                 <p class="text-center">
-                It looks like you don't have any doses scheduled.</p>
+                It looks like you don't have any doses scheduled.
+                </p>
                 <p class="text-center">
               <a class="btn btn-outline-dark" type="button" href="/schedule" class="justify-content-center">
                 Schedule Meds
             </a>
                         {% endif %}
-
-<p class="text-center">
+                        <br>
+                  <p class="text-center">
                 <a class="btn btn-outline-dark" type="button" href="/log" class="justify-content-center">
                   Log As-Needed Meds
               </a>
