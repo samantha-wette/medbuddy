@@ -35,19 +35,19 @@
         <div class="row g-3">
             <div class="col-sm">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="{{ dose }}" name="dose-id" value="{{ dose.dose_id }}">
-                    <label for="{{ dose }}"><b>{{dose.med.med_name}}</b></label><i class="fa-regular fa-clock"></i> <i>{{dose.time.strftime("%I:%M %p")}}</i>
+                    <input class="form-check-input" type="checkbox" id="{{ dose.dose_id }}" name="dose-id" value="{{ dose.dose_id }}">
+                    <label for="{{ dose.dose_id }}"><b>{{dose.med.med_name}}</b></label><i class="fa-regular fa-clock"></i> <i>{{dose.time.strftime("%I:%M %p")}}</i>
                 </div>
             </div>
 
             <div class="col-sm">
-                <input class="form-control" type="text" id="{{ med }}-notes" name="notes-{{med}}" placeholder="Notes (optional)" aria-label="notes">
+                <input class="form-control" type="text" id="{{dose.dose_id}}-notes" name="notes-{{dose.dose_id}}" placeholder="Notes (optional)" aria-label="notes">
             </div>
                 <div class="col-sm-3">
                     {% if dose.usermed.typical_dose == None %}
-                <input class="form-control" type="text" id="{{ dose }}" name="amount-dose" placeholder="Amount (optional)" aria-label="dose">
+                <input class="form-control" type="text" id="{{ dose.dose_id }}" name="amount-{{dose.dose_id}}" placeholder="Amount (optional)" aria-label="dose">
                     {% else %}
-                <input class="form-control" type="text" id="{{ dose }}" name="amount-dose" placeholder="Amount (optional)" aria-label="dose" value="{{dose.usermed.typical_dose}}"/>
+                <input class="form-control" type="text" id="{{ dose.dose_id }}" name="amount-{{dose.dose_id}}" placeholder="Amount (optional)" aria-label="dose" value="{{dose.usermed.typical_dose}}"/>
                     {% endif %}
                 </div>
         </div>
@@ -69,21 +69,22 @@
       <div class="row g-3">
           <div class="col-sm">
             <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="{{ med }}" name="med-id" value="{{ med.med_id }}">
-            <label for="{{ med }}"><b>{{med.med.med_name}}</b></label>
+            <input class="form-check-input" type="checkbox" id="{{ med.med_id }}" name="med-id" value="{{ med.med_id }}">
+            <label for="{{ med.med_id }}"><b>{{med.med.med_name}}
+            </b></label>
             <br><br>
             </div>
         </div>
         <div class="col-sm">
-            <input class="form-control" type="text" id="{{ med }}-notes" name="notes-{{med}}" placeholder="Notes (optional)" aria-label="notes">
+            <input class="form-control" type="text" id="{{ med.med_id }}-notes" name="notes-{{med.med_id}}" placeholder="Notes (optional)" aria-label="notes">
         </div>
         {% if med.typical_dose == None %}
         <div class="col-sm-3">
-            <input class="form-control" type="text" id="{{ med }}-as-needed" name="amount-{{med}}" placeholder="Amount (optional)" aria-label="dose">
+            <input class="form-control" type="text" id="{{ med.med_id }}-as-needed" name="amount-{{med.med_id}}" placeholder="Amount (optional)" aria-label="dose">
         </div>
         {% else %}
         <div class="col-sm-3">
-            <input class="form-control" type="text" id="{{ med }}-as-needed" name="amount-{{med}}" placeholder="Amount (optional)" aria-label="dose" value="{{med.typical_dose}}">
+            <input class="form-control" type="text" id="{{ med.med_id }}-as-needed" name="amount-{{med.med_id}}" placeholder="Amount (optional)" aria-label="dose" value="{{med.typical_dose}}">
         </div>
         {% endif %}
     </div>

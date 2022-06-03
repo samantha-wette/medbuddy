@@ -456,8 +456,12 @@ def med_taken():
 
     if med_ids:
         for med_id in med_ids:
+            print(f"THE MED_ID IS {med_id}")
+            print(f"WE ARE SEARCHING FOR 'notes-{med_id}'")
             notes = request.form.get(f'notes-{med_id}')
+            print(f"the notes are {notes} *********")
             amount = request.form.get(f'amount-{med_id}')
+            print(f"THE AMOUNT ON THIS MED IS IS {amount}")
             usermed = UserMed.get_by_user_and_med(user_id=user_id, med_id=med_id)
             usermed_id=usermed.usermed_id
             new_dose = Dose.create(user_id=user_id,
@@ -475,7 +479,9 @@ def med_taken():
     if dose_ids:
         for dose_id in dose_ids:
             notes = request.form.get(f'notes-{dose_id}')
+            print(f"THE NOTES ON THIS DOSE ARE {notes}")
             amount = request.form.get(f'amount-{dose_id}')
+            print(f"THE AMOUNT ON THIS DOSE IS {amount}")
             Dose.mark_taken(dose_id=dose_id,
                             time_taken=date_time,
                             notes=notes,

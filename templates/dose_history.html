@@ -80,15 +80,8 @@
           <th scope="row">{{ dose.time_taken.strftime("%m/%d/%y") }}</th>
           <td>{{ dose.time_taken.strftime("%I:%M %p") }}</td>
           <td>{{ dose.med.med_name }}</td>
-          {% if dose.amount == None %} 
-          <td><i class="fa-solid fa-circle-xmark" aria-label="No, not taken as needed"></i></td>
-          {% else %}
           <td>{{ dose.amount }}</td>
           {% endif %}
-          {% if dose.notes == None %}
-          <td><i class="fa-solid fa-circle-xmark" aria-label="No, not taken as needed"></i></td>
-          {% else %}
-
           <td>{{ dose.notes }}</td>
           {% endif %}
         </tr>
