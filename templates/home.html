@@ -5,16 +5,12 @@
 {% block home %}
 
 <header>
-
-    <!-- This div is  intentionally blank. It creates the transparent black overlay over the video which you can modify in the CSS -->
     <div class="overlay"></div>
   
-    <!-- The HTML5 video element that will create the background video on the header -->
     <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop" aria-label="video montage of adults smiling, no sound">
       <source src="static/img/homevideo.mp4" type="video/mp4" alt="video montage of adults smiling">
     </video>
-  
-    <!-- The header content -->
+
     <div class="container h-100">
       <div class="d-flex h-100 text-center align-items-center">
         <div class="w-100">
@@ -39,8 +35,6 @@
   {% endblock %}
   {% block body %}
   <div class="container-fluid">
-
-  <!-- Page section example for content below the video header -->
   <section class="my-9">
     <div class="container home-content">
       <div class="row">
@@ -49,7 +43,7 @@
 
         <div class="col-md-3 mx-auto homepage-content text-center">
             <h3 class="text-center">Track</h3>
-            <p>Whether you are tracking the occasional supplement or multiple daily medications, MedBuddy was built with you in mind. MedBuddy empowers users to distinguish their daily and as-needed meds and keep their med list up to date.</p>
+            <p>Whether you are tracking an occasional supplement or multiple daily medications, MedBuddy was built with you in mind. MedBuddy empowers you to distinguish between daily and as-needed meds and keep your med list up to date.</p>
             <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="click to open nav bar">
                 Get Started
               </button>
@@ -60,7 +54,7 @@
 
           <div class="col-md-3 mx-auto homepage-content text-center">
                 <h3 class="text-center">Heal</h4>
-                <p>MedBuddy is more than a medication tracker. With a robust database of medications and supplements, you can research the products that you use. View your med data at any time to keep your care team updated on your med list.</p>
+                <p>MedBuddy is more than a medication tracker. With a robust database of medications and supplements, you can research the products that you use and stay informed on your health. View your med data at any time to keep your care team updated.</p>
                 <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="click to open nav bar">
                     Get Started
                   </button>
@@ -69,7 +63,7 @@
         </div>
             <div class="col-md-3 mx-auto homepage-content text-center">
                 <h3 class="text-center">Play</h3>
-                <p>Your adorable Buddy (and helpful Google Calendar notifications) will keep you coming back and logging your meds. Every time you log a dose, you can buy fun accessories for your buddy. You can even adopt additional buddies!</p>
+                <p>Your adorable Buddy (and helpful Google Calendar notifications) will keep you coming back and logging your meds. Every time you log a dose, you earn points. Save up to buy fun accessories for your buddy or even adopt additional buddies!</p>
                 <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="click to open nav bar">
                     Get Started
                   </button>

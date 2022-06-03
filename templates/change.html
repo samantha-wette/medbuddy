@@ -10,7 +10,7 @@
 <div class="row row-cols-1 row-cols-md-3 g-4">
 {% for med in ordered_meds %}
 
-<form id="change-med" action="/change-med" method="POST" aria-label="change the medication in the user profile">
+<form id="change-med-{{med.med_id}}" action="/change-med" method="POST" aria-label="change the medication in the user profile">
 {% if med.currently_taking == True %}
   <div class="card h-100" style="max-width: 18rem;">
     <div class="card-header text-center">Active</div>
@@ -20,8 +20,8 @@
     {% endif %}
     
       <div class="card-body text-center">
-        <h5 class="card-title" id="med to update">{{ med.med.med_name }}</h5>
-          <input type="hidden" id="med-to-update" name="med-to-update" value="{{ med.usermed_id }}">
+        <h5 class="card-title" id="med-to-update-{{med.usermed_id}}">{{ med.med.med_name }}</h5>
+          <input type="hidden" id="med-to-update-{{med.usermed_id}}" name="med-to-update" value="{{ med.usermed_id }}">
             </div>
               <div class="card-footer text-center">
               <h6 class="card-subtitle mb-2 text-muted">
@@ -36,40 +36,40 @@
       <div class="card-footer">
         <div class="form-check form-switch">
           {% if med.taken_regularly == True %}
-            <input class="form-check-input" type="checkbox" role="switch" id="daily" name="regular" aria-checked="true" checked>
-            <label class="form-check-label" for="daily">I take this daily.</label>
+            <input class="form-check-input" type="checkbox" role="switch" id="daily-{{med.med_id}}" name="regular" aria-checked="true" checked>
+            <label class="form-check-label" for="daily-{{med.med_id}}">I take this daily.</label>
           {% else %}
-            <input class="form-check-input" type="checkbox" role="switch" id="daily" name="regular" aria-checked="false">
-            <label class="form-check-label" for="daily">I take this daily.</label>
+            <input class="form-check-input" type="checkbox" role="switch" id="daily-{{med.med_id}}" name="regular" aria-checked="false">
+            <label class="form-check-label" for="daily-{{med.med_id}}">I take this daily.</label>
         {% endif %}
         </div>
 
 
         <div class="form-check form-switch">
           {% if med.taken_as_needed == True %}
-            <input class="form-check-input" type="checkbox" role="switch" name="as-needed" id="as-needed" aria-checked="true" checked>
-            <label class="form-check-label" for="as-needed">I take this as needed.</label>
+            <input class="form-check-input" type="checkbox" role="switch" name="as-needed" id="as-needed-{{med.med_id}}" aria-checked="true" checked>
+            <label class="form-check-label" for="as-needed-{{med.med_id}}">I take this as needed.</label>
           {% else %}
-            <input class="form-check-input" type="checkbox" role="switch" id="as-needed" name="as-needed" aria-checked="false">
-            <label class="form-check-label" for="as-needed">I take this as needed.</label>
+            <input class="form-check-input" type="checkbox" role="switch" id="as-needed-{{med.med_id}}" name="as-needed" aria-checked="false">
+            <label class="form-check-label" for="as-needed-{{med.med_id}}">I take this as needed.</label>
           {% endif %}
         </div>
 
         <div class="form-check form-switch">
           {% if med.currently_taking == True %}
-            <input class="form-check-input" type="checkbox" role="switch" name="current" id="current" aria-checked="true" checked>
-            <label class="form-check-label" for="current">I currently take this.</label>
+            <input class="form-check-input" type="checkbox" role="switch" name="current" id="current-{{med.med_id}}" aria-checked="true" checked>
+            <label class="form-check-label" for="current-{{med.med_id}}">I currently take this.</label>
           {% else %}
-            <input class="form-check-input" type="checkbox" role="switch" name="current" id="current" aria-checked="false">
-            <label class="form-check-label" for="current">I currently take this.</label>
+            <input class="form-check-input" type="checkbox" role="switch" name="current" id="current-{{med.med_id}}" aria-checked="false">
+            <label class="form-check-label" for="current-{{med.med_id}}">I currently take this.</label>
           {% endif %}
         </div>
           
         <div class="card-footer">
           {% if med.typical_dose == None %}
-            <input type="text" id="dose" name="dose-amount" class="form-control" placeholder="Typical Dose (optional)" aria-label="Typical Dose" >
+            <input type="text" id="dose-{{med.med_id}}" name="dose-amount" class="form-control" placeholder="Typical Dose (optional)" aria-label="Typical Dose" >
           {% else %}
-            <input type="text" id="dose" name="dose-amount" value="{{med.typical_dose}}" class="form-control" placeholder="Typical Dose (optional)" aria-label="Typical Dose">
+            <input type="text" id="dose-{{med.med_id}}" name="dose-amount" value="{{med.typical_dose}}" class="form-control" placeholder="Typical Dose (optional)" aria-label="Typical Dose">
           {% endif %}
         </div>
         <div class="card-footer text-center">
