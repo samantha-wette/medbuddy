@@ -101,8 +101,8 @@
                     <h6 class="text-center">Log In</h6>
                     <form id="log-in" action="/login" method="POST">
                         <fieldset>
-                            <input type="email" id="email" name="email" class="form-control" placeholder="Email Address" aria-label="Email Address" required><br>
-                            <input type="password" id="password" name="password" class="form-control" placeholder="Password" aria-label="Password" required><br>
+                            <input type="email" id="login-email" name="email" class="form-control" placeholder="Email Address" aria-label="Email Address" required><br>
+                            <input type="password" id="login-password" name="password" class="form-control" placeholder="Password" aria-label="Password" required><br>
                             <input type="submit" class="btn btn-outline-dark" aria-label="log-in"  value="Log In"><br>
                         </fieldset>
                     </form>
@@ -112,10 +112,10 @@
               <h6 class="text-center">Create New Account</h6>
               <form class="form-floating" id="create-account" action="/users" method="POST">
                   <fieldset>
-                      <input type="text" id="fname" name="fname" class="form-control" placeholder="First Name" aria-label="First Name"><br>
-                      <input type="text" id="lname" name="lname" class="form-control" placeholder="Last Name (optional)" aria-label="Last Name (optional)"><br>
-                      <input type="email" id="email" name="email" class="form-control" placeholder="Email" aria-label="Email Address"><br>
-                      <input type="password" id="password" name="password" class="form-control" placeholder="Password" aria-label="Password"><br>
+                      <input type="text" id="create-fname" name="fname" class="form-control" placeholder="First Name" aria-label="First Name"><br>
+                      <input type="text" id="create-lname" name="lname" class="form-control" placeholder="Last Name (optional)" aria-label="Last Name (optional)"><br>
+                      <input type="email" id="create-email" name="email" class="form-control" placeholder="Email" aria-label="Email Address"><br>
+                      <input type="password" id="create-password" name="password" class="form-control" placeholder="Password" aria-label="Password"><br>
                       <input type="submit" class="btn btn-outline-dark" aria-label="submit-and-create-account" value="Create My Account">
                   </fieldset>
               </form>
@@ -252,16 +252,16 @@ Get Started With MedBuddy:<br>
 {% if user.buddies %}
 <i class="fa-regular fa-circle-check" aria-label="done"></i>
 {% else %}
-<i class="fa-regular fa-circle" aria-label="not done"></i>{% endif %}  <a href="/adopt">Adopt</a> a buddy <br>
+<i class="fa-regular fa-circle" aria-label="not done"></i>{% endif %}  <a href="/adopt" aria-label="click to adopt a buddy">Adopt</a> a buddy <br>
 
 {% if user.usermeds %}
 <i class="fa-regular fa-circle-check" aria-label="done"></i>
 {% else %}
-<i class="fa-regular fa-circle" aria-label="not done"></i>{% endif %} <a href="/add">Add</a> medications to your med list<br>
+<i class="fa-regular fa-circle" aria-label="not done"></i>{% endif %} <a href="/add" aria-label="click to add a med to your list">Add</a> medications to your med list<br>
 {% if user.doses %}
 <i class="fa-regular fa-circle-check" aria-label="done"></i>
 {% else %}
-<i class="fa-regular fa-circle" aria-label="not done"></i>{% endif %} <a href="/schedule">Schedule</a> some med doses
+<i class="fa-regular fa-circle" aria-label="not done"></i>{% endif %} <a href="/schedule" aria-label="click to schedule a dose">Schedule</a> some med doses
 {% endif %}
 <div class="sidebar-item">
   <div class="sidebar-content">

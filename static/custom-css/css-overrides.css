@@ -32,9 +32,11 @@ h4 {color: #0d0d0d;
 }
 
 .text-stroke {
+  font-weight: bolder;
   -webkit-text-stroke: 2px #b3dae6;
 }
 .inverted-stroke {
+  font-weight: bolder;
   -webkit-text-stroke: 2px #403b3c;
 }
 .no-decoration {

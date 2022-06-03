@@ -30,7 +30,7 @@
           <p>{{ buddy.buddy_description }}</p>
         </div>
         <div class="card-footer">
-          <form id="add-buddy" action="/add-buddy" method="POST">
+          <form id="add-buddy-{{buddy.buddy_id}}" action="/add-buddy" method="POST">
           <input id="{{ buddy.buddy_id }}" name="buddy-id"
           value ="{{ buddy.buddy_id }}" type="hidden">
 

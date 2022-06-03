@@ -32,7 +32,7 @@
             {% endif %}
           </div>
           <div class="card-footer">
-            <form id="add-accessory" action="/add-accessory" method="POST">
+            <form id="add-accessory-{{accessory.accessory_id}}" action="/add-accessory" method="POST">
               <input name="accessory-id" value ="{{accessory.accessory_id}}" type="hidden">
 
             {% if buddy %}

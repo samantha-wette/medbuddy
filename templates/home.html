@@ -94,8 +94,8 @@
 
             {% for dose in upcoming_doses %}
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="{{ dose }}" name="dose-id" value="{{ dose.dose_id }}">
-              <label for="{{ dose }}">
+              <input class="form-check-input" type="checkbox" id="dose-{{ dose.dose_id }}" name="dose-id" value="{{ dose.dose_id }}">
+              <label for="dose-{{ dose.dose_id }}">
                 <div class="row"><div class="col-1"><i class="fa-solid fa-pills"></i></div><div class="col"> {{dose.med.med_name}}</div></div><div class="row"><div class="col-1"><i class="fa-regular fa-clock"></i></div><div class="col"><i> {{dose.time.strftime("%I:%M %p")}}</i></div></div>
               </label>
               </div>
