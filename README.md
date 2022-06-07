@@ -26,7 +26,32 @@ Category | Tech
 **API** | Google [Calendar], [OAuth]
 **Other** | [BeautifulSoup], [Jinja], [Drugs.com], [Canva]
 
-<!-- ## Installation -->
+## Installation
+
+To begin, clone this repository to your local machine.
+```sh
+git clone https://github.com/samantha-wette/medbuddy.git
+```
+
+After cloning, use your CLI to navigate to the project root directory and initialize a virtual environment.
+```sh
+virtualenv env
+source env/bin/activate
+```
+
+Once in the virtual environment, install all required depenencies.
+```sh
+pip3 install -r requirements.txt
+```
+
+Next, create and seed a database for the project.
+```sh
+python3 seed_database.py
+```
+Finally, start the server to launch MedBuddy.
+```sh
+python3 server.py
+```
 
 ## Accessibility
 MedBuddy is [WCAG] compliant with descriptive alt tags, extensive ARIA labeling, and full keyboard accessibility. MedBuddy was written with the VSCode Web Accessibility [extension]. MedBuddy was tested both manually and with [Access] Assistant to ensure accessibility for all users.
