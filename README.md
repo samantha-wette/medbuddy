@@ -13,10 +13,15 @@ MedBuddy is a web application that gamifies the med tracking experience to incre
 - Learn about products on med-list using data from [Drugs.com]
 - View updated med list, doses taken, and doses missed
 
+## Accessibility
+MedBuddy is [WCAG] compliant with descriptive alt tags, extensive ARIA labeling, and full keyboard accessibility. MedBuddy was written with the VSCode Web Accessibility [extension]. MedBuddy was tested both manually and with [Access] Assistant to ensure accessibility for all users.
+
 ## Demo
-Click [here] to view the MedBuddy demo!
+Click [here] to view the MedBuddy demo video!
 <br>
-[![An image of the medbuddy home page featuring a person smiling.](http://i3.ytimg.com/vi/_NKujEak9Mg/hqdefault.jpg)](https://youtu.be/_NKujEak9Mg)
+
+[![A gif of a user dynamically adding medications to MedBuddy. As the user types in the name of the medication, a drop-down bar populates with matching meds. The user can also input their own med that is not on the list. The user can indicate whether their med is taken daily, as needed, and/or currently.](https://github.com/samantha-wette/medbuddy/blob/main/static/img/gif1.gif?raw=true)]
+
 
 ## Tech Stack
 Category | Tech
@@ -52,9 +57,6 @@ Finally, start the server to launch MedBuddy.
 ```sh
 python3 server.py
 ```
-
-## Accessibility
-MedBuddy is [WCAG] compliant with descriptive alt tags, extensive ARIA labeling, and full keyboard accessibility. MedBuddy was written with the VSCode Web Accessibility [extension]. MedBuddy was tested both manually and with [Access] Assistant to ensure accessibility for all users.
 
 ## Author
 Samantha Wette | *[Github], [Linkedin]*
