@@ -19,8 +19,9 @@ MedBuddy is [WCAG] compliant with descriptive alt tags, extensive ARIA labeling,
 ## Demo
 Click [here] to view the MedBuddy demo video!
 <br>
+Adding Meds:
 
-[![A gif of a user dynamically adding medications to MedBuddy. As the user types in the name of the medication, a drop-down bar populates with matching meds. The user can also input their own med that is not on the list. The user can indicate whether their med is taken daily, as needed, and/or currently.](https://github.com/samantha-wette/medbuddy/blob/main/static/img/gif1.gif?raw=true)]
+![A gif of a user dynamically adding medications to MedBuddy. As the user types in the name of the medication, a drop-down bar populates with matching meds. The user can also input their own med that is not on the list. The user can indicate whether their med is taken daily, as needed, and/or currently.](https://github.com/samantha-wette/medbuddy/blob/main/static/img/gif1.gif?raw=true)
 
 
 ## Tech Stack
