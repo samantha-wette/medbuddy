@@ -18,11 +18,27 @@ MedBuddy is [WCAG] compliant with descriptive alt tags, extensive ARIA labeling,
 
 ## Demo
 Click [here] to view the MedBuddy demo video!
-<br>
-Adding Meds:
+<br><br>
+Add Meds:
 
 ![A gif of a user dynamically adding medications to MedBuddy. As the user types in the name of the medication, a drop-down bar populates with matching meds. The user can also input their own med that is not on the list. The user can indicate whether their med is taken daily, as needed, and/or currently.](https://github.com/samantha-wette/medbuddy/blob/main/static/img/gif1.gif?raw=true)
+<br><br>
 
+Change Med Profile:
+![A gif of a user changing their med profile. The user switches off the "i currently take this" button for Chamomile and it goes to the bottom of the page (not pictured). The user then clicks on "About this Med", a link on the Albuterol med card, to learn about Albuterol. Every med card from the database has this informational link to drugs.com](https://github.com/samantha-wette/medbuddy/blob/main/static/img/gif5.gif?raw=true)
+<br><br>
+
+Schedule Meds and Calendar Notifications:
+![On the Schedule Meds page, the user checks two medication boxes and assigns a date and time. The  user indicates that the meds should repeat for 30 days. They also click the "add to google calendar" box before submitting. Then, the user's google calendar shows that has their meds scheduled at the time/dates they indicated with the event name "MB". In the event details there is a list of the meds they are to take at that time and a link to log their dose.](https://github.com/samantha-wette/medbuddy/blob/main/static/img/gif4.gif?raw=true)
+<br><br>
+
+Log Doses:
+![On the home page, a user sees "today's meds" where they can check and log their meds immediately. They can also go to the "log" page in order to log meds with detailed notes and dose information.](https://github.com/samantha-wette/medbuddy/blob/main/static/img/gif2.gif?raw=true)
+<br><br>
+
+Customize Buddy:
+![In the Marketplace, a user can purchase different hats and glasses with the points they earned logging meds. The user can then go to the customization page to customize their buddy. In this case, the user customizes their cat with a party hat and heart shaped sunglasses.](https://github.com/samantha-wette/medbuddy/blob/main/static/img/gif3.gif?raw=true)
+<br><br>
 
 ## Tech Stack
 Category | Tech
