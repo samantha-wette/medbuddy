@@ -14,8 +14,8 @@ MedBuddy is a web application that gamifies the med tracking experience to incre
 - View updated med list, doses taken, and doses missed
 
 ## Demo
-Click here to view the MedBuddy demo!
 [![An image of the medbuddy home page featuring a person smiling.](http://i3.ytimg.com/vi/_NKujEak9Mg/hqdefault.jpg)](https://youtu.be/_NKujEak9Mg)
+Click [here] to view the MedBuddy demo!
 
 ## Tech Stack
 Category | Tech
@@ -54,3 +54,4 @@ Samantha Wette | *[Github], [Linkedin]*
 [extension]: <https://marketplace.visualstudio.com/items?itemName=MaxvanderSchee.web-accessibility>
 [Access]: <https://chrome.google.com/webstore/detail/access-assistant/ojiighldhdmahfdnhfdebnpmlbiemdfm?hl=en-US>
 [Canva]: <https://www.canva.com/>
+[here]: <https://youtu.be/_NKujEak9Mg>
