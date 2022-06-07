@@ -18,6 +18,7 @@ import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import hashlib
+from secrets import SECRET_KEY
 from googleapiclient.errors import HttpError
 # from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 
@@ -28,7 +29,8 @@ SCOPES = ['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.co
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 app = Flask(__name__)
-app.secret_key = "ruvndexfdm"
+app.secret_key = "Gr~A}6Blr*eH~^GG[AJ_Kg&6P=hYg!rOQgDtVQWjdI2vV(o(BTlwJoryktxDH("
+
 # login_manager = LoginManager()
 # login_manager.init_app(app)
 

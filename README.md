@@ -13,7 +13,8 @@ MedBuddy is a web application that gamifies the med tracking experience to incre
 - Learn about products on med-list using data from [Drugs.com]
 - View updated med list, doses taken, and doses missed
 
-<!-- ## Demo -->
+## Demo
+[![Click here to view the MedBuddy demo](http://i3.ytimg.com/vi/_NKujEak9Mg/hqdefault.jpg)](https://youtu.be/_NKujEak9Mg)
 
 ## Tech Stack
 Category | Tech
