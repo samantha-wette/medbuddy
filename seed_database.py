@@ -136,21 +136,21 @@ def create_accessories():
     model.db.session.add_all(accessories_in_db)
     model.db.session.commit()
 
-def create_users():
-    #create 10 users
-    for n in range(10):
-        email = f"user{n}@test.com"
-        password = f"test{n}"
-        fname = f"User{n}"
-        lname = f"{n}user"
-        points = 25
+# def create_users():
+#     #create 10 users
+#     for n in range(10):
+#         email = f"user{n}@test.com"
+#         password = f"test{n}"
+#         fname = f"User{n}"
+#         lname = f"{n}user"
+#         points = 25
 
-        user=model.User.create(email, password, fname, lname, points)
-        model.db.session.add(user)
-        model.db.session.commit()
+#         user=model.User.create(email, password, fname, lname, points)
+#         model.db.session.add(user)
+#         model.db.session.commit()
     
 
 create_buddies()
 create_accessories()
-create_users()
+# create_users()
 create_meds()

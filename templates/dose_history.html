@@ -81,7 +81,10 @@
           <td>{{ dose.time_taken.strftime("%I:%M %p") }}</td>
           <td>{{ dose.med.med_name }}</td>
           {% if not dose.amount %}
-          <td> </td>
+          <td>Unspecified
+            {% if dose.usermed.typical_dose %}
+            <br>(typically {{dose.usermed.typical_dose}})
+          {% endif %}</td>
           {% else %}
           <td>{{ dose.amount }}</td>
           {% endif %}

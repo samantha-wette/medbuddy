@@ -4,7 +4,7 @@ import json
 
 
 def create_meds_dict():
-    """Used to scrape up-to-date A-Z medication list from drugs.com"""
+    """Scrape up-to-date A-Z medication list from drugs.com"""
 
     meds_dict = {}
     med_list = []
@@ -26,7 +26,7 @@ def create_meds_dict():
             doc = BeautifulSoup(result.text, "html.parser")
             meds = doc.find(class_="ddc-list-column-2")
 
-        #try searching for meds in lis
+        #try searching for meds in li's
 
             for med in meds.find_all('li'):
                 med_name = med.a.get_text()
@@ -42,7 +42,7 @@ def create_meds_dict():
             print(f"{url} appended to url_list_2, will try again")
             url_list_2.append(url)
 
-        #try searching for meds in ddc-list-unstyled uls
+        #try searching for meds in ddc-list-unstyled ul's
     for url in url_list_2:
         try:
             result=requests.get(url)

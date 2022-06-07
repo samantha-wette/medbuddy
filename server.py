@@ -71,48 +71,6 @@ def search():
     resp.status_code = 200
     return resp
 
-# @app.route('/test')
-# def add_to_calendar():
-#     print("*********HELLO*******")
-
-#     print(session['credentials'])
-#     if 'credentials' not in session:
-#         return redirect('/authorize')
-    
-#     credentials = google.oauth2.credentials.Credentials(**session['credentials'])
-#     print(credentials)
-
-
-#     service = googleapiclient.discovery.build('calendar', 'V3', credentials = credentials)
-#     print(f"the service is {service} *********")
-#     date = "2022-05-23"
-#     time = "09:00:00"
-#     session['credentials'] = {
-#     'token': credentials.token,
-#     'refresh_token': credentials.refresh_token,
-#     'token_uri': credentials.token_uri,
-#     'client_id': credentials.client_id,
-#     'client_secret': credentials.client_secret,
-#     'scopes': credentials.scopes}
-#     date = date
-#     time = time
-#     print(f"THE DATETIME IS ***** {date}T{time}")
-#     event = {
-#         'summary': 'MB',
-#         'description': 'list_of_doses',
-#         'start': {
-#             'dateTime': f'{date}T{time}:00',
-#             'timeZone': 'America/Los_Angeles',
-#         },
-#         'end': {'dateTime': f'{date}T{time}:59',
-#                 'timeZone': 'America/Los_Angeles',
-#         },
-#         # 'recurrence': ['RRULE:FREQ=DAILY;COUNT=2'],
-#     }
-#     event = service.events().insert(calendarId='primary', body=event).execute()
-#     return jsonify(event)
-
-
 @app.route('/authorize')
 def authorize():
     """Authorizes Google Calendar"""
@@ -399,7 +357,7 @@ def add_buddy():
         User.spend_points(user_id, 15)
         db.session.commit()
 
-        flash(f"Welcome home, {buddy.buddy_name}. You'll love it here.")
+        flash(f"Welcome home, {buddy.buddy_name}! ")
         flash(f"{user.fname}, your new point total is {user.points}.")
 
         session.modified = True
@@ -657,8 +615,7 @@ def add_accessory():
         new_accessory = crud.add_accessory_to_user(user_id = user_id, accessory_id = accessory_id)
         new_points = User.spend_points(user_id, accessory.accessory_cost)
         db.session.commit()
-        flash(f"Ooh, what a nice new {accessory.accessory_name}!")
-        flash(f"{user.fname}, your new point total is {user.points}.")
+        flash(f"Nice {accessory.accessory_name}, {user.fname}! Your new point total is {user.points}.")
         session.modified = True
     return redirect("/marketplace")
 
@@ -749,6 +706,9 @@ def customize():
     if "user" in session:
         user_id = session["user"]
         user = User.get_by_id(user_id)
+
+
+
         return render_template('customize.html', user=user)
     else:
         flash(f"Looks like you need to log in!")
