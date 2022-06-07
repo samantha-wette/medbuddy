@@ -2,25 +2,23 @@
 import json
 from datetime import datetime, timedelta, date
 from re import M
-from select import select
 from time import strftime, strptime
-from tracemalloc import start
-from flask import Flask, jsonify, render_template, request, flash, session, redirect, url_for, make_response
-from pyparsing import commonHTMLEntity
-from model import  connect_to_db, db, User, Med, UserMed, Accessory, \
-    UserAccessory, Buddy, UserBuddy, Dose
+from flask import Flask, jsonify, render_template, request, flash, session, redirect, url_for
+from model import  connect_to_db, db, User, Med, UserMed, Accessory, Buddy, UserBuddy, Dose
 from jinja2 import StrictUndefined
 from random import choice
-# from authlib.integrations.flask_client import OAuth
-import requests
 import os
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
-import hashlib
-from secrets import SECRET_KEY
-from googleapiclient.errors import HttpError
+import requests
+# from pyparsing import commonHTMLEntity
+# import hashlib
+# from googleapiclient.errors import HttpError
 # from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+# from authlib.integrations.flask_client import OAuth
+# from select import select
+# from tracemalloc import start
 
 
 
