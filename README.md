@@ -66,7 +66,7 @@ Once in the virtual environment, install all required depenencies.
 pip3 install -r requirements.txt
 ```
 
-Next, create and seed a database for the project.
+Next, create and seed a database for the project. (You will need [PostgreSQL] installed for this)"
 ```sh
 python3 seed_database.py
 ```
@@ -100,3 +100,4 @@ Samantha Wette | *[Github], [Linkedin]*
 [Access]: <https://chrome.google.com/webstore/detail/access-assistant/ojiighldhdmahfdnhfdebnpmlbiemdfm?hl=en-US>
 [Canva]: <https://www.canva.com/>
 [here]: <https://youtu.be/_NKujEak9Mg>
+[PostgreSQL]: <https://www.postgresql.org/>
